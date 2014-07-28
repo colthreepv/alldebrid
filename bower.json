@@ -1,0 +1,25 @@
+{
+  "name": "alldebrid",
+  "version": "0.0.0",
+  "authors": [
+    "mrgamer <mister.gamer@gmail.com>"
+  ],
+  "description": "This extension aims for a better torrent interface",
+  "main": "index.html",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "alldebrid",
+    "torrent"
+  ],
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

@@ -1,0 +1,30 @@
+#container_footer {
+  display: none;
+}
+
+.dataTables_wrapper {
+  position: absolute;
+  left: 2%;
+  width: 96%;
+}
+
+table {
+  table-layout: auto;
+}
+
+.t_check { width: 15px; }
+.t_id { width: 32px; }
+.t_server { width: 20px; }
+.t_filename { width: 100px; }
+.t_status { width: 28px; }
+.t_downloaded { width: 35px; }
+.t_filesize { width: 36px; }
+.t_seeder { width: 16px; }
+.t_speed { width: 28px; }
+.t_added { width: 24px; }
+.t_links { width: 22px; }
+.t_remove { width: 12px; }
+
+.torrent_filename {
+  max-width: inherit !important;
+}
