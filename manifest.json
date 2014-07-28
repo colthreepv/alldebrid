@@ -1,16 +1,17 @@
 {
   "manifest_version": 2,
 
-  "name": "Alldebrid Better torrents",
-  "description": "This extension aims for a better torrent interface",
+  "name": "Alldebrid",
+  "description": "Better interface for alldebrid alltogheter.",
   "version": "0.2.0",
+  "minimum_chrome_version": "23",
 
-  "options_page": "index.html",
-  "content_scripts": [
-    {
-      "matches": ["http://www.alldebrid.com/torrent/"],
-      "js": ["edit-dom.js"],
-      "css": ["torrent.css"]
+  "icons": {
+    "128": "icon_128.png"
+  },
+  "app": {
+    "background": {
+      "scripts": ["main.js"]
     }
-  ]
+  }
 }
