@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" ng-app>
+<html class="no-js" lang="en" ng-app="adMain" ng-csp>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -11,13 +11,66 @@
 
   <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap-theme.css">
+  <link rel="stylesheet" href="css/spinning-icons.css">
+  <link rel="stylesheet" href="libs/angularjs/angular-csp.css">
   <script src="libs/angularjs/angular.js" type="text/javascript" charset="utf-8"></script>
-  <script src="alldebrid.js" type="text/javascript" charset="utf-8"></script>
+  <script src="src/app.js" type="text/javascript" charset="utf-8"></script>
+  <script src="src/services.js" type="text/javascript" charset="utf-8"></script>
 </head>
-<body>
+<body ng-controller="BodyController">
+  <div class="container">
+    <div class="navbar navbar-default" role="navigation">
+      <div class="navbar-collapse">
+        <!-- Navbar links -->
+        <ul class="nav navbar-nav"></ul>
+        <!-- right side of the navbar -->
+        <!-- login form -->
+        <form class="navbar-form navbar-right" name="loginForm" role="login" ng-submit="loginMe()" ng-show="loginStatus === 'failed'">
+          <div class="form-group">
+            <label for="username">Login</label>
+            <input type="text" class="form-control" ng-model="login.username" name="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <input type="password" class="form-control" ng-model="login.password" name="password" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-default hidden-devices" ng-disabled="loginStatus === 'working'">Login <i class="fa" ng-class="loginStatus === 'working' ? 'fa-cog fa-spin' : 'fa-sign-in'"></i></button>
+        </form>
 
-  <!-- Add your site or application content here -->
-  <p class="bg-primary">Hello world! This is HTML5 Boilerplate.</p>
+        <!-- Spinner -->
+        <button class="btn btn-default navbar-btn navbar-right" ng-show="loginStatus === 'working'">
+          <span>allDebrid login</span>
+          <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+        </button>
 
+        <!-- Logout Form -->
+        <form class="navbar-form navbar-right" role="logout" ng-submit="logoutMe()" ng-show="loginStatus === 'done'">
+          <div class="form-group">
+            <label class="text-success">login done</label>
+          </div>
+          <div class="form-group">
+            <button  type="submit" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- AWESOME TRIUMPH -->
+    <div class="row" ng-show="loginStatus === 'done'">
+      <h1>Torrents:</h1>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>header</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>data</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
 </body>
 </html>

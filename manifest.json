@@ -13,5 +13,8 @@
     "background": {
       "scripts": ["main.js"]
     }
-  }
+  },
+  "permissions": [
+    "http://www.alldebrid.com/*"
+  ]
 }

@@ -11,8 +11,8 @@ chrome.app.runtime.onLaunched.addListener(function() {
   chrome.app.window.create('index.html', {
     id: "AllDebrid",
     outerBounds: {
-    	minWidth: 800,
-    	minHeight: 600
-    }	
+      minWidth: 1024,
+      minHeight: 768
+    }
   });
 });
