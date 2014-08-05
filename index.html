@@ -11,7 +11,7 @@
 
   <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap.css">
   <link rel="stylesheet" href="libs/bootstrap/dist/css/bootstrap-theme.css">
-  <link rel="stylesheet" href="css/spinning-icons.css">
+  <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="libs/angularjs/angular-csp.css">
   <script src="libs/angularjs/angular.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/app.js" type="text/javascript" charset="utf-8"></script>
@@ -55,17 +55,38 @@
     </div>
 
     <!-- AWESOME TRIUMPH -->
-    <div class="row" ng-show="loginStatus === 'done'">
-      <h1>Torrents:</h1>
-      <table class="table">
+    <div class="row" ng-show="loginStatus === 'done'" ng-controller="TorrentController">
+      <div class="col-md-10">
+        <h1>Torrents:</h1>
+      </div>
+      <div class="col-md-offset-1 col-md-1">
+        <h2><span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrentStatus === 'working'"></span></h2>
+      </div>
+      <table class="table torrents">
         <thead>
           <tr>
-            <th>header</th>
+            <th>ID</th>
+            <th>server</th>
+            <th class="name">name</th>
+            <th>status</th>
+            <th>downloaded</th>
+            <th>size</th>
+            <th>seeders</th>
+            <th class="speed">speed</th>
+            <th class="added_date">date</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>data</td>
+          <tr ng-repeat="torrent in torrents">
+            <td>{{ torrent.id }}</td>
+            <td>{{ torrent.server }}</td>
+            <td>{{ torrent.name }}</td>
+            <td>{{ torrent.status }}</td>
+            <td>{{ torrent.downloaded }}</td>
+            <td>{{ torrent.size }}</td>
+            <td>{{ torrent.seeder }}</td>
+            <td>{{ torrent.speed }}</td>
+            <td>{{ torrent.added_date | date }}</td>
           </tr>
         </tbody>
       </table>

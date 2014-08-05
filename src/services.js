@@ -17,6 +17,7 @@ angular.module('adMain')
   function checkLogin (callback) {
     $http({ method: 'GET', url: 'http://www.alldebrid.com' })
     .success(function (data, status, headers, config) {
+      retryCount = 0;
       if (data.match(/Sign in/)) {
         callback(null, false);
       } else {
@@ -44,10 +45,10 @@ angular.module('adMain')
       var asyncLogin = $q.defer();
       // $timeout(function () {
       checkLogin(function (err, loggedIn) {
-        if (!err) {
-          asyncLogin.resolve(loggedIn);
+        if (err) {
+          asyncLogin.reject(err);
         }
-        asyncLogin.reject(err);
+        asyncLogin.resolve(loggedIn);
       });
       // }, 15000);
 
