@@ -32,3 +32,7 @@ table.table.torrents {
 .table.torrents .name {
   text-overflow: ellipsis;
 }
+
+.table.torrents .size {
+  min-width: 80px;
+}

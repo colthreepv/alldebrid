@@ -1,4 +1,4 @@
-angular.module('adMain')
+angular.module('ad')
 .factory('adLogin', function ($http, $q, $timeout) {
 
   // returns a promise
@@ -13,6 +13,10 @@ angular.module('adMain')
 
   // return asyncLogin.promise;
 
+  /**
+   * checkLogin is a loop-call function in case of connection failure
+   * [callback] has parameters (err, isLoggedin, logoutKey)
+   */
   var retryCount = 0;
   function checkLogin (callback) {
     $http({ method: 'GET', url: 'http://www.alldebrid.com' })
@@ -21,7 +25,7 @@ angular.module('adMain')
       if (data.match(/Sign in/)) {
         callback(null, false);
       } else {
-        callback(null, true);
+        callback(null, true, data.match(/\/register\/\?action=logout\&key=(.*)" /)[1]);
       }
     })
     .error(function (data, status, headers, config) {
@@ -44,11 +48,11 @@ angular.module('adMain')
     isLogged: function () {
       var asyncLogin = $q.defer();
       // $timeout(function () {
-      checkLogin(function (err, loggedIn) {
-        if (err) {
+      checkLogin(function (err, loggedIn, logoutKey) {
+        if (err || !loggedIn) {
           asyncLogin.reject(err);
         }
-        asyncLogin.resolve(loggedIn);
+        asyncLogin.resolve(logoutKey);
       });
       // }, 15000);
 

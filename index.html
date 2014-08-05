@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" ng-app="adMain" ng-csp>
+<html class="no-js" lang="en" ng-app="ad" ng-csp>
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -16,19 +16,24 @@
   <script src="libs/angularjs/angular.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/app.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/services.js" type="text/javascript" charset="utf-8"></script>
+  <script src="src/torrent.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body ng-controller="BodyController">
   <div class="container">
     <div class="navbar navbar-default" role="navigation">
       <div class="navbar-collapse">
         <!-- Navbar links -->
-        <ul class="nav navbar-nav"></ul>
+        <ul class="nav navbar-nav">
+          <li class="active">
+            <a href="//:0" target="">Torrents</a>
+          </li>
+        </ul>
         <!-- right side of the navbar -->
         <!-- login form -->
-        <form class="navbar-form navbar-right" name="loginForm" role="login" ng-submit="loginMe()" ng-show="loginStatus === 'failed'">
+        <form class="navbar-form navbar-right" name="loginForm" role="login" ng-submit="loginMe()" ng-show="loginStatus === 'anon'">
           <div class="form-group">
             <label for="username">Login</label>
-            <input type="text" class="form-control" ng-model="login.username" name="username" placeholder="Username">
+            <input type="text" class="form-control" ng-model="login.username" name="username" placeholder="Username" autofocus>
           </div>
           <div class="form-group">
             <input type="password" class="form-control" ng-model="login.password" name="password" placeholder="Password">
@@ -43,7 +48,7 @@
         </button>
 
         <!-- Logout Form -->
-        <form class="navbar-form navbar-right" role="logout" ng-submit="logoutMe()" ng-show="loginStatus === 'done'">
+        <form class="navbar-form navbar-right" role="logout" ng-submit="logoutMe()" ng-show="loginStatus === 'login'">
           <div class="form-group">
             <label class="text-success">login done</label>
           </div>
@@ -54,42 +59,59 @@
       </div>
     </div>
 
-    <!-- AWESOME TRIUMPH -->
-    <div class="row" ng-show="loginStatus === 'done'" ng-controller="TorrentController">
-      <div class="col-md-10">
-        <h1>Torrents:</h1>
+    <div ng-show="loginStatus === 'login'" ng-controller="TorrentController">
+      <div class="row">
+        <div class="col-md-8">
+          <form class="form-inline">
+            <div class="checkbox">
+              <span>Forever </span><input type="checkbox" ng-model="forever">
+            </div>
+            <div class="form-group">
+              <select ng-model="cooldown">
+                <option value="30000">30 sec</option>
+                <option value="15000">15 sec</option>
+                <option value="10000">10 sec</option>
+                <option value="5000">5 sec</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="col-md-offset-3 col-md-1">
+          <h3><span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrentStatus === 'working'"></span></h3>
+        </div>
       </div>
-      <div class="col-md-offset-1 col-md-1">
-        <h2><span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrentStatus === 'working'"></span></h2>
+      <div class="row">
+        <table class="table torrents">
+          <thead>
+            <tr>
+              <th><input type="checkbox" ng-click="select()" ng-model="selectAll"></th>
+              <th>ID</th>
+              <th>server</th>
+              <th class="name">name</th>
+              <th>status</th>
+              <th>downloaded</th>
+              <th class="size">size</th>
+              <th>seeders</th>
+              <th class="speed">speed</th>
+              <th class="added_date">date</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="torrent in torrents">
+              <td><input type="checkbox" ng-model="torrent.checked"></td>
+              <td>{{ torrent.id }}</td>
+              <td>{{ torrent.server }}</td>
+              <td>{{ torrent.name }}</td>
+              <td>{{ torrent.status }}</td>
+              <td>{{ torrent.downloaded }}</td>
+              <td>{{ torrent.size }}</td>
+              <td>{{ torrent.seeder }}</td>
+              <td>{{ torrent.speed }}</td>
+              <td class="added_date">{{ torrent.added_date | date:'dd/MM hh:mm' }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <table class="table torrents">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>server</th>
-            <th class="name">name</th>
-            <th>status</th>
-            <th>downloaded</th>
-            <th>size</th>
-            <th>seeders</th>
-            <th class="speed">speed</th>
-            <th class="added_date">date</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr ng-repeat="torrent in torrents">
-            <td>{{ torrent.id }}</td>
-            <td>{{ torrent.server }}</td>
-            <td>{{ torrent.name }}</td>
-            <td>{{ torrent.status }}</td>
-            <td>{{ torrent.downloaded }}</td>
-            <td>{{ torrent.size }}</td>
-            <td>{{ torrent.seeder }}</td>
-            <td>{{ torrent.speed }}</td>
-            <td>{{ torrent.added_date | date }}</td>
-          </tr>
-        </tbody>
-      </table>
     </div>
 
   </div>
