@@ -189,7 +189,6 @@ angular.module('ad')
       removeTorrents(callback);
     }).error(function (data, status, headers, config) {
       $timeout(removeTorrents.bind(null, callback), 5000);
-      console.log('removal error, retry in 5 secs');
     });
   }
 

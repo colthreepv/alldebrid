@@ -50,7 +50,6 @@ angular.module('ad', [])
         key: $rootScope.logoutKey
       }
     }).success(function (data, status, headers, config) {
-      console.log(config);
       if (data.match(/Sign in/)) {
         $rootScope.loginStatus = 'anon';
       } else {

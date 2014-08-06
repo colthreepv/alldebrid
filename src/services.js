@@ -2,31 +2,19 @@ angular.module('ad')
 .factory('adLogin', function ($http, $q, $timeout, uidFetcher) {
   /**
    * checkLogin is a loop-call function in case of connection failure
-   * [callback] has parameters (err, isLoggedin, logoutKey)
+   * [callback] has parameters (isLoggedin, logoutKey)
    */
-  var retryCount = 0;
   function checkLogin (callback) {
     $http({ method: 'GET', url: 'http://www.alldebrid.com' })
     .success(function (data, status, headers, config) {
-      retryCount = 0;
       if (data.match(/Sign in/)) {
-        callback(null, false);
+        callback(false);
       } else {
-        callback(null, true, data.match(/\/register\/\?action=logout\&key=(.*)" /)[1]);
+        callback(true, data.match(/\/register\/\?action=logout\&key=(.*)" /)[1]);
       }
     })
     .error(function (data, status, headers, config) {
-      // return error
-      if (retryCount > 3) {
-        callback('reached retry limit: ' + retryCount);
-      }
-
-      // retry connection
-      $timeout(function () {
-        retryCount += 1;
-        console.log('retry login...');
-        checkLogin(callback);
-      }, 2500 * (retryCount + 1));
+      $timeout(checkLogin.bind(null, callback), 5000);
     });
   }
 
@@ -35,8 +23,8 @@ angular.module('ad')
     isLogged: function () {
       var asyncLogin = $q.defer();
       // $timeout(function () {
-      checkLogin(function (err, loggedIn, logoutKey) {
-        if (err || !loggedIn) {
+      checkLogin(function (loggedIn, logoutKey) {
+        if (!loggedIn) {
           asyncLogin.reject(err);
         }
 
@@ -46,10 +34,6 @@ angular.module('ad')
             key: logoutKey,
             uid: uid
           });
-        }, function failure (reason) {
-          // that should never happen.
-          console.log(reason);
-          asyncLogin.reject(reason);
         });
       });
       // }, 15000);
@@ -139,8 +123,7 @@ angular.module('ad')
  * uidFetcher is a service that relies on chromeStorage to cache a set of:
  * logoutKey -> uid
  *
- * It returns a promise, that *should* (quite always, except connection failure)
- * get resolved.
+ * It returns a promise, that gets resolved always (forever-loop)
  */
 .factory('uidFetcher', function ($http, $q, $timeout, chromeStorage) {
 
@@ -150,7 +133,6 @@ angular.module('ad')
       url: 'http://www.alldebrid.com/torrent/'
     }).success(function (data, status, headers, config) {
       var uid = data.match(/name="uid" value="(.*)"/)[1];
-      chromeStorage.set('uid.' + logoutKey, uid);
       callback(uid);
     }).error(function (data, status, headers, config) {
       $timeout(fetchPage.bind(null, callback), 5000);
@@ -167,6 +149,7 @@ angular.module('ad')
 
       // forever-retry function
       fetchPage(function (uid) {
+        chromeStorage.set('uid.' + logoutKey, uid);
         uidDone.resolve(uid);
       });
     });
