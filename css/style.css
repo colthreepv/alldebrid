@@ -23,6 +23,7 @@
 table.table.torrents {
   font-size: 12px;
   max-height: 640px;
+  -webkit-user-select: text;
 }
 
 .table.torrents .added_date {
@@ -35,4 +36,8 @@ table.table.torrents {
 
 .table.torrents .size {
   min-width: 80px;
+}
+
+.pointer {
+  cursor: pointer;
 }

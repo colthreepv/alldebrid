@@ -17,6 +17,7 @@ angular.module('ad', [])
 
 })
 .controller('BodyController', function ($scope, $rootScope, $http) {
+  // login functions
   $scope.login = {};
   $scope.loginMe = function () {
     $http({
@@ -59,5 +60,8 @@ angular.module('ad', [])
     // before AJAX gets completed we set loginStatus to working
     $rootScope.loginStatus = 'working';
   };
+
+  $scope.showLinks = false;
+  $scope.showTorrents = false;
 
 });

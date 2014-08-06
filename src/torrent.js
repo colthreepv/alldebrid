@@ -7,6 +7,8 @@ angular.module('ad')
   $scope.cooldown = 30000;
   $scope.forever = true;
   $scope.selectAll = false;
+  $scope.checkedTorrents = [];
+  $scope.removing = false;
 
   var torrentsDB = {};
 
@@ -36,6 +38,16 @@ angular.module('ad')
     });
   }
 
+  function parseSpeed (speedStr) {
+    var s = speedStr.match(/(\d*) (\w*)/);
+
+    // shortcut to zero
+    if (s.length && parseInt(s[1], 10) === 0) {
+      return 0;
+    }
+    return speedStr;
+  }
+
   function parseDate (dateStr) {
     var newd = new Date();
     var d = dateStr.match(/(\d{2})\/(\d{2})-(\d{2}):(\d{2})/);
@@ -48,14 +60,9 @@ angular.module('ad')
     return newd;
   }
 
-  function parseSpeed (speedStr) {
-    var s = speedStr.match(/(\d*) (\w*)/);
-
-    // shortcut to zero
-    if (s.length && parseInt(s[1], 10) === 0) {
-      return 0;
-    }
-    return speedStr;
+  function parseLinks (linksStr) {
+    var slicedStr = linksStr.slice(10, -97);
+    return slicedStr.split(',;,').slice(0, -1);
   }
 
   function parseTorrents (data) {
@@ -76,14 +83,20 @@ angular.module('ad')
           size: torrent[6],
           seeder: parseInt(torrent[7], 10),
           speed: parseSpeed(torrent[8]),
-          added_date: parseDate(torrent[9])
+          added_date: parseDate(torrent[9]),
+          links: parseLinks(torrent[10])
         };
 
         for (var attrName in $scope.torrents[lastIdx]) {
+          // in case the links array differ in length
+          if (attrName === 'links' && $scope.torrents[lastIdx][attrName].length !== newTorrent[attrName].length) {
+            $scope.torrents[lastIdx][attrName] = newTorrent[attrName];
+          }
           if (
             attrName !== '$$hashKey' &&
             attrName !== 'added_date' &&
             attrName !== 'checked' &&
+            attrName !== 'links' &&
             $scope.torrents[lastIdx][attrName] !== newTorrent[attrName]) {
               $scope.torrents[lastIdx][attrName] = newTorrent[attrName];
           }
@@ -99,7 +112,8 @@ angular.module('ad')
           size: torrent[6],
           seeder: parseInt(torrent[7], 10),
           speed: parseSpeed(torrent[8]),
-          added_date: parseDate(torrent[9])
+          added_date: parseDate(torrent[9]),
+          links: parseLinks(torrent[10])
         });
 
         torrentsDB[torrentID] = lastIdx - 1;
@@ -125,4 +139,53 @@ angular.module('ad')
       $scope.torrents[i].checked = $scope.selectAll;
     }
   };
+
+  $scope.check = function (idx) {
+    var foundIdx;
+    if (foundIdx = $scope.checkedTorrents.indexOf($scope.torrents[idx]), foundIdx === -1) {
+      $scope.checkedTorrents.push($scope.torrents[idx]);
+    } else {
+      $scope.checkedTorrents.splice(foundIdx, 1);
+    }
+  };
+
+  // removeTorrent chains as many functions in this project, calls callback when done (no params)
+  function removeTorrent (callback) {
+    if (!$scope.checkedTorrents.length) return callback();
+
+    var firstTorrent = $scope.checkedTorrents[0];
+    $http({
+      method: 'GET',
+      url: 'http://www.alldebrid.com/torrent/',
+      params: {
+        action: 'remove',
+        id: firstTorrent.id
+      }
+    }).success(function (data, status, headers, config) {
+      var idx;
+      // cleaning data structures
+      if (idx = $scope.checkedTorrents.indexOf(firstTorrent), idx !== -1) {
+        $scope.checkedTorrents.splice(idx, 1);
+      } else { console.log('missing splice, why?'); }
+      if (idx = $scope.torrents.indexOf(firstTorrent), idx !== -1) {
+        $scope.torrents.splice(idx, 1);
+      } else { console.log('missing splice, why?'); }
+      if (idx = torrentsDB[firstTorrent.id], !delete torrentsDB[firstTorrent.id]) {
+        console.log('delete on torrentsDB did not work');
+      }
+      // go again
+      removeTorrent(callback);
+    }).error(function (data, status, headers, config) {
+      $timeout(removeTorrent.bind(null, callback), 5000);
+      console.log('removal error, retry in 5 secs');
+    });
+  }
+
+  $scope.removeChecked = function () {
+    $scope.removing = true;
+    removeTorrent(function () {
+      $scope.removing = false;
+    });
+  };
+
 });

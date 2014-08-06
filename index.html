@@ -16,6 +16,7 @@
   <script src="libs/angularjs/angular.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/app.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/services.js" type="text/javascript" charset="utf-8"></script>
+  <script src="src/add.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/torrent.js" type="text/javascript" charset="utf-8"></script>
 </head>
 <body ng-controller="BodyController">
@@ -24,8 +25,14 @@
       <div class="navbar-collapse">
         <!-- Navbar links -->
         <ul class="nav navbar-nav">
-          <li class="active">
-            <a href="//:0" target="">Torrents</a>
+          <li>
+            <a class="pointer">Torrents</a>
+          </li>
+          <li ng-class="{ active: showLinks }">
+            <a class="pointer" ng-click="showLinks = !showLinks">Unrestricted Links</a>
+          </li>
+          <li ng-class="{ active: showTorrents }">
+            <a class="pointer" ng-click="showTorrents = !showTorrents">Add Torrent</a>
           </li>
         </ul>
         <!-- right side of the navbar -->
@@ -59,6 +66,24 @@
       </div>
     </div>
 
+    <div ng-show="showTorrents" ng-controller="AddController">
+      <div class="row">
+        <div class="col-md-12">
+          <form role="form">
+            <div class="form-group">
+              <label>Add Magnet single/multiple</label>
+              <textarea class="form-control" placeholder="add magnets here" rows="16"></textarea>
+            </div>
+            <div class="form-group">
+              <button type="submit" class="btn btn-lg btn-default center-block">
+                Add Magnets <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="addingMagnets"></span>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
     <div ng-show="loginStatus === 'login'" ng-controller="TorrentController">
       <div class="row">
         <div class="col-md-8">
@@ -74,10 +99,15 @@
                 <option value="5000">5 sec</option>
               </select>
             </div>
+            <div class="form-group">
+              <button class="btn btn-xs btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
+                remove selected <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
+              </button>
+            </div>
           </form>
         </div>
         <div class="col-md-offset-3 col-md-1">
-          <h3><span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrentStatus === 'working'"></span></h3>
+          <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrentStatus === 'working'"></span>
         </div>
       </div>
       <div class="row">
@@ -98,7 +128,7 @@
           </thead>
           <tbody>
             <tr ng-repeat="torrent in torrents">
-              <td><input type="checkbox" ng-model="torrent.checked"></td>
+              <td><input type="checkbox" ng-click="check($index)" ng-model="torrent.checked"></td>
               <td>{{ torrent.id }}</td>
               <td>{{ torrent.server }}</td>
               <td>{{ torrent.name }}</td>
