@@ -11,6 +11,7 @@ angular.module('ad')
   $scope.removing = false;
 
   var torrentsDB = {};
+  var cooldownTimeout;
 
   function fetchTorrents (callback) {
     $scope.torrentStatus = 'working';
@@ -120,7 +121,7 @@ angular.module('ad')
       }
     });
     if ($scope.forever) {
-      $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
+      cooldownTimeout = $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
     }
   }
 
@@ -131,6 +132,17 @@ angular.module('ad')
     if (newValue === 'login') {
       fetchTorrents(parseTorrents);
     }
+  });
+
+  $scope.checkForever = function () {
+    if (!$scope.forever) fetchTorrents(parseTorrents);
+  };
+
+  $scope.$watch('cooldown', function (newValue, oldValue) {
+    if (newValue === oldValue) return;
+
+    $timeout.cancel(cooldownTimeout);
+    cooldownTimeout = $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
   });
 
   $scope.select = function () {
