@@ -64,4 +64,8 @@ angular.module('ad', [])
   $scope.showLinks = false;
   $scope.showTorrents = false;
 
+  $scope.checkedTorrents = [];
+  $scope.generatingLinks = false;
+  $scope.linksText = '';
+
 });

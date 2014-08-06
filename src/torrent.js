@@ -7,7 +7,7 @@ angular.module('ad')
   $scope.cooldown = 30000;
   $scope.forever = true;
   $scope.selectAll = false;
-  $scope.checkedTorrents = [];
+  $scope.checkedTorrents = $scope.$parent.checkedTorrents;
   $scope.removing = false;
 
   $scope.orderByField = 'added_date';
@@ -43,8 +43,8 @@ angular.module('ad')
   }
 
   function parseStatus (statusStr) {
-    var s;
-    if (s = statusStr.split(' '), s[1] === 'Downloading') {
+    var s = statusStr.split(' ');
+    if (s[1] === 'Downloading' || s[1] === 'Uploading') {
       return s[0];
     }
     if (statusStr === 'In Queue') {
@@ -55,7 +55,7 @@ angular.module('ad')
 
   function parseSpeed (speedStr) {
     // when in queue, ad gives 0 as Number, not string.
-    if (angular.isNumber(speedStr)) {
+    if (angular.isNumber(speedStr) || speedStr === '??') {
       return 0;
     }
 
@@ -226,6 +226,51 @@ angular.module('ad')
     $scope.removing = true;
     removeTorrents(function () {
       $scope.removing = false;
+    });
+  };
+
+  function generateLinks (callback) {
+    if (!$scope.checkedTorrents.length) return callback();
+
+    // in case a non-finished torrent gets selected, it gets de-selected
+    if ($scope.checkedTorrents[0].status !== 'finished') {
+      $scope.torrents[$scope.torrents.indexOf($scope.checkedTorrents[0])].checked = false;
+      $scope.checkedTorrents.splice(0, 1);
+      return generateLinks(callback);
+    }
+
+    $scope.$parent.showLinks = true;
+    var firstTorrent = $scope.checkedTorrents[0];
+    var firstLink = firstTorrent.links[0];
+    $http({
+      method: 'GET',
+      url: 'http://www.alldebrid.com/service.php',
+      params: {
+        link: firstLink,
+        json: true
+      }
+    }).success(function (data, status, headers, config) {
+      var idx;
+
+      firstTorrent.links.pop();
+      if (!firstTorrent.links.length) { // no links left for this torrent, remove
+        // cleaning data structures
+        if (idx = $scope.checkedTorrents.indexOf(firstTorrent), idx !== -1) {
+          $scope.checkedTorrents.splice(idx, 1);
+        }
+      }
+
+      $scope.$parent.linksText += data.link + '\n';
+      generateLinks(callback);
+    }).error(function (data, status, headers, config) {
+      $timeout(generateLinks.bind(null, callback), 5000);
+    });
+  }
+
+  $scope.generateLinks = function () {
+    $scope.$parent.generatingLinks = true;
+    generateLinks(function () {
+      $scope.$parent.generatingLinks = false;
     });
   };
 
