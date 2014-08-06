@@ -73,12 +73,15 @@
             <div class="form-group">
               <label>Add Magnet single/multiple:</label>
               <span>use one magnet per line, newline is <b>required</b> between them</span>
-              <textarea class="form-control long-text" placeholder="add magnets here" rows="16" autofocus ng-model="magnetText"></textarea>
+              <textarea class="form-control long-text" placeholder="add magnets here" rows="16" autofocus ng-model="magnetText" ng-disabled="addingTorrents"></textarea>
             </div>
-            <div class="form-group">
-              <button type="submit" class="btn btn-lg center-block"
-                ng-class="{ 'btn-default': !addingTorrents, 'btn-info': addingTorrents }" ng-disabled="addingTorrents" ng-click="addTorrents()">
+            <div class="form-group text-center">
+              <button class="btn btn-lg"
+                ng-class="{ 'btn-default': !addingTorrents, 'btn-info': addingTorrents }" ng-disabled="addingTorrents" ng-click="addMagnets()">
                 Add Magnets <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="addingTorrents"></span>
+              </button>
+              <button class="btn btn-lg btn-danger" ng-click="clearMagnets()" ng-disabled="addingTorrents">
+                Clear <span class="glyphicon glyphicon-remove"></span>
               </button>
             </div>
           </form>
@@ -117,20 +120,20 @@
           <thead>
             <tr>
               <th><input type="checkbox" ng-click="select()" ng-model="selectAll"></th>
-              <th>ID</th>
-              <th>server</th>
-              <th class="name">name</th>
-              <th>status</th>
-              <th>downloaded</th>
-              <th class="size">size</th>
-              <th>seeders</th>
-              <th class="speed">speed</th>
-              <th class="added_date">date</th>
+              <th><a class="pointer" ng-click="orderByField = 'id'; orderReversed = !orderReversed">ID</a></th>
+              <th><a class="pointer" ng-click="orderByField = 'server'; orderReversed = !orderReversed">server</a></th>
+              <th class="name"><a class="pointer" ng-click="orderByField = 'name'; orderReversed = !orderReversed">name</a></th>
+              <th><a class="pointer" ng-click="orderByField = 'status'; orderReversed = !orderReversed">status</a></th>
+              <th><a class="pointer" ng-click="orderByField = 'downloaded'; orderReversed = !orderReversed">downloaded</a></th>
+              <th class="size"><a class="pointer" ng-click="orderByField = 'size'; orderReversed = !orderReversed">size</a></th>
+              <th><a class="pointer" ng-click="orderByField = 'seeders'; orderReversed = !orderReversed">seeders</a></th>
+              <th class="speed"><a class="pointer" ng-click="orderByField = 'speed'; orderReversed = !orderReversed">speed</a></th>
+              <th class="added_date"><a class="pointer" ng-click="orderByField = 'added_date'; orderReversed = !orderReversed">date</a></th>
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="torrent in torrents">
-              <td><input type="checkbox" ng-click="check($index)" ng-model="torrent.checked"></td>
+            <tr ng-repeat="torrent in torrents | orderBy:orderByField:orderReversed">
+              <td><input type="checkbox" ng-click="check(torrent)" ng-model="torrent.checked"></td>
               <td>{{ torrent.id }}</td>
               <td>{{ torrent.server }}</td>
               <td>{{ torrent.name }}</td>

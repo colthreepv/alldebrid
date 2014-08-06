@@ -10,6 +10,9 @@ angular.module('ad')
   $scope.checkedTorrents = [];
   $scope.removing = false;
 
+  $scope.orderByField = 'added_date';
+  $scope.orderReversed = true;
+
   var torrentsDB = {};
   var cooldownTimeout;
 
@@ -39,9 +42,24 @@ angular.module('ad')
     });
   }
 
-  function parseSpeed (speedStr) {
-    var s = speedStr.match(/(\d*) (\w*)/);
+  function parseStatus (statusStr) {
+    var s;
+    if (s = statusStr.split(' '), s[1] === 'Downloading') {
+      return s[0];
+    }
+    if (statusStr === 'In Queue') {
+      return 'queue';
+    }
+    return statusStr;
+  }
 
+  function parseSpeed (speedStr) {
+    // when in queue, ad gives 0 as Number, not string.
+    if (angular.isNumber(speedStr)) {
+      return 0;
+    }
+
+    var s = speedStr.match(/(\d*) (\w*)/);
     // shortcut to zero
     if (s.length && parseInt(s[1], 10) === 0) {
       return 0;
@@ -52,12 +70,24 @@ angular.module('ad')
   function parseDate (dateStr) {
     var newd = new Date();
     var d = dateStr.match(/(\d{2})\/(\d{2})-(\d{2}):(\d{2})/);
-    if (d.length) {
-      newd.setDate(parseInt(d[1], 10));
-      newd.setMonth(parseInt(d[2], 10) - 1);
-      newd.setHours(parseInt(d[3], 10));
-      newd.setMinutes(parseInt(d[4], 10));
+
+    // when in queue, ad gives short-format dates
+    if (d === null) {
+      d = dateStr.match(/(\d{2})-(\d{2}):(\d{2})/);
+      if (d.length) {
+        newd.setDate(parseInt(d[1], 10));
+        newd.setHours(parseInt(d[2], 10));
+        newd.setMinutes(parseInt(d[3], 10));
+      }
+    } else { // all the rest
+      if (d.length) {
+        newd.setDate(parseInt(d[1], 10));
+        newd.setMonth(parseInt(d[2], 10) - 1);
+        newd.setHours(parseInt(d[3], 10));
+        newd.setMinutes(parseInt(d[4], 10));
+      }
     }
+
     return newd;
   }
 
@@ -74,12 +104,12 @@ angular.module('ad')
       var newTorrent;
 
       // if exists, replace
-      if (lastIdx = torrentsDB[torrentID], !!lastIdx) {
+      if (lastIdx = torrentsDB[torrentID], lastIdx !== undefined) {
         newTorrent = {
           id: torrentID,
           server: parseInt(torrent[2], 10),
           name: torrent[3].slice(31, -7),
-          status: torrent[4],
+          status: parseStatus(torrent[4]),
           downloaded: torrent[5],
           size: torrent[6],
           seeder: parseInt(torrent[7], 10),
@@ -108,7 +138,7 @@ angular.module('ad')
           id: torrentID,
           server: parseInt(torrent[2], 10),
           name: torrent[3].slice(31, -7),
-          status: torrent[4],
+          status: parseStatus(torrent[4]),
           downloaded: torrent[5],
           size: torrent[6],
           seeder: parseInt(torrent[7], 10),
@@ -152,10 +182,10 @@ angular.module('ad')
     }
   };
 
-  $scope.check = function (idx) {
+  $scope.check = function (torrent) {
     var foundIdx;
-    if (foundIdx = $scope.checkedTorrents.indexOf($scope.torrents[idx]), foundIdx === -1) {
-      $scope.checkedTorrents.push($scope.torrents[idx]);
+    if (foundIdx = $scope.checkedTorrents.indexOf(torrent), foundIdx === -1) {
+      $scope.checkedTorrents.push(torrent);
     } else {
       $scope.checkedTorrents.splice(foundIdx, 1);
     }
