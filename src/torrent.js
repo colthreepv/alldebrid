@@ -34,7 +34,7 @@ angular.module('ad')
       $timeout(function () {
         $scope.retryCount += 1;
         console.log('retry torrent fetch...');
-        checkLogin(callback);
+        fetchTorrents(callback);
       }, 5000 * Math.max(($scope.retryCount + 1), 10));
     });
   }
@@ -161,8 +161,8 @@ angular.module('ad')
     }
   };
 
-  // removeTorrent chains as many functions in this project, calls callback when done (no params)
-  function removeTorrent (callback) {
+  // removeTorrents chains as many functions in this project, calls callback when done (no params)
+  function removeTorrents (callback) {
     if (!$scope.checkedTorrents.length) return callback();
 
     var firstTorrent = $scope.checkedTorrents[0];
@@ -186,16 +186,16 @@ angular.module('ad')
         console.log('delete on torrentsDB did not work');
       }
       // go again
-      removeTorrent(callback);
+      removeTorrents(callback);
     }).error(function (data, status, headers, config) {
-      $timeout(removeTorrent.bind(null, callback), 5000);
+      $timeout(removeTorrents.bind(null, callback), 5000);
       console.log('removal error, retry in 5 secs');
     });
   }
 
   $scope.removeChecked = function () {
     $scope.removing = true;
-    removeTorrent(function () {
+    removeTorrents(function () {
       $scope.removing = false;
     });
   };

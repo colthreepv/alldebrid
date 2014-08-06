@@ -20,6 +20,10 @@
 }
 */
 
+.long-text {
+  white-space: nowrap;
+}
+
 table.table.torrents {
   font-size: 12px;
   max-height: 640px;
@@ -40,4 +44,8 @@ table.table.torrents {
 
 .pointer {
   cursor: pointer;
+}
+
+html {
+  overflow-y: scroll;
 }

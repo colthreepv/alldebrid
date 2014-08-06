@@ -71,12 +71,14 @@
         <div class="col-md-12">
           <form role="form">
             <div class="form-group">
-              <label>Add Magnet single/multiple</label>
-              <textarea class="form-control" placeholder="add magnets here" rows="16" autofocus></textarea>
+              <label>Add Magnet single/multiple:</label>
+              <span>use one magnet per line, newline is <b>required</b> between them</span>
+              <textarea class="form-control long-text" placeholder="add magnets here" rows="16" autofocus ng-model="magnetText"></textarea>
             </div>
             <div class="form-group">
-              <button type="submit" class="btn btn-lg btn-default center-block">
-                Add Magnets <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="addingMagnets"></span>
+              <button type="submit" class="btn btn-lg center-block"
+                ng-class="{ 'btn-default': !addingTorrents, 'btn-info': addingTorrents }" ng-disabled="addingTorrents" ng-click="addTorrents()">
+                Add Magnets <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="addingTorrents"></span>
               </button>
             </div>
           </form>

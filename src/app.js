@@ -8,9 +8,10 @@ angular.module('ad', [])
    */
   $rootScope.loginStatus = 'working';
 
-  adLogin.isLogged().then(function success (key) {
+  adLogin.isLogged().then(function success (userData) {
     $rootScope.loginStatus = 'login';
-    $rootScope.logoutKey = key;
+    $rootScope.logoutKey = userData.key;
+    $rootScope.uid = userData.uid;
   }, function failure (reason) {
     $rootScope.loginStatus = 'anon';
   });

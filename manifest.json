@@ -15,6 +15,7 @@
     }
   },
   "permissions": [
-    "http://www.alldebrid.com/*"
+    "http://*.alldebrid.com/*",
+    "storage"
   ]
 }
