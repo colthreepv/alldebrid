@@ -88,7 +88,8 @@
                 <ul class="list-group">
                   <li class="list-group-item" ng-class="{ 'list-group-item-danger': link.error }" ng-repeat="link in linkList">
                     <span class="badge" title="{{ link.error }}" ng-show="link.error">hover for error</span>
-                    <a href="link.link" target="_blank">{{ link.filename }}</a>
+                    <a href="link.link" target="_blank" ng-show="link.filename">{{ link.filename }}</a>
+                    <a href="link.link" target="_blank" ng-show="!link.filename">{{ link.link }}</a>
                     <a href="link.streaming" target="_blank" ng-show="!!link.streaming.length">{{ link.streaming }}</a>
                   </li>
                 </ul>

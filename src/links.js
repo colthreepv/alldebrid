@@ -18,12 +18,16 @@ angular.module('ad')
    * convertLinks has no side-effects
    * 
    * @param  {Array}   links: links to convert
-   * @param  {Function} callback: has (unrestrictedLinks) parameters:
-   *                             @param {Array} unrestrictedLinks: converted links output
-   * @param  {Array}   partials: support Array, when invoking must be undefined
+   * @param  {Function} callback: has no parameters
+   * @param  {Function} progressFn: function notifying progress, has parameters:
+   *                                @param {Object} single link output (from AD service)
    */
-  function convertLinks (links, callback, partials) {
+  function convertLinks (links, callback, progressFn) {
     if (!links.length) return callback();
+
+    if (progressFn === undefined) {
+      progressFn = angular.noop;
+    }
 
     var firstLink = links[0];
     $http({
@@ -42,17 +46,22 @@ angular.module('ad')
        */
 
       links.splice(0, 1);
-      if (partials === undefined) partials = []; // initialize a partial array
-      partials.push(data);
+      progressFn(data);
 
       if (!!links.length) { // in case there are more links, re-do
-        convertLinks(links, callback, partials);
+        convertLinks(links, callback, progressFn);
       } else { // if they are ended
-        callback(partials);
+        callback();
       }
     }).error(function (data, status, headers, config) {
-      $timeout(convertLinks.bind(null, links, callback, partials), 5000);
+      $timeout(convertLinks.bind(null, links, callback, progressFn), 5000);
     });
+  }
+
+  function convertLinksP (links) {
+    var convertDone = $q.defer();
+    convertLinks(links, convertDone.resolve, convertDone.notify);
+    return convertDone.promise;
   }
 
   $scope.$parent.$on('torrentLinks', function (event, args) {
@@ -88,27 +97,27 @@ angular.module('ad')
     } else { // in case the Hash has at least 1 (k,v)
       // hash[hashKeys[0]] is an array of links
       // hashKeys[0] is the name of the first Torrent
-      convertLinks(hash[hashKeys[0]], function (converted) {
-        var errors = [];
-        // object version
-        $scope.clickableLinks[hashKeys[0]] = converted;
 
-        // textual version
-        converted.forEach(function (c) {
-          if (c.error) return errors.push(c);
-          $scope.unrestrictedLinks += c.link + '\n';
-        });
-
+      var errors = [];
+      $scope.clickableLinks[hashKeys[0]] = [];
+      convertLinks(hash[hashKeys[0]], function done() {
         // error printing at the bottom
         if (!!errors.length) $scope.unrestrictedLinks += '\n\n === LINKS WITH ERRORS ===\n';
         errors.forEach(function (brokenLink) {
           $scope.unrestrictedLinks += brokenLink.link + ': ' + brokenLink.error + '\n';
         });
+      }, function progress (objData) {
+        // object version
+        $scope.clickableLinks[hashKeys[0]].push(objData);
+
+        // textual version
+        if (objData.error) return errors.push(objData);
+        $scope.unrestrictedLinks += objData.link + '\n';
 
         // now the first key is done, need to roll the others
         delete hash[hashKeys[0]];
         unrollHash(hash, callback);
-      }); 
+      });
     }
   }
 
@@ -121,23 +130,24 @@ angular.module('ad')
       $scope.unrestrictedLinks = '';
       $scope.clickableLinks = {};
       $scope.generatingLinks = true;
-      convertLinks(linkList, function (converted) {
-        var errors = [];
-        $scope.clickableLinks.Unrestricted = converted;
 
-        // textual version
-        converted.forEach(function (c) {
-          if (c.error) return errors.push(c);
-          $scope.unrestrictedLinks += c.link + '\n';
-        });
-
-        // error printing at the bottom
+      var errors = [];
+      $scope.clickableLinks.Unrestricted = [];
+      convertLinks(linkList, function done() {
+       // error printing at the bottom
         if (!!errors.length) $scope.unrestrictedLinks += '\n\n === LINKS WITH ERRORS ===\n';
         errors.forEach(function (brokenLink) {
           $scope.unrestrictedLinks += brokenLink.link + ': ' + brokenLink.error + '\n';
         });
 
         $scope.generatingLinks = false;
+      }, function progress (objData) {
+        // object version
+        $scope.clickableLinks.Unrestricted.push(objData);
+
+        // textual version
+        if (objData.error) return errors.push(objData);
+        $scope.unrestrictedLinks += objData.link + '\n';
       });
     }
   };
