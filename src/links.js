@@ -88,13 +88,20 @@ angular.module('ad')
       // hash[hashKeys[0]] is an array of links
       // hashKeys[0] is the name of the first Torrent
       convertLinks(hash[hashKeys[0]], function (converted) {
+        var errors = [];
         // object version
         $scope.clickableLinks[hashKeys[0]] = converted;
 
         // textual version
         converted.forEach(function (c) {
-          if (c.error) console.log('plz debug me');
+          if (c.error) return errors.push(c);
           $scope.unrestrictedLinks += c.link + '\n';
+        });
+
+        // error printing at the bottom
+        if (!!errors.length) $scope.unrestrictedLinks += '\n\n === LINKS WITH ERRORS ===\n';
+        errors.forEach(function (brokenLink) {
+          $scope.unrestrictedLinks += brokenLink.link + ': ' + brokenLink.error + '\n';
         });
 
         // now the first key is done, need to roll the others
@@ -105,19 +112,27 @@ angular.module('ad')
   }
 
   $scope.unrestrictLinks = function () {
-    linkList = $scope.unrestrictLinks.split('\n').filter(function (m, idx) {
+    linkList = $scope.requestedLinks.split('\n').filter(function (m, idx) {
       return /(http|https):\/\/(\w+:{0,1}\w*@)?(\S+)(:[0-9]+)?(\/|\/([\w#!:.?+=&%@!\-\/]))?/.test(m);
     });
 
     if (!!linkList.length) {
+      $scope.unrestrictedLinks = '';
       $scope.generatingLinks = true;
       convertLinks(linkList, function (converted) {
+        var errors = [];
         $scope.clickableLinks.Unrestricted = converted;
 
         // textual version
         converted.forEach(function (c) {
-          if (c.error) console.log('plz debug me');
+          if (c.error) return errors.push(c);
           $scope.unrestrictedLinks += c.link + '\n';
+        });
+
+        // error printing at the bottom
+        if (!!errors.length) $scope.unrestrictedLinks += '\n\n === LINKS WITH ERRORS ===\n';
+        errors.forEach(function (brokenLink) {
+          $scope.unrestrictedLinks += brokenLink.link + ': ' + brokenLink.error + '\n';
         });
 
         $scope.generatingLinks = false;

@@ -87,7 +87,8 @@
               <label class="radio-inline">
                 <input type="radio" value="textarea" ng-model="displayMode">Textarea
               </label>
-              <button class="btn btn-lg btn-success" ng-click="unrestrictLinks()" ng-disabled="generatingLinks">
+              <button class="btn btn-lg"
+                ng-class="{ 'btn-default': !generatingLinks, 'btn-success': generatingLinks }" ng-click="unrestrictLinks()" ng-disabled="generatingLinks">
                 Unrestrict links <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="generatingLinks"></span>
               </button>
               <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
@@ -110,7 +111,7 @@
             </div>
             <div class="form-group text-center">
               <button class="btn btn-lg"
-                ng-class="{ 'btn-default': !addingTorrents, 'btn-info': addingTorrents }" ng-disabled="addingTorrents" ng-click="addMagnets()">
+                ng-class="{ 'btn-default': !addingTorrents, 'btn-success': addingTorrents }" ng-disabled="addingTorrents" ng-click="addMagnets()">
                 Add Magnets <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="addingTorrents"></span>
               </button>
               <button class="btn btn-lg btn-danger" ng-click="clearMagnets()" ng-disabled="addingTorrents">
