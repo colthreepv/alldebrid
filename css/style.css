@@ -42,6 +42,14 @@ table.table.torrents {
   min-width: 80px;
 }
 
+.table.torrents .ordered {
+  /* same as .bg-primary */
+  color: #fff;
+  background-color: #428bca;
+  padding: 2px;
+  border-radius: 3px;
+}
+
 .pointer {
   cursor: pointer;
 }

@@ -162,8 +162,8 @@
             </div>
           </form>
         </div>
-        <div class="col-md-offset-3 col-md-1">
-          <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrentStatus === 'working'"></span>
+        <div class="col-md-offset-2 col-md-2">
+          <p class="pull-right" ng-show="torrentStatus === 'working'">Updating <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></p>
         </div>
       </div>
       <div class="row">
@@ -171,15 +171,78 @@
           <thead>
             <tr>
               <th><input type="checkbox" ng-click="select()" ng-model="selectAll"></th>
-              <th><a class="pointer" ng-click="orderByField = 'id'; orderReversed = !orderReversed">ID</a></th>
-              <th><a class="pointer" ng-click="orderByField = 'server'; orderReversed = !orderReversed">server</a></th>
-              <th class="name"><a class="pointer" ng-click="orderByField = 'name'; orderReversed = !orderReversed">name</a></th>
-              <th><a class="pointer" ng-click="orderByField = 'status'; orderReversed = !orderReversed">status</a></th>
-              <th><a class="pointer" ng-click="orderByField = 'downloaded'; orderReversed = !orderReversed">downloaded</a></th>
-              <th class="size"><a class="pointer" ng-click="orderByField = 'size'; orderReversed = !orderReversed">size</a></th>
-              <th><a class="pointer" ng-click="orderByField = 'seeders'; orderReversed = !orderReversed">seeders</a></th>
-              <th class="speed"><a class="pointer" ng-click="orderByField = 'speed'; orderReversed = !orderReversed">speed</a></th>
-              <th class="added_date"><a class="pointer" ng-click="orderByField = 'added_date'; orderReversed = !orderReversed">date</a></th>
+              <th>
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'id'}" ng-click="orderByField = 'id'; orderReversed = !orderReversed">
+                ID <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'id'"></span>
+                </a>
+              </th>
+              <th>
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'server'}" ng-click="orderByField = 'server'; orderReversed = !orderReversed">
+                server <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'server'"></span>
+                </a>
+              </th>
+              <th class="name">
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'name'}" ng-click="orderByField = 'name'; orderReversed = !orderReversed">
+                Filename <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'name'"></span>
+                </a>
+              </th>
+              <th>
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'status'}" ng-click="orderByField = 'status'; orderReversed = !orderReversed">
+                status <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'status'"></span>
+                </a>
+              </th>
+              <th>
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'downloaded'}" ng-click="orderByField = 'downloaded'; orderReversed = !orderReversed">
+                downloaded <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'downloaded'"></span>
+                </a>
+              </th>
+              <th class="size">
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'size'}" ng-click="orderByField = 'size'; orderReversed = !orderReversed">
+                size <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'size'"></span>
+                </a>
+              </th>
+              <th>
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'seeders'}" ng-click="orderByField = 'seeders'; orderReversed = !orderReversed">
+                seeders <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'seeders'"></span>
+                </a>
+              </th>
+              <th class="speed">
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'speed'}" ng-click="orderByField = 'speed'; orderReversed = !orderReversed">
+                speed <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'speed'"></span>
+                </a>
+              </th>
+              <th class="added_date">
+                <a class="pointer"
+                ng-class="{ 'ordered': orderByField === 'added_date'}" ng-click="orderByField = 'added_date'; orderReversed = !orderReversed">
+                date <span class="glyphicon"
+                    ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                    ng-show="orderByField === 'added_date'"></span>
+                </a>
+              </th>
             </tr>
           </thead>
           <tbody>
