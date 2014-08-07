@@ -76,9 +76,23 @@
               <span>use one link per line, newline is <b>required</b> between them</span>
               <textarea class="form-control long-text" placeholder="place links here" rows="16" autofocus ng-model="requestedLinks"></textarea>
             </div>
-            <div class="form-group">
+            <div class="form-group" ng-show="displayMode === 'textarea'">
               <label>Unrestricted links</label>
               <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." rows="16" autofocus ng-model="unrestrictedLinks"></textarea>
+            </div>
+            <div class="form-group" ng-show="displayMode === 'clickable'">
+              <div ng-repeat="(linkName, linkList) in clickableLinks">
+                <div class="alert alert-success" role="alert">
+                  {{ linkName }}
+                </div>
+                <ul class="list-group">
+                  <li class="list-group-item" ng-class="{ 'list-group-item-danger': link.error }" ng-repeat="link in linkList">
+                    <span class="badge" title="{{ link.error }}" ng-show="link.error">hover for error</span>
+                    <a href="link.link" target="_blank">{{ link.filename }}</a>
+                    <a href="link.streaming" target="_blank" ng-show="!!link.streaming.length">{{ link.streaming }}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
             <div class="form-group text-center">
               <label class="radio-inline">

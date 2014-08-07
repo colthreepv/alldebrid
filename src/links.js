@@ -11,6 +11,7 @@ angular.module('ad')
   $scope.clearLinks = function () {
     $scope.requestedLinks = '';
     $scope.unrestrictedLinks = '';
+    $scope.clickableLinks = {};
   };
 
   /**
@@ -118,6 +119,7 @@ angular.module('ad')
 
     if (!!linkList.length) {
       $scope.unrestrictedLinks = '';
+      $scope.clickableLinks = {};
       $scope.generatingLinks = true;
       convertLinks(linkList, function (converted) {
         var errors = [];
