@@ -64,8 +64,8 @@ angular.module('ad', [])
   $scope.showLinks = false;
   $scope.showTorrents = false;
 
-  $scope.checkedTorrents = [];
-  $scope.generatingLinks = false;
-  $scope.linksText = '';
+  $scope.$on('torrentLinks', function (event, args) {
+    $scope.showLinks = true;
+  });
 
 });

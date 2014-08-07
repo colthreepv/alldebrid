@@ -7,7 +7,7 @@ angular.module('ad')
   $scope.cooldown = 30000;
   $scope.forever = true;
   $scope.selectAll = false;
-  $scope.checkedTorrents = $scope.$parent.checkedTorrents;
+  $scope.checkedTorrents = [];
   $scope.removing = false;
 
   $scope.orderByField = 'added_date';
@@ -179,7 +179,16 @@ angular.module('ad')
     $scope.selectAll = !$scope.selectAll;
     for (var i = 0; i < $scope.torrents.length; i++) {
       $scope.torrents[i].checked = $scope.selectAll;
+      $scope.checkedTorrents.push($scope.torrents[i]);
     }
+  };
+
+  $scope.deselect = function () {
+    $scope.selectAll = false;
+    for (var i = 0; i < $scope.torrents.length; i++) {
+      $scope.torrents[i].checked = false;
+    }
+    $scope.checkedTorrents.splice(0, Number.MAX_VALUE);
   };
 
   $scope.check = function (torrent) {
@@ -229,49 +238,23 @@ angular.module('ad')
     });
   };
 
-  function generateLinks (callback) {
-    if (!$scope.checkedTorrents.length) return callback();
-
-    // in case a non-finished torrent gets selected, it gets de-selected
-    if ($scope.checkedTorrents[0].status !== 'finished') {
-      $scope.torrents[$scope.torrents.indexOf($scope.checkedTorrents[0])].checked = false;
-      $scope.checkedTorrents.splice(0, 1);
-      return generateLinks(callback);
-    }
-
-    $scope.$parent.showLinks = true;
-    var firstTorrent = $scope.checkedTorrents[0];
-    var firstLink = firstTorrent.links[0];
-    $http({
-      method: 'GET',
-      url: 'http://www.alldebrid.com/service.php',
-      params: {
-        link: firstLink,
-        json: true
-      }
-    }).success(function (data, status, headers, config) {
-      var idx;
-
-      firstTorrent.links.pop();
-      if (!firstTorrent.links.length) { // no links left for this torrent, remove
-        // cleaning data structures
-        if (idx = $scope.checkedTorrents.indexOf(firstTorrent), idx !== -1) {
-          $scope.checkedTorrents.splice(idx, 1);
-        }
-      }
-
-      $scope.$parent.linksText += data.link + '\n';
-      generateLinks(callback);
-    }).error(function (data, status, headers, config) {
-      $timeout(generateLinks.bind(null, callback), 5000);
-    });
-  }
-
   $scope.generateLinks = function () {
-    $scope.$parent.generatingLinks = true;
-    generateLinks(function () {
-      $scope.$parent.generatingLinks = false;
+    // torrentHash is a structure made this way:
+    // {
+    //   'torrent-name': ['link1', 'link2', 'link3'],
+    //   'another-torrent-name': ['link1']
+    // }
+    var torrentHash = {};
+    $scope.checkedTorrents.filter(function (torrent, idx) {
+      return !!torrent.links.length;
+    }).forEach(function (torrent, idx) {
+      torrentHash[torrent.name] = angular.copy(torrent.links);
     });
+
+    // send event only in case there's something to convert!
+    if (!!Object.keys(torrentHash).length) {
+      $scope.$emit('torrentLinks', torrentHash);
+    }
   };
 
 });

@@ -4,7 +4,7 @@
   "name": "Alldebrid",
   "description": "Better interface for alldebrid alltogheter.",
   "version": "0.2.0",
-  "minimum_chrome_version": "23",
+  "minimum_chrome_version": "31",
 
   "icons": {
     "128": "icon_128.png"

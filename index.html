@@ -72,8 +72,13 @@
         <div class="col-md-12">
           <form role="form">
             <div class="form-group">
+              <label>Links to request</label>
+              <span>use one link per line, newline is <b>required</b> between them</span>
+              <textarea class="form-control long-text" placeholder="place links here" rows="16" autofocus ng-model="requestedLinks"></textarea>
+            </div>
+            <div class="form-group">
               <label>Unrestricted links</label>
-              <textarea class="form-control long-text" placeholder="in the torrent list click Generate Links" rows="16" autofocus ng-model="$parent.linksText"></textarea>
+              <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." rows="16" autofocus ng-model="unrestrictedLinks"></textarea>
             </div>
             <div class="form-group text-center">
               <label class="radio-inline">
@@ -82,7 +87,10 @@
               <label class="radio-inline">
                 <input type="radio" value="textarea" ng-model="displayMode">Textarea
               </label>
-              <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="$parent.generatingLinks">
+              <button class="btn btn-lg btn-success" ng-click="unrestrictLinks()" ng-disabled="generatingLinks">
+                Unrestrict links <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="generatingLinks"></span>
+              </button>
+              <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
                 Clear <span class="glyphicon glyphicon-remove"></span>
               </button>
             </div>
@@ -133,9 +141,8 @@
               <button class="btn btn-xs btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
                 remove selected <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
               </button>
-              <button class="btn btn-xs btn-info" ng-disabled="!checkedTorrents.length || $parent.generatingLinks" ng-click="generateLinks()">
-                generate links <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="$parent.generatingLinks"></span>
-              </button>
+              <button class="btn btn-xs btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">generate links</button>
+              <button class="btn btn-xs btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">clear selection</button>
             </div>
           </form>
         </div>
