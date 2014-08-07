@@ -98,10 +98,10 @@ angular.module('ad')
 
   function parseTorrents (data) {
     data.forEach(function (torrent, index, array) {
-      var torrentID = parseInt(torrent[1], 10), lastIdx;
+      var torrentID = parseInt(torrent[1], 10);
       var torrentDate = new Date();
 
-      var newTorrent;
+      var newTorrent, lastIdx;
 
       // if exists, replace
       if (lastIdx = torrentsDB[torrentID], lastIdx !== undefined) {
@@ -134,7 +134,7 @@ angular.module('ad')
         }
       } else {
         // else add
-        lastIdx = $scope.torrents.push({
+        newTorrent = {
           id: torrentID,
           server: parseInt(torrent[2], 10),
           name: torrent[3].slice(31, -7),
@@ -145,9 +145,10 @@ angular.module('ad')
           speed: parseSpeed(torrent[8]),
           added_date: parseDate(torrent[9]),
           links: parseLinks(torrent[10])
-        });
+        };
+        $scope.torrents.push(newTorrent);
 
-        torrentsDB[torrentID] = lastIdx - 1;
+        torrentsDB[torrentID] = newTorrent;
       }
     });
     if ($scope.forever) {
@@ -221,7 +222,7 @@ angular.module('ad')
       if (idx = $scope.torrents.indexOf(firstTorrent), idx !== -1) {
         $scope.torrents.splice(idx, 1);
       } else { console.log('missing splice, why?'); }
-      if (idx = torrentsDB[firstTorrent.id], !delete torrentsDB[firstTorrent.id]) {
+      if (!delete torrentsDB[firstTorrent.id]) {
         console.log('delete on torrentsDB did not work');
       }
       // go again

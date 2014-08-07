@@ -106,6 +106,10 @@ angular.module('ad')
         errors.forEach(function (brokenLink) {
           $scope.unrestrictedLinks += brokenLink.link + ': ' + brokenLink.error + '\n';
         });
+
+        // now the first key is done, need to roll the others
+        delete hash[hashKeys[0]];
+        unrollHash(hash, callback);
       }, function progress (objData) {
         // object version
         $scope.clickableLinks[hashKeys[0]].push(objData);
@@ -113,10 +117,6 @@ angular.module('ad')
         // textual version
         if (objData.error) return errors.push(objData);
         $scope.unrestrictedLinks += objData.link + '\n';
-
-        // now the first key is done, need to roll the others
-        delete hash[hashKeys[0]];
-        unrollHash(hash, callback);
       });
     }
   }
