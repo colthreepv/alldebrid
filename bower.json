@@ -1,6 +1,6 @@
 {
   "name": "alldebrid",
-  "version": "0.0.0",
+  "version": "0.3.1",
   "authors": [
     "mrgamer <mister.gamer@gmail.com>"
   ],
@@ -23,6 +23,7 @@
     "tests"
   ],
   "dependencies": {
-    "angularjs": "~1.2.21"
+    "angularjs": "~1.2.21",
+    "angular-hotkeys": "chieffancypants/angular-hotkeys#~1.4.2"
   }
 }

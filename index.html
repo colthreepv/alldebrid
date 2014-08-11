@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="libs/angularjs/angular-csp.css">
   <script src="libs/angularjs/angular.js" type="text/javascript" charset="utf-8"></script>
+  <script src="libs/angular-hotkeys/build/hotkeys.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/app.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/services.js" type="text/javascript" charset="utf-8"></script>
   <script src="src/add.js" type="text/javascript" charset="utf-8"></script>
@@ -109,6 +110,9 @@
               <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
                 Clear <span class="glyphicon glyphicon-remove"></span>
               </button>
+              <button class="btn btn-lg btn-warning" ng-click="$parent.showLinks = false">
+                Close <span class="glyphicon glyphicon-eject"></span>
+              </button>
             </div>
           </form>
         </div>
@@ -131,6 +135,9 @@
               </button>
               <button class="btn btn-lg btn-danger" ng-click="clearMagnets()" ng-disabled="addingTorrents">
                 Clear <span class="glyphicon glyphicon-remove"></span>
+              </button>
+              <button class="btn btn-lg btn-warning" ng-click="$parent.showTorrents = false">
+                Close <span class="glyphicon glyphicon-eject"></span>
               </button>
             </div>
           </form>
@@ -162,11 +169,14 @@
             </div>
           </form>
         </div>
-        <div class="col-md-offset-2 col-md-2">
-          <p class="pull-right" ng-show="torrentStatus === 'working'">Updating <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></p>
+        <div class="col-md-2">
+          <span class="pull-right" ng-show="!!torrents.length">{{ torrents.length }} torrents</span>
+        </div>
+        <div class="col-md-2">
+          <span class="pull-right" ng-show="torrentStatus === 'working'">Updating <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></span>
         </div>
       </div>
-      <div class="row">
+      <div class="row" ng-show="!!torrents.length">
         <table class="table torrents">
           <thead>
             <tr>
@@ -246,8 +256,8 @@
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="torrent in torrents | orderBy:orderByField:orderReversed">
-              <td><input type="checkbox" ng-click="check(torrent)" ng-model="torrent.checked"></td>
+            <tr ng-repeat="torrent in torrents | orderBy:orderByField:orderReversed" ng-class="{ 'warning': torrent.checked }" ng-click="check(torrent)">
+              <td><input type="checkbox" ng-model="torrent.checked"></td>
               <td>{{ torrent.id }}</td>
               <td>{{ torrent.server }}</td>
               <td>{{ torrent.name }}</td>
@@ -260,6 +270,15 @@
             </tr>
           </tbody>
         </table>
+      </div>
+      <div class="row" ng-show="(torrentStatus !== 'working' && !torrents.length) || !torrents.length">
+        <div class="col-md-12 well-sm">
+          <div class="jumbotron">
+            <h1>No torrents detected</h1>
+            <p>add your first one now</p>
+            <p><a class="btn btn-primary btn-lg" ng-click="$parent.showTorrents = true">Add Torrent</a></p>
+          </div>
+        </div>
       </div>
     </div>
 

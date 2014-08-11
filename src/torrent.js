@@ -1,5 +1,5 @@
 angular.module('ad')
-.controller('TorrentController', function ($scope, $rootScope, $http, $timeout) {
+.controller('TorrentController', function ($scope, $rootScope, $http, $timeout, hotkeys, $filter) {
   // initial values
   $scope.torrentStatus = 'working';
   $scope.retryCount = 0;
@@ -12,9 +12,11 @@ angular.module('ad')
 
   $scope.orderByField = 'added_date';
   $scope.orderReversed = true;
+  $scope.multiSelect = false;
 
   var torrentsDB = {};
   var cooldownTimeout;
+  var lastChecked;
 
   function fetchTorrents (callback) {
     $scope.torrentStatus = 'working';
@@ -186,6 +188,7 @@ angular.module('ad')
 
   $scope.deselect = function () {
     $scope.selectAll = false;
+    lastChecked = undefined;
     for (var i = 0; i < $scope.torrents.length; i++) {
       $scope.torrents[i].checked = false;
     }
@@ -193,10 +196,46 @@ angular.module('ad')
   };
 
   $scope.check = function (torrent) {
-    var foundIdx;
+    var foundIdx, lastIdx, firstIdx;
+    var orderedTorrents;
+
+    if ($scope.multiSelect && angular.isDefined(lastChecked)) {
+      orderedTorrents = $filter('orderBy')($scope.torrents, $scope.orderByField, $scope.orderReversed);
+      lastIdx = orderedTorrents.indexOf(lastChecked);
+      firstIdx = orderedTorrents.indexOf(torrent);
+
+      // in case of bottom->up selection use this particular strategy to select
+      if (lastIdx > firstIdx) {
+        for (lastIdx--; firstIdx <= lastIdx; firstIdx++) {
+          orderedTorrents[firstIdx].checked = !orderedTorrents[firstIdx].checked;
+          if (orderedTorrents[firstIdx].checked) { // if it gets checked, add it to the list
+            $scope.checkedTorrents.push(orderedTorrents[firstIdx]);
+          } else { // otherwise remove it
+            $scope.checkedTorrents.splice($scope.checkedTorrents.indexOf(orderedTorrents[firstIdx]), 1);
+          }
+        }
+      } else {
+        // otherwise
+        for (lastIdx++, firstIdx++; lastIdx < firstIdx; lastIdx++) {
+          orderedTorrents[lastIdx].checked = !orderedTorrents[lastIdx].checked;
+          if (orderedTorrents[lastIdx].checked) { // if it gets checked, add it to the list
+            $scope.checkedTorrents.push(orderedTorrents[lastIdx]);
+          } else { // otherwise remove it
+            $scope.checkedTorrents.splice($scope.checkedTorrents.indexOf(orderedTorrents[lastIdx]), 1);
+          }
+        }
+      }
+
+      lastChecked = torrent;
+      return;
+    }
+
+    lastChecked = torrent;
     if (foundIdx = $scope.checkedTorrents.indexOf(torrent), foundIdx === -1) {
+      torrent.checked = true;
       $scope.checkedTorrents.push(torrent);
     } else {
+      torrent.checked = false;
       $scope.checkedTorrents.splice(foundIdx, 1);
     }
   };
@@ -257,5 +296,25 @@ angular.module('ad')
       $scope.$emit('torrentLinks', torrentHash);
     }
   };
+
+  // hold shift to multi-select
+  hotkeys.bindTo($scope)
+  .add({
+    combo: 'shift',
+    description: 'activate multi selection in table',
+    action: 'keydown',
+    callback: function (event, hotkey) {
+      if ($scope.multiSelect) return;
+      $scope.multiSelect = true;
+    }
+  })
+  .add({
+    combo: 'shift',
+    description: 'dectivate multi selection in table',
+    action: 'keyup',
+    callback: function (event, hotkey) {
+      $scope.multiSelect = false;
+    }
+  });
 
 });

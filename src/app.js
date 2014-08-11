@@ -1,4 +1,4 @@
-angular.module('ad', [])
+angular.module('ad', ['cfp.hotkeys'])
 .run(function (adLogin, $rootScope) {
   /**
    * loginStatus has 3 statuses for now:
