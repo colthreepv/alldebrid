@@ -103,10 +103,10 @@ angular.module('ad')
       var torrentID = parseInt(torrent[1], 10);
       var torrentDate = new Date();
 
-      var newTorrent, lastIdx;
+      var newTorrent, torrentPtr;
 
       // if exists, replace
-      if (lastIdx = torrentsDB[torrentID], lastIdx !== undefined) {
+      if (torrentPtr = torrentsDB[torrentID], torrentPtr !== undefined) {
         newTorrent = {
           id: torrentID,
           server: parseInt(torrent[2], 10),
@@ -120,18 +120,19 @@ angular.module('ad')
           links: parseLinks(torrent[10])
         };
 
-        for (var attrName in $scope.torrents[lastIdx]) {
+        for (var attrName in torrentPtr) {
           // in case the links array differ in length
-          if (attrName === 'links' && $scope.torrents[lastIdx][attrName].length !== newTorrent[attrName].length) {
-            $scope.torrents[lastIdx][attrName] = newTorrent[attrName];
+          if (attrName === 'links' && torrentPtr[attrName].length !== newTorrent[attrName].length) {
+            torrentPtr[attrName] = newTorrent[attrName];
           }
           if (
             attrName !== '$$hashKey' &&
             attrName !== 'added_date' &&
             attrName !== 'checked' &&
             attrName !== 'links' &&
-            $scope.torrents[lastIdx][attrName] !== newTorrent[attrName]) {
-              $scope.torrents[lastIdx][attrName] = newTorrent[attrName];
+            torrentPtr[attrName] !== newTorrent[attrName]) {
+              console.log('something differs:', torrentPtr[attrName], newTorrent[attrName]);
+              torrentPtr[attrName] = newTorrent[attrName];
           }
         }
       } else {
