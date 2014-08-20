@@ -166,6 +166,9 @@ angular.module('ad')
     if (newValue === 'login') {
       fetchTorrents(parseTorrents);
     }
+    if (newValue === 'anon') { // in case the user logs out, clear the $timeout
+      $timeout.cancel(cooldownTimeout);
+    }
   });
 
   $scope.checkForever = function () {

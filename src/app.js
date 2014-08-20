@@ -7,12 +7,14 @@ angular.module('ad', ['cfp.hotkeys'])
    *  * anon
    */
   $rootScope.loginStatus = 'working';
+  $rootScope.loginFailed = false;
 
   adLogin.isLogged().then(function success (userData) {
     $rootScope.loginStatus = 'login';
+    $rootScope.loginFailed = false;
     $rootScope.logoutKey = userData.key;
     $rootScope.uid = userData.uid;
-  }, function failure (reason) {
+  }, function failure () {
     $rootScope.loginStatus = 'anon';
   });
 
@@ -32,8 +34,10 @@ angular.module('ad', ['cfp.hotkeys'])
     }).success(function (data, status, headers, config) {
       if (data.match(/Sign in/)) {
         $rootScope.loginStatus = 'anon';
+        $rootScope.loginFailed = true;
       } else {
         $rootScope.loginStatus = 'login';
+        $rootScope.loginFailed = false;
       }
     });
 

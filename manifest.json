@@ -3,7 +3,7 @@
 
   "name": "Alldebrid",
   "description": "Alternative interface for AllDebrid",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "minimum_chrome_version": "31",
 
   "icons": {

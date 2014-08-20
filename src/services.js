@@ -25,7 +25,7 @@ angular.module('ad')
       // $timeout(function () {
       checkLogin(function (loggedIn, logoutKey) {
         if (!loggedIn) {
-          asyncLogin.reject(err);
+          asyncLogin.reject();
         }
 
         // get uid for that user
