@@ -5,7 +5,17 @@ Alternative interface for [AllDebrid][ad] as a Chrome App.
 
 ## Install from Chrome Store
 
-Still ongoing publishing...
+[Chrome Web Store link](https://chrome.google.com/webstore/detail/pbphhfknnndbbigjgiogloieniaemoed)
+
+## Need contributions
+If anyone with graphic skills, this project would really benefit of:
+
+  * Chrome App icon, different sizes, [128x128](https://raw.githubusercontent.com/mrgamer/alldebrid-chrome/master/icon_128.png), [48x48](https://raw.githubusercontent.com/mrgamer/alldebrid-chrome/master/icon_48.png) as you can see they are awful
+  * Chrome Web Store small tile [(440x280)](https://raw.githubusercontent.com/mrgamer/alldebrid-chrome/master/store_small_tile.png), large tile (920x680)
+
+Visibility on Chrome Web Store will attract more contributors, so better graphics equals better App.  
+
+__Credits for contributions will be shown both here and on Chrome Web Store Application.__
 
 ## How-To Build locally
 Using [bower](http://bower.io):
@@ -29,9 +39,7 @@ Navigate your Chrome browser to [chrome://extensions](chrome://extensions):
   * [AllDebrid][ad] in case of many failed logins shows a reCaptcha, and the Chrome App does not handle it currently, it only suggest to wait _several minutes_ before trying to log again.
   * It's not yet possible to upload `.torrent` files as on the standard website, not planned for now (as magnets are.. better?)
 
-### Why
-Make a frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
-I could use some batch features, like batch delete or batch add magnets, so i started making stupid javascript scripts, but those were not really complete, so the next step would of course be... an App!
-
+### Aim of the project
+Create an user-made frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
 
 [ad]: http://www.alldebrid.com/
