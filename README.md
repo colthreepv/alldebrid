@@ -39,7 +39,13 @@ Navigate your Chrome browser to [chrome://extensions](chrome://extensions):
   * [AllDebrid][ad] in case of many failed logins shows a reCaptcha, and the Chrome App does not handle it currently, it only suggest to wait _several minutes_ before trying to log again.
   * It's not yet possible to upload `.torrent` files as on the standard website, not planned for now (as magnets are.. better?)
 
+### Roadmap
+Features planned:
+
+  * [Grunt][gruntjs] script in order to assist in `.zip` creation, making it smaller and faster to publish on Chrome Web Store
+
 ### Aim of the project
 Create an user-made frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
 
 [ad]: http://www.alldebrid.com/
+[gruntjs]: http://gruntjs.com/
