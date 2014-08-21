@@ -6,62 +6,59 @@ angular.module('ad', ['cfp.hotkeys'])
    *  * login
    *  * anon
    */
+  $rootScope.recaptchaWarning = false;
   $rootScope.loginStatus = 'working';
   $rootScope.loginFailed = false;
 
   adLogin.isLogged().then(function success (userData) {
     $rootScope.loginStatus = 'login';
     $rootScope.loginFailed = false;
-    $rootScope.logoutKey = userData.key;
+    $rootScope.logoutKey = userData.logoutKey;
     $rootScope.uid = userData.uid;
-  }, function failure () {
+  }, function failure (details) {
+    if (!!details.recaptcha) {
+      $rootScope.recaptchaWarning = true;
+    }
     $rootScope.loginStatus = 'anon';
   });
 
 })
-.controller('BodyController', function ($scope, $rootScope, $http) {
+.controller('BodyController', function ($scope, $rootScope, $http, adLogin) {
   // login functions
   $scope.login = {};
-  $scope.loginMe = function () {
-    $http({
-      method: 'GET',
-      url: 'http://www.alldebrid.com/register/',
-      params: {
-        action: 'login',
-        login_login: $scope.login.username,
-        login_password: $scope.login.password
+
+  // copy-paste from .run code
+  $scope.loginUser = function() {
+    adLogin.login($scope.login.username, $scope.login.password)
+    .then(function success (userData) {
+      $rootScope.loginStatus = 'login';
+      $rootScope.loginFailed = false;
+      $rootScope.logoutKey = userData.logoutKey;
+      $rootScope.uid = userData.uid;
+
+      // clean scope values
+      delete $scope.login.username;
+      delete $scope.login.password;
+    }, function failure (details) {
+      if (details.recaptcha) {
+        $rootScope.recaptchaWarning = true;
       }
-    }).success(function (data, status, headers, config) {
-      if (data.match(/Sign in/)) {
-        $rootScope.loginStatus = 'anon';
-        $rootScope.loginFailed = true;
-      } else {
-        $rootScope.loginStatus = 'login';
-        $rootScope.loginFailed = false;
-      }
+
+      $rootScope.loginStatus = 'anon';
+      $rootScope.loginFailed = true;
     });
 
-    // before AJAX gets completed we set loginStatus to working
     $rootScope.loginStatus = 'working';
   };
 
-  $scope.logoutMe = function () {
-    $http({
-      method: 'GET',
-      url: 'http://www.alldebrid.com/register/',
-      params: {
-        action: 'logout',
-        key: $rootScope.logoutKey
-      }
-    }).success(function (data, status, headers, config) {
-      if (data.match(/Sign in/)) {
-        $rootScope.loginStatus = 'anon';
-      } else {
-        $rootScope.loginStatus = 'login';
-      }
+  $scope.logoutUser = function() {
+    adLogin.logout($rootScope.logoutKey)
+    .then(function success () {
+      $rootScope.loginStatus = 'anon';
+    }, function failure () {
+      $rootScope.loginStatus = 'login';
     });
 
-    // before AJAX gets completed we set loginStatus to working
     $rootScope.loginStatus = 'working';
   };
 

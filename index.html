@@ -39,10 +39,11 @@
         </ul>
         <!-- right side of the navbar -->
         <!-- login form -->
-        <form class="navbar-form navbar-right" name="loginForm" role="login" ng-submit="loginMe()" ng-show="loginStatus === 'anon'">
+        <form class="navbar-form navbar-right" name="loginForm" role="login" ng-submit="loginUser()" ng-show="loginStatus === 'anon'">
           <div class="form-group">
-            <label for="username" class="label label-danger blink" ng-show="loginFailed">Login failed</label>
-            <label for="username" ng-hide="loginFailed">Login</label>
+            <label class="label label-danger blink pointer" ng-show="recaptchaWarning" title="you tried too many times to login, please wait several minutes before retrying.">Recaptcha Appeared</label>
+            <label class="label label-danger blink" ng-show="loginFailed">Login failed</label>
+            <label ng-hide="loginFailed">Login</label>
             <input type="text" class="form-control" ng-model="login.username" name="username" placeholder="Username" autofocus>
           </div>
           <div class="form-group">
@@ -58,7 +59,7 @@
         </button>
 
         <!-- Logout Form -->
-        <form class="navbar-form navbar-right" role="logout" ng-submit="logoutMe()" ng-show="loginStatus === 'login'">
+        <form class="navbar-form navbar-right" role="logout" ng-submit="logoutUser()" ng-show="loginStatus === 'login'">
           <div class="form-group">
             <label class="text-success">login done</label>
           </div>
