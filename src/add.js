@@ -40,6 +40,7 @@ angular.module('ad')
         $scope.addingTorrents = false;
         $scope.magnetText = '';
         $rootScope.showTorrents = false;
+        $scope.$emit('forceUpdateTorrents');
       });
     }
   };

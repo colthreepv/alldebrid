@@ -69,4 +69,7 @@ angular.module('ad', ['cfp.hotkeys'])
     $scope.showLinks = true;
   });
 
+  $scope.$on('forceUpdateTorrents', function (event, args) {
+    $scope.$broadcast('updateTorrents');
+  });
 });

@@ -178,8 +178,17 @@ angular.module('ad')
   $scope.$watch('cooldown', function (newValue, oldValue) {
     if (newValue === oldValue) return;
 
-    $timeout.cancel(cooldownTimeout);
-    cooldownTimeout = $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
+    if ($scope.forever) {
+      $timeout.cancel(cooldownTimeout);
+      cooldownTimeout = $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
+    }
+  });
+
+  $scope.$on('updateTorrents', function (event, args) {
+    if ($scope.forever) {
+      $timeout.cancel(cooldownTimeout);
+      fetchTorrents(parseTorrents);
+    }
   });
 
   $scope.select = function () {

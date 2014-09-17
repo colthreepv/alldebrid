@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "AllDebrid as a Chrome App",
   "description": "alternative interface for AllDebrid",
-  "version": "0.3.6",
+  "version": "0.3.8",
   "minimum_chrome_version": "31",
   "icons": {
     "48": "icon_48.png",
