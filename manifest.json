@@ -1,18 +1,18 @@
 {
   "manifest_version": 2,
-
   "name": "AllDebrid as a Chrome App",
   "description": "alternative interface for AllDebrid",
-  "version": "0.3.5.1",
+  "version": "0.3.6",
   "minimum_chrome_version": "31",
-
   "icons": {
     "48": "icon_48.png",
     "128": "icon_128.png"
   },
   "app": {
     "background": {
-      "scripts": ["main.js"]
+      "scripts": [
+        "main.js"
+      ]
     }
   },
   "permissions": [

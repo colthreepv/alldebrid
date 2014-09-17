@@ -1,0 +1,32 @@
+{
+  "name": "alldebrid-chrome",
+  "version": "0.3.6",
+  "description": "\"alternative interface for AllDebrid",
+  "main": "main.js",
+  "dependencies": {
+    "grunt": "^0.4.5"
+  },
+  "devDependencies": {
+    "grunt-bower-task": "^0.4.0",
+    "grunt-contrib-compress": "^0.11.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:mrgamer/alldebrid-chrome.git"
+  },
+  "keywords": [
+    "alldebrid",
+    "chrome",
+    "app",
+    "angular"
+  ],
+  "author": "mrgamer",
+  "license": "Apache v2",
+  "bugs": {
+    "url": "https://github.com/mrgamer/alldebrid-chrome/issues"
+  },
+  "homepage": "https://github.com/mrgamer/alldebrid-chrome"
+}

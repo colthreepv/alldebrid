@@ -1,3 +1,5 @@
 # bower
 libs/
 
+# node
+node_modules/

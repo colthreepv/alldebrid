@@ -3,9 +3,15 @@ alldebrid-chrome
 
 Alternative interface for [AllDebrid][ad] as a Chrome App.  
 
-## Install from Chrome Store
+## ~~Install from Chrome Store~~ NOT AVAILABLE
 
-[Chrome Web Store link](https://chrome.google.com/webstore/detail/pbphhfknnndbbigjgiogloieniaemoed)
+To publish the package to Google store the project needs a new set of icons, non-proprietary.  
+~~[Chrome Web Store link](https://chrome.google.com/webstore/detail/pbphhfknnndbbigjgiogloieniaemoed)~~
+
+## Install from this repository
+
+Download a version from [dist/ folder](dist/), and unzip where you like.  
+Then follow the [Build Locally](#build-locally) chrome options (load extension)
 
 ## Need contributions
 If anyone with graphic skills, this project would really benefit of:
@@ -17,7 +23,7 @@ Visibility on Chrome Web Store will attract more contributors, so better graphic
 
 __Credits for contributions will be shown both here and on Chrome Web Store Application.__
 
-## How-To Build locally
+## Build locally
 Using [bower](http://bower.io):
 ```bash
 $ git clone https://github.com/mrgamer/alldebrid-chrome.git
@@ -33,6 +39,22 @@ Navigate your Chrome browser to [chrome://extensions](chrome://extensions):
   * Enable Developer Mode
   * Load unpacked extension pointing out the checkout out repository
 
+## Build system
+In case you made modifications to the project, you need [Grunt](http://www.gruntjs.com) to assist in building.  
+If you have node.js installed all you need to do is:
+```bash
+$ npm install -g grunt-cli
+$ npm install
+```
+
+After you done your modifications, use grunt to:
+  * Set a new version
+  * Build a zip package of it
+
+```bash
+$ grunt setver --setver=x.x.x.x
+$ grunt build
+```
 
 ### Known Issues
 
@@ -42,7 +64,7 @@ Navigate your Chrome browser to [chrome://extensions](chrome://extensions):
 ### Roadmap
 Features planned:
 
-  * [Grunt][gruntjs] script in order to assist in `.zip` creation, making it smaller and faster to publish on Chrome Web Store
+  * ~~[Grunt][gruntjs] script in order to assist in `.zip` creation, making it smaller and faster to publish on Chrome Web Store~~ DONE!
 
 ### Aim of the project
 Create an user-made frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
