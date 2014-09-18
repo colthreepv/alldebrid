@@ -26,6 +26,7 @@ module.exports = function (grunt) {
             'icon_48.png',
             'main.js',
             'manifest.json',
+            'index.html',
             'libs/angular-hotkeys/build/hotkeys.?s*',
             'libs/angularjs/angular.js',
             'libs/angularjs/angular-csp.css',
