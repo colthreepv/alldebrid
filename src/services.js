@@ -21,9 +21,10 @@ angular.module('ad')
         return callback(false, {});
       }
       if (!!page.querySelector('strong a')) {
+        var days = page.querySelector('.toolbar_welcome').textContent.match(/in (\d*) days/);
         callback(true, {
           username: page.querySelector('strong a').textContent,
-          remainingDays: page.querySelector('.toolbar_welcome').textContent.match(/in (\d*) days/)[1],
+          remainingDays: days ? parseInt(days[1], 10) : 0,
           logoutKey: page.querySelector('.toolbar_disconnect').getAttribute('href').split('key=')[1]
         });
       }

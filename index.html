@@ -61,7 +61,17 @@
         <!-- Logout Form -->
         <form class="navbar-form navbar-right" role="logout" ng-submit="logoutUser()" ng-show="loginStatus === 'login'">
           <div class="form-group">
-            <label class="text-success">login done</label>
+            <span>
+              <span class="glyphicon glyphicon-user"></span>
+              <span class="right-spacer">{{ username }}</span>
+              <span ng-show="paid">
+                <span class="glyphicon glyphicon-time"></span>
+                <span class="text-success">remaining days: {{ remainingDays }}</span>
+              </span>
+              <span ng-show="!paid">
+                <span class="text-error">No paid days left, <a href="http://www.alldebrid.com/offer/" target="_blank">renew</a> to use this application</span>
+              </span>
+            </span>
           </div>
           <div class="form-group">
             <button  type="submit" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></button>
@@ -172,10 +182,10 @@
           </form>
         </div>
         <div class="col-md-2">
-          <span class="pull-right" ng-show="!!torrents.length">{{ torrents.length }} torrents</span>
+          <span class="pull-right" ng-show="torrentStatus === 'working'">Updating <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></span>
         </div>
         <div class="col-md-2">
-          <span class="pull-right" ng-show="torrentStatus === 'working'">Updating <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></span>
+          <span class="pull-right" ng-show="!!torrents.length">{{ torrents.length }} torrents</span>
         </div>
       </div>
       <div class="row" ng-show="!!torrents.length">
@@ -278,7 +288,7 @@
           <div class="jumbotron">
             <h1>No torrents detected</h1>
             <p>add your first one now</p>
-            <p><a class="btn btn-primary btn-lg" ng-click="$parent.showTorrents = true">Add Torrent</a></p>
+            <p><a class="btn btn-primary btn-lg" ng-click="$parent.showTorrents = true" ng-disabled="!paid">Add Torrent</a></p>
           </div>
         </div>
       </div>

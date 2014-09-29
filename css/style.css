@@ -23,6 +23,10 @@
 }
 */
 
+.right-spacer {
+  margin-right: 10px;
+}
+
 .long-text {
   white-space: nowrap;
 }

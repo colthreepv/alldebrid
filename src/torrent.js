@@ -1,10 +1,10 @@
 angular.module('ad')
-.controller('TorrentController', function ($scope, $rootScope, $http, $timeout, hotkeys, $filter) {
+.controller('TorrentController', function ($scope, $rootScope, $http, $timeout, hotkeys, chromeStorage, $filter) {
   // initial values
   $scope.torrentStatus = 'working';
   $scope.retryCount = 0;
   $scope.torrents = [];
-  $scope.cooldown = 30000;
+  $scope.cooldown = 5000;
   $scope.forever = true;
   $scope.selectAll = false;
   $scope.checkedTorrents = [];
@@ -17,6 +17,47 @@ angular.module('ad')
   var torrentsDB = {};
   var cooldownTimeout;
   var lastChecked;
+
+  /**
+   * Cooldown and Forever settings are stored in chromeStorage
+   * the app retrieves them as soon TorrentController gets initialized.
+   *
+   * In case of failure, default values applies.
+   */
+  function watchOptions() {
+    $scope.$watchGroup(['cooldown', 'forever'], function (newValue, oldValue) {
+      if (newValue === oldValue) return;
+
+      chromeStorage.set('loop', {
+        cooldown: newValue[0],
+        forever: newValue[1]
+      });
+    });
+  }
+
+  function watchCooldown() {
+    $scope.$watch('cooldown', function (newValue, oldValue) {
+      if (newValue === oldValue) return;
+
+      if ($scope.forever) {
+        $timeout.cancel(cooldownTimeout);
+        cooldownTimeout = $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
+      }
+    });
+  }
+
+  chromeStorage.get('loop', 'object')
+  .then(function success (loop) {
+    $scope.cooldown = loop.cooldown;
+    $scope.forever = loop.forever;
+  }, function failure () {
+    chromeStorage.set('loop', {
+      cooldown: $scope.cooldown,
+      forever: $scope.forever
+    });
+  })
+  .then(watchOptions, watchOptions)
+  .then(watchCooldown, watchCooldown);
 
   function fetchTorrents (callback) {
     $scope.torrentStatus = 'working';
@@ -174,15 +215,6 @@ angular.module('ad')
   $scope.checkForever = function () {
     if (!$scope.forever) fetchTorrents(parseTorrents);
   };
-
-  $scope.$watch('cooldown', function (newValue, oldValue) {
-    if (newValue === oldValue) return;
-
-    if ($scope.forever) {
-      $timeout.cancel(cooldownTimeout);
-      cooldownTimeout = $timeout(fetchTorrents.bind(null, parseTorrents), $scope.cooldown);
-    }
-  });
 
   $scope.$on('updateTorrents', function (event, args) {
     if ($scope.forever) {

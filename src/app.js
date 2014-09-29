@@ -15,6 +15,11 @@ angular.module('ad', ['cfp.hotkeys'])
     $rootScope.loginFailed = false;
     $rootScope.logoutKey = userData.logoutKey;
     $rootScope.uid = userData.uid;
+
+    // user details to rootScope propagation
+    $rootScope.paid = (userData.remainingDays > 0) ? true : false;
+    $rootScope.remainingDays = userData.remainingDays;
+    $rootScope.username = userData.username;
   }, function failure (details) {
     if (!!details.recaptcha) {
       $rootScope.recaptchaWarning = true;
@@ -35,6 +40,11 @@ angular.module('ad', ['cfp.hotkeys'])
       $rootScope.loginFailed = false;
       $rootScope.logoutKey = userData.logoutKey;
       $rootScope.uid = userData.uid;
+
+      // user details to rootScope propagation
+      $rootScope.paid = (userData.remainingDays > 0) ? true : false;
+      $rootScope.remainingDays = userData.remainingDays;
+      $rootScope.username = userData.username;
 
       // clean scope values
       delete $scope.login.username;

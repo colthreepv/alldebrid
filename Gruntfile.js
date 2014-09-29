@@ -32,6 +32,7 @@ module.exports = function (grunt) {
             'libs/angularjs/angular-csp.css',
             'libs/bootstrap/dist/css/bootstrap.css',
             'libs/bootstrap/dist/css/bootstrap-theme.css',
+            'libs/bootstrap/dist/fonts/*',
             'css/**',
             'src/**'
           ], dest: '.' }
