@@ -28,13 +28,13 @@
         <!-- Navbar links -->
         <ul class="nav navbar-nav">
           <li>
-            <a class="pointer">Torrents</a>
+            <a>Alldebrid</a>
           </li>
           <li ng-class="{ active: showLinks }">
-            <a class="pointer" ng-click="showLinks = !showLinks">Unrestricted Links</a>
+            <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showLinks = !showLinks : null">Unrestricted Links</a>
           </li>
           <li ng-class="{ active: showTorrents }">
-            <a class="pointer" ng-click="showTorrents = !showTorrents">Add Torrent</a>
+            <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showTorrents = !showTorrents : null">Add Torrent</a>
           </li>
         </ul>
         <!-- right side of the navbar -->

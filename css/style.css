@@ -60,6 +60,10 @@ table.table.torrents {
   cursor: pointer;
 }
 
+.nav.navbar-nav li .denied {
+  opacity: 0;
+}
+
 html {
   overflow-y: scroll;
 }

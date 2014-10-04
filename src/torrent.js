@@ -209,6 +209,8 @@ angular.module('ad')
     }
     if (newValue === 'anon') { // in case the user logs out, clear the $timeout
       $timeout.cancel(cooldownTimeout);
+      // also clear the torrent list.
+      $scope.torrents = [];
     }
   });
 
