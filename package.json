@@ -1,6 +1,6 @@
 {
   "name": "alldebrid-chrome",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "\"alternative interface for AllDebrid",
   "main": "main.js",
   "dependencies": {
