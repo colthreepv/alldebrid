@@ -13,6 +13,13 @@ To publish the package to Google store the project needs a new set of icons, non
 Download a version from [dist/ folder](dist/), and unzip where you like.  
 Then follow the [Build Locally](#build-locally) chrome options (load extension)
 
+## Chrome Webstore versioning
+
+The project uses a standard [semver versioning](http://semver.org/) (`x.x.x` style), 
+when published on Chrome Webstore it gains an additional minor release number, representing the number of times
+it has been republished or corrected (ex: `x.x.x.8`).  
+This because Chrome Webstore requires strictly increasing version values, which I agree with.
+
 ## Need contributions
 If anyone with graphic skills, this project would really benefit of:
 
