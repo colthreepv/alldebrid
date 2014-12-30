@@ -3,10 +3,7 @@ alldebrid-chrome
 
 Alternative interface for [AllDebrid][ad] as a Chrome App.  
 
-## ~~Install from Chrome Store~~ NOT AVAILABLE
-
-To publish the package to Google store the project needs a new set of icons, non-proprietary.  
-~~[Chrome Web Store link](https://chrome.google.com/webstore/detail/pbphhfknnndbbigjgiogloieniaemoed)~~
+## [Install from Chrome Store](https://chrome.google.com/webstore/detail/alldebrid-for-desktop/pbphhfknnndbbigjgiogloieniaemoed)
 
 ## Install from this repository
 
