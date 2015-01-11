@@ -73,14 +73,16 @@ html {
   .desktop {
     display: none !important;
   }
-  .torrents .server, .torrents .id, .torrents .downloaded, .torrents .seeders, .torrents .speed, .torrents .added_date {
-    display: none;
-  }
-
   /* fonts are small on smartphone! */
   .navbar-nav li a {
     text-align: center;
     font-size: x-large;
+  }
+  .showLinks, .showTorrents {
+    margin-bottom: 10px;
+    background: linear-gradient(to bottom, #ffffff 0%,#ededed 50%,#d2d2d2 100%);
+    border-radius: 5px;
+    box-shadow: 1px 1px 5px 0px rgba(50, 50, 50, 0.75);
   }
   .torrents tr {
     font-size: medium;
@@ -88,6 +90,9 @@ html {
   table.torrents {
     table-layout: fixed;
     text-overflow: ellipsis;
+  }
+  .torrents .server, .torrents .id, .torrents .downloaded, .torrents .seeders, .torrents .speed, .torrents .added_date {
+    display: none;
   }
   .torrents .select {
     width: 32px;
@@ -97,13 +102,14 @@ html {
     min-height: 26px;
   }
   .torrents .name {
-    width: 200px;
+    width: 180px;
+    overflow: hidden;
   }
   .torrents .status {
-    width: 64px;
+    width: 74px;
   }
   .torrents .size {
-    width: 48px;
+    width: 60px;
   }
 }
 
@@ -111,5 +117,11 @@ html {
 @media only screen and (min-width : 1024px) {
   .mobile {
     display: none !important;
+  }
+  .showLinks textarea {
+    height: 8em;
+  }
+  .showTorrents textarea {
+    height: 8em;
   }
 }

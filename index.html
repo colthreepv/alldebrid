@@ -82,18 +82,18 @@
       </div>
     </div>
 
-    <div ng-show="showLinks" ng-controller="LinksController">
+    <div class="showLinks" ng-show="showLinks" ng-controller="LinksController">
       <div class="row">
         <div class="col-md-12">
           <form role="form">
             <div class="form-group">
               <label>Links to request</label>
               <span>use one link per line, newline is <b>required</b> between them</span>
-              <textarea class="form-control long-text" placeholder="place links here" rows="16" autofocus ng-model="requestedLinks"></textarea>
+              <textarea class="form-control long-text" placeholder="place links here" autofocus ng-model="requestedLinks"></textarea>
             </div>
             <div class="form-group" ng-show="displayMode === 'textarea'">
               <label>Unrestricted links</label>
-              <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." rows="16" autofocus ng-model="unrestrictedLinks"></textarea>
+              <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." autofocus ng-model="unrestrictedLinks"></textarea>
             </div>
             <div class="form-group" ng-show="displayMode === 'clickable'">
               <div ng-repeat="(linkName, linkList) in clickableLinks">
@@ -121,6 +121,17 @@
                 ng-class="{ 'btn-default': !generatingLinks, 'btn-success': generatingLinks }" ng-click="unrestrictLinks()" ng-disabled="generatingLinks">
                 Unrestrict links <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="generatingLinks"></span>
               </button>
+              <div class="desktop">
+                <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
+                  Clear <span class="glyphicon glyphicon-remove"></span>
+                </button>
+                <button class="btn btn-lg btn-warning" ng-click="$parent.showLinks = false">
+                  Close <span class="glyphicon glyphicon-eject"></span>
+                </button>
+              </div>
+            </div>
+            <!-- close buttons are split in mobile -->
+            <div class="form-group text-center mobile">
               <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
                 Clear <span class="glyphicon glyphicon-remove"></span>
               </button>
@@ -133,14 +144,14 @@
       </div>
     </div>
 
-    <div ng-show="showTorrents" ng-controller="AddController">
+    <div class="showTorrents" ng-show="showTorrents" ng-controller="AddController">
       <div class="row">
         <div class="col-md-12">
           <form role="form">
             <div class="form-group">
               <label>Add Magnet single/multiple:</label>
               <span>use one magnet per line, newline is <b>required</b> between them</span>
-              <textarea class="form-control long-text" placeholder="add magnets here" rows="16" autofocus ng-model="magnetText" ng-disabled="addingTorrents"></textarea>
+              <textarea class="form-control long-text" placeholder="add magnets here" autofocus ng-model="magnetText" ng-disabled="addingTorrents"></textarea>
             </div>
             <div class="form-group text-center">
               <button class="btn btn-lg"
@@ -284,7 +295,7 @@
               <td class="name">{{ torrent.name }}</td>
               <td class="status">{{ torrent.status }}</td>
               <td class="downloaded">{{ torrent.downloaded }}</td>
-              <td class="size">{{ torrent.size }}</td>
+              <td class="size">{{ torrent.size | bytes:2 }}</td>
               <td class="seeders">{{ torrent.seeder }}</td>
               <td class="speed">{{ torrent.speed }}</td>
               <td class="added_date">{{ torrent.added_date | date:'dd/MM hh:mm' }}</td>
