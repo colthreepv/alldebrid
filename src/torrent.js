@@ -96,6 +96,42 @@ angular.module('ad')
     return statusStr;
   }
 
+  function parseSize (sizeStr) {
+    var s = sizeStr.split(' ');
+    if (s.length < 2) { // FIXME: when something goes wrong, just return sizeStr
+      console.error('debug this torrent size', sizeStr);
+      return sizeStr;
+    }
+    var multiplier;
+    switch (s[1]) {
+      case 'Bytes':
+        multiplier  = 1;
+        break;
+      case 'KB':
+        multiplier = 1024;
+        break;
+      case 'MB':
+        multiplier = 1024 * 1024;
+        break;
+      case 'GB':
+        multiplier = 1024 * 1024 * 1024;
+        break;
+      default:
+        console.error('torrent size not handled', sizeStr, s[1]);
+    }
+    // try parsing quantity
+    var quantity;
+    try {
+      quantity = parseFloat(s[0]);
+    } catch (e) {
+      console.error('parseFloat exploded', s[0]);
+      return sizeStr;
+    }
+
+    quantity = quantity * multiplier;
+    return Math.round(quantity);
+  }
+
   function parseSpeed (speedStr) {
     // when in queue, ad gives 0 as Number, not string.
     if (angular.isNumber(speedStr) || speedStr === '??') {
@@ -154,7 +190,7 @@ angular.module('ad')
           name: torrent[3].slice(31, -7),
           status: parseStatus(torrent[4]),
           downloaded: torrent[5],
-          size: torrent[6],
+          size: parseSize(torrent[6]),
           seeder: parseInt(torrent[7], 10),
           speed: parseSpeed(torrent[8]),
           added_date: parseDate(torrent[9]),
@@ -184,7 +220,7 @@ angular.module('ad')
           name: torrent[3].slice(31, -7),
           status: parseStatus(torrent[4]),
           downloaded: torrent[5],
-          size: torrent[6],
+          size: parseSize(torrent[6]),
           seeder: parseInt(torrent[7], 10),
           speed: parseSpeed(torrent[8]),
           added_date: parseDate(torrent[9]),
