@@ -67,3 +67,49 @@ table.table.torrents {
 html {
   overflow-y: scroll;
 }
+
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  .desktop {
+    display: none !important;
+  }
+  .torrents .server, .torrents .id, .torrents .downloaded, .torrents .seeders, .torrents .speed, .torrents .added_date {
+    display: none;
+  }
+
+  /* fonts are small on smartphone! */
+  .navbar-nav li a {
+    text-align: center;
+    font-size: x-large;
+  }
+  .torrents tr {
+    font-size: medium;
+  }
+  table.torrents {
+    table-layout: fixed;
+    text-overflow: ellipsis;
+  }
+  .torrents .select {
+    width: 32px;
+  }
+  .torrents .select input {
+    min-width: 26px;
+    min-height: 26px;
+  }
+  .torrents .name {
+    width: 200px;
+  }
+  .torrents .status {
+    width: 64px;
+  }
+  .torrents .size {
+    width: 48px;
+  }
+}
+
+/* Desktops and laptops ----------- */
+@media only screen and (min-width : 1024px) {
+  .mobile {
+    display: none !important;
+  }
+}

@@ -27,7 +27,7 @@
       <div class="navbar-collapse">
         <!-- Navbar links -->
         <ul class="nav navbar-nav">
-          <li>
+          <li class="desktop">
             <a>Alldebrid</a>
           </li>
           <li ng-class="{ active: showLinks }">
@@ -66,15 +66,17 @@
               <span class="right-spacer">{{ username }}</span>
               <span ng-show="paid">
                 <span class="glyphicon glyphicon-time"></span>
-                <span class="text-success">remaining days: {{ remainingDays }}</span>
+                <span class="text-success desktop">remaining days: {{ remainingDays }}</span>
+                <span class="text-success mobile">days: {{ remainingDays }}</span>
               </span>
               <span ng-show="!paid">
                 <span class="text-error">No paid days left, <a href="http://www.alldebrid.com/offer/" target="_blank">renew</a> to use this application</span>
               </span>
+              <button type="submit" class="btn btn-link btn-lg mobile">Logout <span class="glyphicon glyphicon-log-out"></span></button>
             </span>
           </div>
-          <div class="form-group">
-            <button  type="submit" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+          <div class="form-group desktop">
+            <button type="submit" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></button>
           </div>
         </form>
       </div>
@@ -161,10 +163,10 @@
       <div class="row">
         <div class="col-md-8">
           <form class="form-inline">
-            <div class="checkbox">
+            <div class="checkbox desktop">
               <span>Forever </span><input type="checkbox" ng-model="forever" ng-click="checkForever()">
             </div>
-            <div class="form-group">
+            <div class="form-group desktop">
               <select ng-model="cooldown">
                 <option value="30000">30 sec</option>
                 <option value="15000">15 sec</option>
@@ -172,12 +174,19 @@
                 <option value="5000">5 sec</option>
               </select>
             </div>
-            <div class="form-group">
+            <div class="form-group desktop">
               <button class="btn btn-xs btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
                 remove selected <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
               </button>
               <button class="btn btn-xs btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">generate links</button>
               <button class="btn btn-xs btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">clear selection</button>
+            </div>
+            <div class="form-group mobile">
+              <button class="btn btn-lg btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
+                remove <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
+              </button>
+              <button class="btn btn-lg btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">generate links</button>
+              <button class="btn btn-lg btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">deselect all</button>
             </div>
           </form>
         </div>
@@ -192,8 +201,8 @@
         <table class="table torrents">
           <thead>
             <tr>
-              <th><input type="checkbox" ng-click="select()" ng-model="selectAll"></th>
-              <th>
+              <th class="select"><input type="checkbox" ng-click="select()" ng-model="selectAll"></th>
+              <th class="id">
                 <a class="pointer"
                 ng-class="{ 'ordered': orderByField === 'id'}" ng-click="orderByField = 'id'; orderReversed = !orderReversed">
                 ID <span class="glyphicon"
@@ -201,7 +210,7 @@
                     ng-show="orderByField === 'id'"></span>
                 </a>
               </th>
-              <th>
+              <th class="server">
                 <a class="pointer"
                 ng-class="{ 'ordered': orderByField === 'server'}" ng-click="orderByField = 'server'; orderReversed = !orderReversed">
                 server <span class="glyphicon"
@@ -217,7 +226,7 @@
                     ng-show="orderByField === 'name'"></span>
                 </a>
               </th>
-              <th>
+              <th class="status">
                 <a class="pointer"
                 ng-class="{ 'ordered': orderByField === 'status'}" ng-click="orderByField = 'status'; orderReversed = !orderReversed">
                 status <span class="glyphicon"
@@ -225,7 +234,7 @@
                     ng-show="orderByField === 'status'"></span>
                 </a>
               </th>
-              <th>
+              <th class="downloaded">
                 <a class="pointer"
                 ng-class="{ 'ordered': orderByField === 'downloaded'}" ng-click="orderByField = 'downloaded'; orderReversed = !orderReversed">
                 downloaded <span class="glyphicon"
@@ -241,7 +250,7 @@
                     ng-show="orderByField === 'size'"></span>
                 </a>
               </th>
-              <th>
+              <th class="seeders">
                 <a class="pointer"
                 ng-class="{ 'ordered': orderByField === 'seeders'}" ng-click="orderByField = 'seeders'; orderReversed = !orderReversed">
                 seeders <span class="glyphicon"
@@ -269,15 +278,15 @@
           </thead>
           <tbody>
             <tr ng-repeat="torrent in torrents | orderBy:orderByField:orderReversed" ng-class="{ 'warning': torrent.checked }" ng-click="check(torrent)">
-              <td><input type="checkbox" ng-model="torrent.checked"></td>
-              <td>{{ torrent.id }}</td>
-              <td>{{ torrent.server }}</td>
-              <td>{{ torrent.name }}</td>
-              <td>{{ torrent.status }}</td>
-              <td>{{ torrent.downloaded }}</td>
-              <td>{{ torrent.size }}</td>
-              <td>{{ torrent.seeder }}</td>
-              <td>{{ torrent.speed }}</td>
+              <td class="select"><input type="checkbox" ng-model="torrent.checked"></td>
+              <td class="id">{{ torrent.id }}</td>
+              <td class="server">{{ torrent.server }}</td>
+              <td class="name">{{ torrent.name }}</td>
+              <td class="status">{{ torrent.status }}</td>
+              <td class="downloaded">{{ torrent.downloaded }}</td>
+              <td class="size">{{ torrent.size }}</td>
+              <td class="seeders">{{ torrent.seeder }}</td>
+              <td class="speed">{{ torrent.speed }}</td>
               <td class="added_date">{{ torrent.added_date | date:'dd/MM hh:mm' }}</td>
             </tr>
           </tbody>
