@@ -7,7 +7,7 @@ Alternative interface for [AllDebrid][ad] as a Chrome App.
 
 ## Install from this repository
 
-Download a version from the [releases list](/releases), and unzip where you like.  
+Download a version from the [releases list](https://github.com/mrgamer/alldebrid-chrome/releases), and unzip where you like.  
 Then follow the [Load into Chrome](#load-into-chrome) steps.
 
 ## Chrome Webstore versioning
