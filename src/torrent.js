@@ -166,6 +166,10 @@ angular.module('ad')
         newd.setMinutes(parseInt(d[4], 10));
       }
     }
+    // if date is in future, is probably in the past year, actually!
+    if (newd > Date.now()) {
+      newd.setFullYear(newd.getFullYear() - 1);
+    }
 
     return newd;
   }
@@ -180,7 +184,7 @@ angular.module('ad')
       var torrentID = parseInt(torrent[1], 10);
       var torrentDate = new Date();
 
-      var newTorrent, torrentPtr;
+      var newTorrent, torrentPtr, seeds;
 
       // if exists, replace
       if (torrentPtr = torrentsDB[torrentID], torrentPtr !== undefined) {
@@ -191,7 +195,7 @@ angular.module('ad')
           status: parseStatus(torrent[4]),
           downloaded: torrent[5],
           size: parseSize(torrent[6]),
-          seeder: parseInt(torrent[7], 10),
+          seeder: (seeds = parseInt(torrent[7], 10), !isNaN(seeds)) ? seeds : 0,
           speed: parseSpeed(torrent[8]),
           added_date: parseDate(torrent[9]),
           links: parseLinks(torrent[10])

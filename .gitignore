@@ -3,3 +3,6 @@ libs/
 
 # node
 node_modules/
+
+# built packages
+*.zip

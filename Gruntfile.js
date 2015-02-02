@@ -38,7 +38,7 @@ module.exports = function (grunt) {
           ], dest: '.' }
         ],
         options: {
-          archive: 'dist/' + pkg.name + '-' + pkg.version + '.zip',
+          archive: pkg.name + '-' + pkg.version + '.zip',
           mode: 'zip',
           level: 9,
           pretty: true
@@ -78,7 +78,7 @@ module.exports = function (grunt) {
   grunt.registerTask('chrome', 'Builds a package specifically for Chrome Webstore, with a custom version', function() {
     var manifest = require('./manifest.json');
     var chromeVersion;
-    if (chromeVersion = grunt.option('chromev'), !chromeVersion) {
+    if (chromeVersion = grunt.option('chromev'), chromeVersion === '') {
       grunt.fail.fatal('required --chromev=x, not given. Specific version for Chrome Webstore.');
     }
     var fs = require('fs');
@@ -106,9 +106,8 @@ module.exports = function (grunt) {
     var fs = require('fs');
     var newVersion = grunt.option('setver');
     var files = [
-      { file: 'bower.json', data: require('./bower.json') },
       { file: 'manifest.json', data: require('./manifest.json') },
-      { file: 'package.json', data: require('./package.json') },
+      { file: 'package.json', data: require('./package.json') }
     ];
     files.forEach(function (f) {
       f.data.version = newVersion;
