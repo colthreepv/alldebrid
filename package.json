@@ -5,7 +5,9 @@
   "main": "main.js",
   "devDependencies": {
     "browserify": "^10.2.4",
-    "gulp": "gulpjs/gulp.git#4.0"
+    "del": "^1.2.0",
+    "gulp": "gulpjs/gulp.git#4.0",
+    "gulp-less": "^3.0.3"
   },
   "scripts": {
     "browserify": "node_modules/.bin/browserify",
