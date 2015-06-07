@@ -3,14 +3,13 @@
   "version": "0.5.3",
   "description": "\"alternative interface for AllDebrid",
   "main": "main.js",
-  "dependencies": {
-    "grunt": "^0.4.5"
-  },
   "devDependencies": {
-    "grunt-bower-task": "^0.4.0",
-    "grunt-contrib-compress": "^0.11.0"
+    "browserify": "^10.2.4",
+    "gulp": "gulpjs/gulp.git#4.0"
   },
   "scripts": {
+    "browserify": "node_modules/.bin/browserify",
+    "gulp": "node_modules/.bin/gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -24,9 +23,14 @@
     "angular"
   ],
   "author": "mrgamer",
-  "license": "Apache v2",
+  "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/mrgamer/alldebrid-chrome/issues"
   },
-  "homepage": "https://github.com/mrgamer/alldebrid-chrome"
+  "homepage": "https://github.com/mrgamer/alldebrid-chrome",
+  "dependencies": {
+    "angular": "^1.4.0",
+    "angular-hotkeys": "^1.4.5",
+    "bootstrap": "^3.3.4"
+  }
 }
