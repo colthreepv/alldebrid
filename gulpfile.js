@@ -19,6 +19,7 @@ function buildLess (done) {
   return gulp.src('css/*.less').pipe(less({
     paths: [
       path.join(__dirname, 'node_modules', 'bootstrap/less'),
+      path.join(__dirname, 'node_modules', 'angular/'),
       path.join(__dirname, 'css')
     ]
   })).pipe(gulp.dest(destDir));
