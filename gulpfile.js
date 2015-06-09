@@ -26,9 +26,23 @@ function buildLess (done) {
   })).pipe(gulp.dest(destDir));
 }
 
-gulp.task('html', function (done) {
-  return gulp.src('./index.html')
-    .pipe(gulp.dest(destDir));
+gulp.task('copy-static', function () {
+  return gulp.src([
+    'icon_128.png',
+    'icon_48.png',
+    'main.js',
+    'index.html',
+    'manifest.json',
+    'index.html'
+  ]).pipe(gulp.dest(destDir));
+});
+
+gulp.task('copy-fonts', function () {
+  return gulp.src([
+    'node_modules/bootstrap/fonts/glyphicons-halflings-regular.woff',
+    'node_modules/bootstrap/fonts/glyphicons-halflings-regular.woff2',
+    'node_modules/bootstrap/fonts/glyphicons-halflings-regular.ttf'
+  ]).pipe(gulp.dest(path.join(destDir, 'fonts')));
 });
 
 gulp.task('code-build', tasks.code.build(destDir));
@@ -37,6 +51,6 @@ gulp.task('clean', cleanDir);
 gulp.task('less', buildLess);
 gulp.task('default',
   gulp.series('clean',
-    gulp.parallel('html', 'less', 'code-watch')
+    gulp.parallel('copy-static', 'copy-fonts', 'less', 'code-watch')
   )
 );
