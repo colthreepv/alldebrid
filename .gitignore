@@ -3,6 +3,7 @@ libs/
 
 # node
 node_modules/
+npm-debug.log
 
 # built packages
 *.zip
