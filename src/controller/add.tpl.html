@@ -1,0 +1,25 @@
+<div class="showTorrents" ng-show="showTorrents" ng-controller="AddController">
+  <div class="row">
+    <div class="col-md-12">
+      <form role="form">
+        <div class="form-group">
+          <label>Add Magnet single/multiple:</label>
+          <span>use one magnet per line, newline is <b>required</b> between them</span>
+          <textarea class="form-control long-text" placeholder="add magnets here" autofocus ng-model="magnetText" ng-disabled="addingTorrents"></textarea>
+        </div>
+        <div class="form-group text-center">
+          <button class="btn btn-lg"
+            ng-class="{ 'btn-default': !addingTorrents, 'btn-success': addingTorrents }" ng-disabled="addingTorrents" ng-click="addMagnets()">
+            Add Magnets <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="addingTorrents"></span>
+          </button>
+          <button class="btn btn-lg btn-danger" ng-click="clearMagnets()" ng-disabled="addingTorrents">
+            Clear <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button class="btn btn-lg btn-warning" ng-click="$parent.showTorrents = false">
+            Close <span class="glyphicon glyphicon-eject"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

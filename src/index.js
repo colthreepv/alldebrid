@@ -1,11 +1,12 @@
 'use strict';
 
-var
-  angular = require('angular');
+var // angular modules
+  angular = require('angular'),
+  uiRouter = require('angular-ui-router');
 
 require('angular-hotkeys'); // for side-effects
 
-var AD = angular.module('ad', ['cfp.hotkeys']);
+var AD = angular.module('ad', ['cfp.hotkeys', uiRouter]);
 AD.run(require('./run'));
 AD.filter('bytes', require('./filter/bytes'));
 AD.controller('BodyController', require('./controller/body'));

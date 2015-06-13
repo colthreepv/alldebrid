@@ -1,0 +1,58 @@
+<div class="navbar navbar-default" role="navigation">
+  <div class="navbar-collapse">
+    <!-- Navbar links -->
+    <ul class="nav navbar-nav">
+      <li class="desktop">
+        <a>Alldebrid</a>
+      </li>
+      <li ng-class="{ active: showLinks }">
+        <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showLinks = !showLinks : null">Unrestricted Links</a>
+      </li>
+      <li ng-class="{ active: showTorrents }">
+        <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showTorrents = !showTorrents : null">Add Torrent</a>
+      </li>
+    </ul>
+    <!-- right side of the navbar -->
+    <!-- login form -->
+    <form class="navbar-form navbar-right" name="loginForm" role="login" ng-submit="loginUser()" ng-show="loginStatus === 'anon'">
+      <div class="form-group">
+        <label class="label label-danger blink pointer" ng-show="recaptchaWarning" title="you tried too many times to login, please wait several minutes before retrying.">Recaptcha Appeared</label>
+        <label class="label label-danger blink" ng-show="loginFailed">Login failed</label>
+        <label ng-hide="loginFailed">Login</label>
+        <input type="text" class="form-control" ng-model="login.username" name="username" placeholder="Username" autofocus>
+      </div>
+      <div class="form-group">
+        <input type="password" class="form-control" ng-model="login.password" name="password" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-default hidden-devices" ng-disabled="loginStatus === 'working'">Login <i class="fa" ng-class="loginStatus === 'working' ? 'fa-cog fa-spin' : 'fa-sign-in'"></i></button>
+    </form>
+
+    <!-- Spinner -->
+    <button class="btn btn-default navbar-btn navbar-right" ng-show="loginStatus === 'working'">
+      <span>allDebrid login</span>
+      <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+    </button>
+
+    <!-- Logout Form -->
+    <form class="navbar-form navbar-right" role="logout" ng-submit="logoutUser()" ng-show="loginStatus === 'login'">
+      <div class="form-group">
+        <span>
+          <span class="glyphicon glyphicon-user"></span>
+          <span class="right-spacer">{{ username }}</span>
+          <span ng-show="paid">
+            <span class="glyphicon glyphicon-time"></span>
+            <span class="text-success desktop">remaining days: {{ remainingDays }}</span>
+            <span class="text-success mobile">days: {{ remainingDays }}</span>
+          </span>
+          <span ng-show="!paid">
+            <span class="text-error">No paid days left, <a href="http://www.alldebrid.com/offer/" target="_blank">renew</a> to use this application</span>
+          </span>
+          <button type="submit" class="btn btn-link btn-lg mobile">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+        </span>
+      </div>
+      <div class="form-group desktop">
+        <button type="submit" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+      </div>
+    </form>
+  </div>
+</div>
