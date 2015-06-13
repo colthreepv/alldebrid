@@ -2,7 +2,7 @@
   "manifest_version": 2,
   "name": "AllDebrid for desktop",
   "description": "alternative interface for AllDebrid service",
-  "version": "0.5.3",
+  "version": "0.6.0",
   "minimum_chrome_version": "31",
   "icons": {
     "48": "icon_48.png",
@@ -19,5 +19,5 @@
     "http://*.alldebrid.com/*",
     "storage"
   ],
-  "short_name": "ad-chrome"
+  "short_name": "ad-chrome-dev"
 }

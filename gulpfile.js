@@ -12,6 +12,15 @@ let // external deps
 let destDir = 'build';
 let tasks = require('./tasks');
 
+let staticList = [
+  'icon_128.png',
+  'icon_48.png',
+  'main.js',
+  'index.html',
+  'manifest.json',
+  'index.html'
+];
+
 function cleanDir (done) {
   del(destDir, done);
 }
@@ -27,14 +36,12 @@ function buildLess (done) {
 }
 
 gulp.task('copy-static', function () {
-  return gulp.src([
-    'icon_128.png',
-    'icon_48.png',
-    'main.js',
-    'index.html',
-    'manifest.json',
-    'index.html'
-  ]).pipe(gulp.dest(destDir));
+  return gulp.src(staticList).pipe(gulp.dest(destDir));
+});
+
+gulp.task('static-watch', function (done) {
+  gulp.watch(staticList, gulp.series('copy-static'));
+  done();
 });
 
 gulp.task('copy-fonts', function () {
@@ -51,6 +58,7 @@ gulp.task('clean', cleanDir);
 gulp.task('less', buildLess);
 gulp.task('default',
   gulp.series('clean',
-    gulp.parallel('copy-static', 'copy-fonts', 'less', 'code-watch')
+    gulp.parallel('copy-static', 'copy-fonts', 'less', 'code-watch'),
+    'static-watch'
   )
 );
