@@ -31,7 +31,7 @@ function classicWatch (destDir) {
 }
 
 exports.watch = function (done) {
-  spawn('node', ['node_modules/watchify/bin/cmd.js', 'src/', '-d', '-v', '-o', 'build/bundle.js'], {
+  spawn('node', ['node_modules/watchify/bin/cmd.js', 'src/index.js', '-d', '-v', '-o', 'build/bundle.js'], {
     cwd: path.resolve(__dirname, '..'),
     stdio: 'inherit'
   });

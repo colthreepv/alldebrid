@@ -3,10 +3,16 @@
   "version": "0.5.3",
   "description": "\"alternative interface for AllDebrid",
   "main": "main.js",
+  "browserify": {
+    "transform": [
+      "ngify"
+    ]
+  },
   "devDependencies": {
     "browserify": "^10.2.4",
     "del": "^1.2.0",
     "gulp": "gulpjs/gulp.git#4.0",
+    "gulp-angular-templatecache": "^1.6.0",
     "gulp-less": "^3.0.3",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.2.2"

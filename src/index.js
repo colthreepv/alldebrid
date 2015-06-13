@@ -3,11 +3,14 @@
 var // angular modules
   angular = require('angular'),
   uiRouter = require('angular-ui-router');
-
 require('angular-hotkeys'); // for side-effects
 
-var AD = angular.module('ad', ['cfp.hotkeys', uiRouter]);
+// module for templates
+var ngify = angular.module('ngify', []);
+
+var AD = angular.module('ad', ['cfp.hotkeys', uiRouter, ngify.name]);
 AD.run(require('./run'));
+AD.config(require('./config'));
 AD.filter('bytes', require('./filter/bytes'));
 AD.controller('BodyController', require('./controller/body'));
 AD.controller('AddController', require('./controller/add'));
