@@ -1,6 +1,7 @@
 'use strict';
 
 let // node
+  util = require('util'),
   path = require('path'),
   spawn = require('child_process').spawn;
 
@@ -17,24 +18,32 @@ function classicWatch (destDir) {
   return function watch (done) {
     let b = watchify(browserify({
       entries: ['./src/index.js'],
+      noParse: [ // libreries without `require()`
+        require.resolve('angular/angular.js'),
+        require.resolve('angular-ui-router'),
+        require.resolve('angular-hotkeys')
+      ],
+      fullPaths: true,
       debug: true
     }));
 
-    b.on('update', function () {
-      console.time('update');
-      b.bundle();
-      console.timeEnd('update');
-    });
+    function rebuild () {
+      var startTime = Date.now();
+      var stream = b.bundle()
+        .on('error', gutil.log.bind(gutil, 'Browserify Error'))
+        .pipe(source('bundle.js'))
+        .pipe(gulp.dest(destDir));
 
-    var stream = b.bundle()
-      .pipe(source('bundle.js'))
-      .pipe(gulp.dest(destDir));
+      stream.on('end', function () {
+        var elapsed = Date.now() - startTime;
+        gutil.log(gutil.colors.magenta('Rebuild code'), util.format('%dms', elapsed));
+      });
 
-    stream.on('end', function () {
-      gutil.log(gutil.colors.magenta('Watching'), 'Code');
-    });
+      return stream;
+    }
 
-    return stream;
+    b.on('update', rebuild);
+    return rebuild();
   };
 }
 
