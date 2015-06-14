@@ -1,8 +1,15 @@
 'use strict';
 module.exports = function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise(function ($injector, $location) {
-    var $state = $injector.get('$state');
-    $state.go('home');
+    var // injecting modules
+      $state = $injector.get('$state'),
+      adLogin = $injector.get('adLogin');
+
+    adLogin.isLogged().then(function () {
+      $state.go('home');
+    }, function () {
+      $state.go('login');
+    });
   });
 
   $stateProvider.state('home', {
