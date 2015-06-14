@@ -1,10 +1,12 @@
 'use strict';
 module.exports = function ($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise('/');
+  $urlRouterProvider.otherwise(function ($injector, $location) {
+    var $state = $injector.get('$state');
+    $state.go('home');
+  });
 
   $stateProvider.state('home', {
-    url: '/',
-    templateUrl: 'home.tpl.html',
+    templateUrl: 'controller/home.tpl.html',
     controller: require('./controller/home'),
     controllerAs: 'home'
   });

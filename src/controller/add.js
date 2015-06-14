@@ -1,6 +1,5 @@
 'use strict';
 
-require('./add.tpl.html');
 module.exports = function ($scope, $rootScope, $http, $timeout, transformRequestAsFormPost) {
   $scope.addingTorrents = false;
   $scope.magnetText = '';

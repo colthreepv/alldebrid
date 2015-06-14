@@ -1,6 +1,5 @@
 'use strict';
 
-require('./torrent.tpl.html');
 module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeStorage, $filter) {
   // initial values
   $scope.torrentStatus = 'working';

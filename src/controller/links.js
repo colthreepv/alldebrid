@@ -1,6 +1,5 @@
 'use strict';
 
-require('./links.tpl.html');
 module.exports = function ($scope, $http, $timeout) {
   $scope.generatingLinks = false;
   $scope.displayMode = 'textarea';

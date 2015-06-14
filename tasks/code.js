@@ -6,6 +6,7 @@ let // node
 
 let gulp = require('gulp');
 let // gulp tools
+  gutil = require('gulp-util'),
   source = require('vinyl-source-stream');
 
 let // external deps
@@ -15,18 +16,25 @@ let // external deps
 function classicWatch (destDir) {
   return function watch (done) {
     let b = watchify(browserify({
-      entries: ['./src/'],
+      entries: ['./src/index.js'],
       debug: true
     }));
 
     b.on('update', function () {
+      console.time('update');
       b.bundle();
-      console.info('file changed!');
+      console.timeEnd('update');
     });
 
-    return b.bundle()
-      .pipe(source('app.js'))
+    var stream = b.bundle()
+      .pipe(source('bundle.js'))
       .pipe(gulp.dest(destDir));
+
+    stream.on('end', function () {
+      gutil.log(gutil.colors.magenta('Watching'), 'Code');
+    });
+
+    return stream;
   };
 }
 
@@ -37,16 +45,17 @@ exports.watch = function (done) {
   });
   done();
 };
+exports.watch2 = classicWatch;
 
 exports.build = function (destDir) {
   return function (code) {
     let b = browserify({
       entries: ['./src/'],
-      debug: true
+      debug: false
     });
 
     return b.bundle()
-      .pipe(source('app.js'))
+      .pipe(source('bundle.js'))
       .pipe(gulp.dest(destDir));
   };
 };

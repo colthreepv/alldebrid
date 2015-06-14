@@ -4,7 +4,8 @@ let path = require('path');
 
 let // gulp deps
   gulp = require('gulp'),
-  less = require('gulp-less');
+  less = require('gulp-less'),
+  tmpl = require('gulp-angular-templatecache');
 
 let // external deps
   del = require('del');
@@ -39,10 +40,6 @@ gulp.task('copy-static', function () {
   return gulp.src(staticList).pipe(gulp.dest(destDir));
 });
 
-gulp.task('static-watch', function (done) {
-  gulp.watch(staticList, gulp.series('copy-static'));
-  done();
-});
 
 gulp.task('copy-fonts', function () {
   return gulp.src([
@@ -52,13 +49,27 @@ gulp.task('copy-fonts', function () {
   ]).pipe(gulp.dest(path.join(destDir, 'fonts')));
 });
 
+gulp.task('templates', function () {
+  return gulp.src('src/**/*.tpl.html')
+    .pipe(tmpl({
+      standalone: true
+    }))
+    .pipe(gulp.dest(destDir));
+});
+
+gulp.task('watch', function (done) {
+  gulp.watch(staticList, gulp.series('copy-static'));
+  gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
+  done();
+});
+
 gulp.task('code-build', tasks.code.build(destDir));
-gulp.task('code-watch', tasks.code.watch);
+gulp.task('code-watch', tasks.code.watch2(destDir));
 gulp.task('clean', cleanDir);
 gulp.task('less', buildLess);
 gulp.task('default',
   gulp.series('clean',
-    gulp.parallel('copy-static', 'copy-fonts', 'less', 'code-watch'),
-    'static-watch'
+    gulp.parallel('copy-static', 'copy-fonts', 'less', 'templates', 'code-watch'),
+    'watch'
   )
 );
