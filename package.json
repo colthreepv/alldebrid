@@ -14,10 +14,7 @@
     "watchify": "^3.2.2"
   },
   "scripts": {
-    "browserify": "node_modules/.bin/browserify",
-    "watchify": "node_modules/.bin/watchify",
-    "start": "node_modules/.bin/watchify src/ -d -v -o build/bundle.js",
-    "gulp": "node_modules/.bin/gulp",
+    "start": "node_modules/.bin/gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

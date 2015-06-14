@@ -1,9 +1,7 @@
 'use strict';
 
 let // node
-  util = require('util'),
-  path = require('path'),
-  spawn = require('child_process').spawn;
+  util = require('util');
 
 let gulp = require('gulp');
 let // gulp tools
@@ -14,7 +12,7 @@ let // external deps
   browserify = require('browserify'),
   watchify = require('watchify');
 
-function classicWatch (destDir) {
+exports.watch = function (destDir) {
   return function watch (done) {
     let b = watchify(browserify({
       entries: ['./src/index.js'],
@@ -45,16 +43,7 @@ function classicWatch (destDir) {
     b.on('update', rebuild);
     return rebuild();
   };
-}
-
-exports.watch = function (done) {
-  spawn('node', ['node_modules/watchify/bin/cmd.js', 'src/index.js', '-d', '-v', '-o', 'build/bundle.js'], {
-    cwd: path.resolve(__dirname, '..'),
-    stdio: 'inherit'
-  });
-  done();
 };
-exports.watch2 = classicWatch;
 
 exports.build = function (destDir) {
   return function (code) {
