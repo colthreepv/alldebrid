@@ -21,7 +21,7 @@
     "no-nested-ternary": 2,
     "no-sequences": 0,
     "no-shadow": 0,
-    "no-unused-vars": [2, { "vars": "local", "args": "none" }],
+    "no-unused-vars": [2, {"vars": "all", "args": "after-used"}],
     "no-var": 0,
     "quotes": [1, "single"],
     "radix": 2,
