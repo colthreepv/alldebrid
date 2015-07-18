@@ -1,7 +1,6 @@
 'use strict';
 
 let // node
-  path = require('path'),
   util = require('util');
 
 let // gulp
@@ -13,15 +12,7 @@ let // external deps
   browserify = require('browserify'),
   watchify = require('watchify');
 
-let pkg = require(path.join(process.cwd(), 'package.json'));
-
-// avoids to include libraries already copied inside destination dir
-let noResolve = Object.keys(pkg.dependencies).map(function (dep) {
-  return require.resolve(dep);
-});
-
 let b = browserify({
-  noParse: noResolve,
   fullPaths: true,
   debug: true
 });
@@ -54,7 +45,7 @@ exports.watch = function (destDir) {
 };
 
 exports.build = function (destDir) {
-  return function () {
+  return function browserifyBuild () {
 
     return b.bundle()
       .pipe(source('bundle.js'))

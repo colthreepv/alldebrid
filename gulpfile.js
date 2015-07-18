@@ -50,6 +50,7 @@ gulp.task('templates', function () {
 gulp.task('watch', function (done) {
   gulp.watch(staticList, gulp.series('copy-static'));
   gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
+  gulp.watch('src/**/*.js', tasks.browserify.build(destDir));
   done();
 });
 
@@ -65,8 +66,4 @@ gulp.task('build', gulp.series(
 ));
 
 // watch
-gulp.task('default', gulp.series(
-  'clean',
-  gulp.parallel('copy-static', 'copy-fonts', 'copy-libs', 'less', 'templates', 'code-watch'),
-  'watch')
-);
+gulp.task('default', gulp.series('build', 'watch'));
