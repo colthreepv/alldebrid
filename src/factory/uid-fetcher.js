@@ -5,7 +5,7 @@
  *
  * It returns a promise, that gets resolved always (forever-loop)
  */
-module.exports = function ($http, $q, $timeout, chromeStorage) {
+module.exports = ['$http', '$q', '$timeout', 'chromeStorage', function ($http, $q, $timeout, chromeStorage) {
 
   function fetchPage (callback) {
     $http({
@@ -36,4 +36,4 @@ module.exports = function ($http, $q, $timeout, chromeStorage) {
 
     return uidDone.promise;
   };
-};
+}];

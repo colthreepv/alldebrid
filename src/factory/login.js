@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function ($http, $q, $timeout, uidFetcher) {
+module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, $timeout, uidFetcher) {
   /**
    * checkLogin is a loop-call function in case of connection failure
    * [callback] has parameters (isLoggedin, details)
@@ -124,4 +124,4 @@ module.exports = function ($http, $q, $timeout, uidFetcher) {
       return asyncLogout.promise;
     }
   };
-};
+}];

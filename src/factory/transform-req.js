@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function () {
+module.exports = [function () {
   // serializes the given Object into a key-value pair string. This
   // method expects an object and will default to the toString() method.
   // --
@@ -31,4 +31,4 @@ module.exports = function () {
   return function (data, getHeaders) {
     return serializeData(data);
   };
-};
+}];

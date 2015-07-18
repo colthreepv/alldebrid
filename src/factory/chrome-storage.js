@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function ($q) {
+module.exports = ['$q', function ($q) {
   return {
     set: function (name, value) {
       var setDone = $q.defer();
@@ -44,4 +44,4 @@ module.exports = function ($q) {
       return getDone.promise;
     }
   };
-};
+}];
