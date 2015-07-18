@@ -12,22 +12,25 @@ let // external deps
   browserify = require('browserify'),
   watchify = require('watchify');
 
+let b = browserify({
+    noParse: [ // in these libraries there are no `require()s`
+      require.resolve('angular/angular.js'),
+      require.resolve('angular-ui-router'),
+      require.resolve('angular-hotkeys')
+    ],
+    fullPaths: true,
+    debug: true
+  });
+b.transform('bulkify');
+b.add('src/index.js');
+
 exports.watch = function (destDir) {
   return function watch (done) {
-    let b = watchify(browserify({
-      entries: ['./src/index.js'],
-      noParse: [ // libreries without `require()`
-        require.resolve('angular/angular.js'),
-        require.resolve('angular-ui-router'),
-        require.resolve('angular-hotkeys')
-      ],
-      fullPaths: true,
-      debug: true
-    }));
+    let w = watchify(b);
 
     function rebuild () {
       var startTime = Date.now();
-      var stream = b.bundle()
+      var stream = w.bundle()
         .on('error', gutil.log.bind(gutil, 'Browserify Error'))
         .pipe(source('bundle.js'))
         .pipe(gulp.dest(destDir));
@@ -40,20 +43,22 @@ exports.watch = function (destDir) {
       return stream;
     }
 
-    b.on('update', rebuild);
+    w.on('update', rebuild);
     return rebuild();
   };
 };
 
 exports.build = function (destDir) {
-  return function (code) {
-    let b = browserify({
-      entries: ['./src/'],
-      debug: false
-    });
+  return function () {
 
     return b.bundle()
       .pipe(source('bundle.js'))
       .pipe(gulp.dest(destDir));
   };
 };
+
+if (module === module.main) {
+  let path = require('path');
+  console.log('manually starting build');
+  exports.build(path.join(process.cwd(), 'build'));
+}
