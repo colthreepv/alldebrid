@@ -1,5 +1,5 @@
 'use strict';
-module.exports = function (adLogin, $rootScope) {
+module.exports = ['login', '$rootScope', function (login, $rootScope) {
   /**
    * loginStatus has 3 statuses for now:
    *  * working
@@ -10,7 +10,7 @@ module.exports = function (adLogin, $rootScope) {
   $rootScope.loginStatus = 'working';
   $rootScope.loginFailed = false;
 
-  adLogin.isLogged().then(function success (userData) {
+  login.isLogged().then(function success (userData) {
     $rootScope.loginStatus = 'login';
     $rootScope.loginFailed = false;
     $rootScope.logoutKey = userData.logoutKey;
@@ -27,4 +27,4 @@ module.exports = function (adLogin, $rootScope) {
     $rootScope.loginStatus = 'anon';
   });
 
-};
+}];

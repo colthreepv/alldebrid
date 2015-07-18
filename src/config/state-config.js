@@ -1,11 +1,10 @@
-'use strict';
 module.exports = function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise(function ($injector, $location) {
     var // injecting modules
       $state = $injector.get('$state'),
-      adLogin = $injector.get('adLogin');
+      login = $injector.get('login');
 
-    adLogin.isLogged().then(function () {
+    login.isLogged().then(function () {
       $state.go('home');
     }, function () {
       $state.go('login');
@@ -14,7 +13,6 @@ module.exports = function ($stateProvider, $urlRouterProvider) {
 
   $stateProvider.state('home', {
     templateUrl: 'controller/home.tpl.html',
-    controller: require('./controller/home'),
     controllerAs: 'home'
   });
 

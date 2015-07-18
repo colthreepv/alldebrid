@@ -18,6 +18,9 @@ Object.keys(modules).forEach(function (type) {
       modules[type][camelCased] = modules[type][moduleName];
       delete modules[type][moduleName];
     }
+    if (type === 'config' || type === 'run') return AD[type](modules[type][camelCased]);
     AD[type](camelCased, modules[type][camelCased]);
   });
 });
+
+console.log(modules);
