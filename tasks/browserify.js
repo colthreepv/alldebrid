@@ -26,6 +26,7 @@ let b = browserify({
   debug: true
 });
 b.transform('bulkify');
+b.transform('browserify-shim');
 b.add('src/index.js');
 
 exports.watch = function (destDir) {

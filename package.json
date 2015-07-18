@@ -8,12 +8,14 @@
     "bulk-require": "^0.2.1",
     "bulkify": "^1.1.1",
     "del": "^1.2.0",
+    "express": "^4.13.1",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-angular-templatecache": "^1.7.0",
     "gulp-angular-templates": "0.0.2",
     "gulp-less": "^3.0.3",
     "gulp-rename": "^1.2.2",
     "gulp-util": "^3.0.6",
+    "http-proxy": "^1.11.1",
     "tsify": "^0.11.2",
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.3.0"
@@ -43,5 +45,8 @@
     "angular-hotkeys": "^1.4.5",
     "angular-ui-router": "^0.2.15",
     "bootstrap": "^3.3.5"
+  },
+  "browserify-shim": {
+    "angular": "global:angular"
   }
 }

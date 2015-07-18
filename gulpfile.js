@@ -10,10 +10,10 @@ let // gulp deps
 let // external deps
   del = require('del');
 
-let destDir = 'build';
 let tasks = require('./tasks');
 
-let staticList = [
+const destDir = 'build';
+const staticList = [
   'index.html'
 ];
 
@@ -24,6 +24,8 @@ function buildLess (done) {
     ]
   })).pipe(gulp.dest(destDir));
 }
+
+gulp.task('copy-libs', tasks.copyLibs(destDir));
 
 gulp.task('copy-static', function () {
   return gulp.src(staticList).pipe(gulp.dest(destDir));
@@ -55,10 +57,16 @@ gulp.task('code-build', tasks.browserify.build(destDir));
 gulp.task('code-watch', tasks.browserify.watch(destDir));
 gulp.task('clean', del.bind(null, destDir));
 gulp.task('less', buildLess);
-gulp.task('default',
-  gulp.series(
-    'clean',
-    gulp.parallel('copy-static', 'copy-fonts', 'less', 'templates', 'code-watch'),
-    'watch'
-  )
+
+// build only task
+gulp.task('build', gulp.series(
+  'clean',
+  gulp.parallel('copy-static', 'copy-fonts', 'copy-libs', 'less', 'templates', 'code-build')
+));
+
+// watch
+gulp.task('default', gulp.series(
+  'clean',
+  gulp.parallel('copy-static', 'copy-fonts', 'copy-libs', 'less', 'templates', 'code-watch'),
+  'watch')
 );

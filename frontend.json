@@ -1,3 +1,6 @@
 {
-  "overrides":{}
+  "overrides": {
+    "angular": "node_modules/angular/angular.js",
+    "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.js"
+  }
 }
