@@ -1,10 +1,11 @@
 'use strict';
 
 let // node
+  path = require('path'),
   util = require('util');
 
-let gulp = require('gulp');
-let // gulp tools
+let // gulp
+  gulp = require('gulp'),
   gutil = require('gulp-util'),
   source = require('vinyl-source-stream');
 
@@ -12,15 +13,18 @@ let // external deps
   browserify = require('browserify'),
   watchify = require('watchify');
 
+let pkg = require(path.join(process.cwd(), 'package.json'));
+
+// avoids to include libraries already copied inside destination dir
+let noResolve = Object.keys(pkg.dependencies).map(function (dep) {
+  return require.resolve(dep);
+});
+
 let b = browserify({
-    noParse: [ // in these libraries there are no `require()s`
-      require.resolve('angular/angular.js'),
-      require.resolve('angular-ui-router'),
-      require.resolve('angular-hotkeys')
-    ],
-    fullPaths: true,
-    debug: true
-  });
+  noParse: noResolve,
+  fullPaths: true,
+  debug: true
+});
 b.transform('bulkify');
 b.add('src/index.js');
 
