@@ -1,12 +1,11 @@
 'use strict';
 
-// non-commonjs requires for side-effects
-require('angular/angular.js');
-require('angular-hotkeys');
-var // angular modules
-  uiRouter = require('angular-ui-router');
+var bulk = require('bulk-require');
+var modules = bulk(__dirname, ['./**/!(index).js']);
 
-var AD = angular.module('ad', ['cfp.hotkeys', uiRouter, 'templates']);
+console.log(modules);
+
+var AD = angular.module('ad', ['cfp.hotkeys', 'ui-router', 'templates']);
 AD.run(require('./run'));
 AD.config(require('./config'));
 AD.filter('bytes', require('./filter/bytes'));

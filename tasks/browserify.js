@@ -25,7 +25,7 @@ b.transform('bulkify');
 b.add('src/index.js');
 
 exports.watch = function (destDir) {
-  return function watch (done) {
+  return function browserifyWatch (done) {
     let w = watchify(b);
 
     function rebuild () {
@@ -56,9 +56,3 @@ exports.build = function (destDir) {
       .pipe(gulp.dest(destDir));
   };
 };
-
-if (module === module.main) {
-  let path = require('path');
-  console.log('manually starting build');
-  exports.build(path.join(process.cwd(), 'build'));
-}
