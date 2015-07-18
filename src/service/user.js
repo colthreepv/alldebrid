@@ -31,18 +31,12 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
     }
   }
 
-  function parseLogout (callback) {
-    return function (page) {
-      if (page.querySelector('#toolbar span a.toolbar_welcome')) {
-        return callback(true);
-      } else {
-        return callback(false);
-      }
-    };
+  function parseLogout (page) {
+    if (page.querySelector('#toolbar span a.toolbar_welcome')) return true;
+    else return false;
   }
 
   function checkLogin () {
-    console.log('enter checkLogin');
     return new $q(function (resolve) {
       $http({
         method: 'GET',
@@ -60,10 +54,57 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
     });
   }
 
+  // when retrieving details of an user, it misses an unique uid necessary for logout
+  // this function helps in that
   function retrieveUid (status) {
     return uidFetcher(status.logoutKey).then(function (uid) {
       status.uid = uid;
       return status;
+    });
+  }
+
+  function attemptLogin (username, password) {
+    return new $q(function (resolve) {
+      $http({
+        method: 'GET',
+        url: registerUrl,
+        params: {
+          action: 'login',
+          'login_login': username,
+          'login_password': password
+        },
+        responseType: 'document'
+      })
+      .success(function (page) {
+        resolve(parseLogin(page));
+      })
+      .error(function () {
+        $timeout(function () {
+          resolve(attemptLogin(username, password));
+        }, 5000);
+      });
+    });
+  }
+
+  function attemptLogout (key) {
+    return new $q(function (resolve) {
+      $http({
+        method: 'GET',
+        url: registerUrl,
+        params: {
+          action: 'logout',
+          key: key
+        },
+        responseType: 'document'
+      })
+      .success(function (page) {
+        resolve(parseLogout(page));
+      })
+      .error(function () {
+        $timeout(function () {
+          resolve(attemptLogout(key));
+        }, 5000);
+      });
     });
   }
 
@@ -76,53 +117,17 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
   };
 
   this.login = function (username, password) {
-    var asyncLogin = $q.defer();
-    $http({
-      method: 'GET',
-      url: registerUrl,
-      params: {
-        action: 'login',
-        'login_login': username,
-        'login_password': password
-      },
-      responseType: 'document'
-    })
-    // this has same code as isLogged - it might be useful to make a function out of it
-    .success(parseLogin(function (isLoggedIn, details) {
-      if (!isLoggedIn) {
-        return asyncLogin.reject(details);
-      }
-
-      // get uid for that user
-      uidFetcher(details.logoutKey).then(function success (uid) {
-        asyncLogin.resolve(angular.extend(details, {
-          uid: uid
-        }));
-      });
-    }));
-
-    return asyncLogin.promise;
+    return attemptLogin(username, password).then(function (status) {
+      if (status.logged) return retrieveUid(status.logoutKey);
+      return $q.reject(status);
+    });
   };
 
   this.logout = function (key) {
-    var asyncLogout = $q.defer();
-    $http({
-      method: 'GET',
-      url: registerUrl,
-      params: {
-        action: 'logout',
-        key: key
-      },
-      responseType: 'document'
-    })
-    .success(parseLogout(function (isLoggedOut) {
-      if (!isLoggedOut) {
-        return asyncLogout.reject();
-      }
-      asyncLogout.resolve();
-    }));
-
-    return asyncLogout.promise;
+    return attemptLogout(key).then(function (status) {
+      if (status === true) return $q.resolve();
+      return $q.reject();
+    });
   };
 
 }];
