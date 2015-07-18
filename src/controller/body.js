@@ -1,12 +1,12 @@
 'use strict';
 
-module.exports = function ($scope, $rootScope, $http, adLogin) {
+module.exports = function ($scope, $rootScope, $http, login) {
   // login functions
   $scope.login = {};
 
   // copy-paste from .run code
   $scope.loginUser = function () {
-    adLogin.login($scope.login.username, $scope.login.password)
+    login.login($scope.login.username, $scope.login.password)
     .then(function success (userData) {
       $rootScope.loginStatus = 'login';
       $rootScope.loginFailed = false;
@@ -34,7 +34,7 @@ module.exports = function ($scope, $rootScope, $http, adLogin) {
   };
 
   $scope.logoutUser = function () {
-    adLogin.logout($rootScope.logoutKey)
+    login.logout($rootScope.logoutKey)
     .then(function success () {
       $rootScope.loginStatus = 'anon';
     }, function failure () {
