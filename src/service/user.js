@@ -12,30 +12,27 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
    *
    * parseLogout has parameter (isLoggedOut)
    */
-  function parseLogin (callback) {
-    return function (page, status, headers, config) {
-      if (page.querySelector('.login textarea[name="recaptcha_challenge_field"]')) {
-        // A wild recaptcha appears
-        return callback(false, {
-          recaptcha: true
-        });
-      }
-      if (page.querySelector('#toolbar span a.toolbar_welcome')) {
-        return callback(false, {});
-      }
-      if (page.querySelector('strong a')) {
-        var days = page.querySelector('.toolbar_welcome').textContent.match(/in (\d*) days/);
-        callback(true, {
-          username: page.querySelector('strong a').textContent,
-          remainingDays: days ? parseInt(days[1], 10) : 0,
-          logoutKey: page.querySelector('.toolbar_disconnect').getAttribute('href').split('key=')[1]
-        });
-      }
-    };
+  function parseLogin (page) {
+    if (page.querySelector('.login textarea[name="recaptcha_challenge_field"]')) {
+      // A wild recaptcha appears
+      return { logged: false, recaptcha: true };
+    }
+    if (page.querySelector('#toolbar span a.toolbar_welcome')) {
+      return { logged: false };
+    }
+    if (page.querySelector('strong a')) {
+      var days = page.querySelector('.toolbar_welcome').textContent.match(/in (\d*) days/);
+      return {
+        logged: true,
+        username: page.querySelector('strong a').textContent,
+        remainingDays: days ? parseInt(days[1], 10) : 0,
+        logoutKey: page.querySelector('.toolbar_disconnect').getAttribute('href').split('key=')[1]
+      };
+    }
   }
 
   function parseLogout (callback) {
-    return function (page, status, headers, config) {
+    return function (page) {
       if (page.querySelector('#toolbar span a.toolbar_welcome')) {
         return callback(true);
       } else {
@@ -44,37 +41,38 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
     };
   }
 
-  function checkLogin (callback) {
-    $http({
-      method: 'GET',
-      url: registerUrl,
-      responseType: 'document'
-    })
-    .success(parseLogin(callback))
-    .error(function (data, status, headers, config) {
-      $timeout(checkLogin.bind(null, callback), 5000);
+  function checkLogin () {
+    console.log('enter checkLogin');
+    return new $q(function (resolve) {
+      $http({
+        method: 'GET',
+        url: registerUrl,
+        responseType: 'document'
+      })
+      .success(function (page) {
+        resolve(parseLogin(page));
+      })
+      .error(function () {
+        $timeout(function () {
+          resolve(checkLogin());
+        }, 5000);
+      });
+    });
+  }
+
+  function retrieveUid (status) {
+    return uidFetcher(status.logoutKey).then(function (uid) {
+      status.uid = uid;
+      return status;
     });
   }
 
     // isLogged returns a promise
   this.isLogged = function () {
-    var asyncLogin = $q.defer();
-    // $timeout(function () {
-    checkLogin(function (isLoggedIn, details) {
-      if (!isLoggedIn) {
-        return asyncLogin.reject(details);
-      }
-
-      // get uid for that user
-      uidFetcher(details.logoutKey).then(function success (uid) {
-        asyncLogin.resolve(angular.extend(details, {
-          uid: uid
-        }));
-      });
+    return checkLogin().then(function (status) {
+      if (status.logged) return retrieveUid(status.logoutKey);
+      return $q.reject(status);
     });
-    // }, 15000);
-
-    return asyncLogin.promise;
   };
 
   this.login = function (username, password) {

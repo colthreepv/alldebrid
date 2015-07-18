@@ -1,10 +1,10 @@
-module.exports = function ($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise(function ($injector, $location) {
+module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise(function ($injector) {
     var // injecting modules
       $state = $injector.get('$state'),
-      login = $injector.get('login');
+      user = $injector.get('user');
 
-    login.isLogged().then(function () {
+    user.isLogged().then(function () {
       $state.go('home');
     }, function () {
       $state.go('login');
@@ -20,4 +20,4 @@ module.exports = function ($stateProvider, $urlRouterProvider) {
     controller: 'home'
   });
 
-};
+}];

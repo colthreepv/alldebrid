@@ -1,5 +1,5 @@
 'use strict';
-module.exports = ['login', '$rootScope', function (login, $rootScope) {
+module.exports = ['user', '$rootScope', function (user, $rootScope) {
   /**
    * loginStatus has 3 statuses for now:
    *  * working
@@ -10,7 +10,7 @@ module.exports = ['login', '$rootScope', function (login, $rootScope) {
   $rootScope.loginStatus = 'working';
   $rootScope.loginFailed = false;
 
-  login.isLogged().then(function success (userData) {
+  user.isLogged().then(function success (userData) {
     $rootScope.loginStatus = 'login';
     $rootScope.loginFailed = false;
     $rootScope.logoutKey = userData.logoutKey;

@@ -1,12 +1,11 @@
-'use strict';
-
-module.exports = function ($scope, $rootScope, $http, login) {
+module.exports = ['$scope', '$rootScope', 'user',
+function ($scope, $rootScope, user) {
   // login functions
   $scope.login = {};
 
   // copy-paste from .run code
   $scope.loginUser = function () {
-    login.login($scope.login.username, $scope.login.password)
+    user.login($scope.login.username, $scope.login.password)
     .then(function success (userData) {
       $rootScope.loginStatus = 'login';
       $rootScope.loginFailed = false;
@@ -34,7 +33,7 @@ module.exports = function ($scope, $rootScope, $http, login) {
   };
 
   $scope.logoutUser = function () {
-    login.logout($rootScope.logoutKey)
+    user.logout($rootScope.logoutKey)
     .then(function success () {
       $rootScope.loginStatus = 'anon';
     }, function failure () {
@@ -47,11 +46,11 @@ module.exports = function ($scope, $rootScope, $http, login) {
   $scope.showLinks = false;
   $scope.showTorrents = false;
 
-  $scope.$on('torrentLinks', function (event, args) {
+  $scope.$on('torrentLinks', function () {
     $scope.showLinks = true;
   });
 
-  $scope.$on('forceUpdateTorrents', function (event, args) {
+  $scope.$on('forceUpdateTorrents', function () {
     $scope.$broadcast('updateTorrents');
   });
-};
+}];
