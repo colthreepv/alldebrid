@@ -1,15 +1,13 @@
-'use strict';
-let
-  path = require('path'),
-  fs = require('fs');
-
-fs.readdirSync(__dirname)
-.filter(function (file) {
-  return (file.endsWith('.js') && file !== 'index.js');
-})
-.map(function (file) {
-  if (fs.statSync(path.join(__dirname, file)).isDirectory()) return file;
-  return file.slice(0, -3); // remove '.js' extension, if is a file
-}).forEach(function (file) {
-  exports[file] = require('./' + file);
+// Recursively include files and convert paths to camelCase
+var bulk = require('bulk-require');
+exports = module.exports = bulk(__dirname, ['./!(index|_*|*.spec).js']);
+Object.keys(exports).forEach(function (key) {
+  var camelCased = key;
+  camelCased = camelCased.replace(/-([a-z])/g, function (g) {
+    return g[1].toUpperCase();
+  });
+  if (camelCased !== key) {
+    exports[camelCased] = exports[key];
+    delete exports[key];
+  }
 });
