@@ -14,24 +14,13 @@ let destDir = 'build';
 let tasks = require('./tasks');
 
 let staticList = [
-  'icon_128.png',
-  'icon_48.png',
-  'main.js',
-  'index.html',
-  'manifest.json',
   'index.html'
 ];
-
-function cleanDir (done) {
-  del(destDir, done);
-}
 
 function buildLess (done) {
   return gulp.src('css/*.less').pipe(less({
     paths: [
-      path.join(__dirname, 'node_modules', 'bootstrap/less'),
-      path.join(__dirname, 'node_modules', 'angular/'),
-      path.join(__dirname, 'css')
+      path.join(__dirname, 'node_modules')
     ]
   })).pipe(gulp.dest(destDir));
 }
@@ -39,7 +28,6 @@ function buildLess (done) {
 gulp.task('copy-static', function () {
   return gulp.src(staticList).pipe(gulp.dest(destDir));
 });
-
 
 gulp.task('copy-fonts', function () {
   return gulp.src([
@@ -65,10 +53,11 @@ gulp.task('watch', function (done) {
 
 gulp.task('code-build', tasks.browserify.build(destDir));
 gulp.task('code-watch', tasks.browserify.watch(destDir));
-gulp.task('clean', cleanDir);
+gulp.task('clean', del.bind(null, destDir));
 gulp.task('less', buildLess);
 gulp.task('default',
-  gulp.series('clean',
+  gulp.series(
+    'clean',
     gulp.parallel('copy-static', 'copy-fonts', 'less', 'templates', 'code-watch'),
     'watch'
   )

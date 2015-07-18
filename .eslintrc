@@ -14,7 +14,6 @@
     "curly": [2, "multi-line"],
     "default-case": 2,
     "func-style": [2, "declaration"],
-    "global-strict": 0,
     "guard-for-in": 0,
     "indent": [2, 2],
     "new-cap": 0,
@@ -30,7 +29,7 @@
     "space-before-blocks": 2,
     "space-before-function-parentheses": 2,
     "spaced-line-comment": [2, "always", { "exceptions": ["-"]}],
-    "strict": [2, "global"],
+    "strict": 0,
     "valid-jsdoc": [0, { "prefer": { "return": "returns"}}]
   }
 }
