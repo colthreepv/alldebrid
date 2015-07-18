@@ -13,7 +13,11 @@ module.exports = function ($stateProvider, $urlRouterProvider) {
 
   $stateProvider.state('home', {
     templateUrl: 'controller/home.tpl.html',
-    controllerAs: 'home'
+    controller: 'home'
+  });
+  $stateProvider.state('login', {
+    templateUrl: 'controller/login.tpl.html',
+    controller: 'home'
   });
 
 };
