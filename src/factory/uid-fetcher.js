@@ -5,35 +5,32 @@
  *
  * It returns a promise, that gets resolved always (forever-loop)
  */
-module.exports = ['$http', '$q', '$timeout', 'chromeStorage', function ($http, $q, $timeout, chromeStorage) {
+module.exports = ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
 
   function fetchPage (callback) {
     $http({
       method: 'GET',
       url: 'http://www.alldebrid.com/torrent/'
-    }).success(function (data, status, headers, config) {
+    }).success(function (data) {
       var uid = data.match(/name="uid" value="(.*)"/)[1];
       callback(uid);
-    }).error(function (data, status, headers, config) {
+    }).error(function () {
       $timeout(fetchPage.bind(null, callback), 5000);
     });
   }
 
-  return function (logoutKey) {
-    var uidDone = $q.defer();
+  function getKey (logoutKey) {
+    return new $q(function (resolve) {
+      var uid = localStorage.get('uid.' + logoutKey);
+      if (uid) return resolve(uid);
 
-    chromeStorage.get('uid.' + logoutKey, 'string')
-    .then(function success (uid) {
-      uidDone.resolve(uid);
-    }, function failure (reason) {
-
-      // forever-retry function
+      // AJAX to resolve the uid
       fetchPage(function (uid) {
-        chromeStorage.set('uid.' + logoutKey, uid);
-        uidDone.resolve(uid);
+        localStorage.set('uid.' + logoutKey, uid);
+        resolve(uid);
       });
     });
+  }
 
-    return uidDone.promise;
-  };
+  return getKey;
 }];
