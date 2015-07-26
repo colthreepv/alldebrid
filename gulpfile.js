@@ -55,8 +55,8 @@ gulp.task('watch', function (done) {
   gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
   gulp.watch('src/**/*.js', tasks.browserify.build(destDir));
 
-  var listen = proxy.listen(8080, '127.0.0.1', function () {
-    gutil.log(gutil.colors.magenta('Express server listening on:'), 'http://' + listen.address().address + ':' + listen.address().port + '/');
+  var listen = proxy.listen(3000, '127.0.0.1', function () {
+    gutil.log(gutil.colors.magenta('Proxy server listening on:'), 'http://' + listen.address().address + ':' + listen.address().port + '/');
     done();
   });
 });

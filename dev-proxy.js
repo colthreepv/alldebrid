@@ -53,7 +53,7 @@ server.use(function (req, res) {
 });
 
 if (require.main === module) {
-  server.set('port', process.env.PORT || 8080);
+  server.set('port', process.env.PORT || 3000);
   server.set('hostname', process.env.HOSTNAME || '127.0.0.1');
 
   var listen = server.listen(server.get('port'), server.get('hostname'), function () {
