@@ -2,34 +2,68 @@
 
 let // node stdlib
   path = require('path'),
-  overrides = require(path.join(process.cwd(), 'frontend.json')).overrides,
-  pkg = require(path.join(process.cwd(), 'package.json'));
+  frontend = require(path.join(process.cwd(), 'frontend.json')),
+  pkg = require(path.join(process.cwd(), 'package.json')),
+  overrides = frontend.overrides,
+  additional = frontend.additional;
 
 let // gulp modules
   gulp = require('gulp'),
   rename = require('gulp-rename');
   // gutil = require('gulp-util');
 
+/**
+ * frontend.json structure:
+ *
+ * {
+ *   // overrides gets removed from package.dependencies
+ *   "overrides": {
+ *     "angular": "node_modules/angular/angular.js"
+ *   },
+ *   // additionals gets added to dependencies list
+ *   "additional": {
+ *     "bootstrap": "node_modules/bootstrap/dist/css/bootstrap.css"
+ *   }
+ * }
+ *
+ * Behaviour is:
+ * 1) Read all package.dependencies
+ * 2) find the library to copy (via require.resolve)
+ * 3) add to a list
+ * 4) filter out overrides
+ * 5) add overrides back with customized paths
+ * 6) add "additionals", with customized paths
+ *
+ */
+
+
 module.exports = function (buildPath) {
   return function copyJsLibs () {
-    let libExceptions = Object.keys(overrides);
-    libExceptions.forEach(function (lib) { // filter bad libraries, like angular.js
-      delete pkg.dependencies[lib];
+    // filter dependencies, leaving only the ones without overrides
+    let deps = Object.keys(pkg.dependencies)
+    .filter(function (lib) {
+      return overrides[lib] === undefined;
+    });
+    let depPaths = deps.map(require.resolve);
+
+    Object.keys(overrides).forEach(function (lib) {
+      if (overrides[lib] === false) return;
+      deps.push(lib);
+      depPaths.push(path.resolve(process.cwd(), overrides[lib]));
     });
 
-    let
-      libArray = Object.keys(pkg.dependencies),
-      libPaths = libArray.map(require.resolve);
-
-    libExceptions.forEach(function (lib) {
-      libArray.push(lib);
-      libPaths.push(path.resolve(process.cwd(), overrides[lib]));
+    Object.keys(additional).forEach(function (lib) {
+      deps.push(lib);
+      depPaths.push(path.resolve(process.cwd(), additional[lib]));
     });
 
     // gutil.log(libPaths);
-    return gulp.src(libPaths)
+    return gulp.src(depPaths)
       .pipe(rename(function (path) {
-        path.basename = libArray.shift();
+        // in case the override has a different name from the original lib
+        // this single line does this:
+        // "bootstrap": "somefile.js" ==> "bootstrap.js"
+        path.basename = deps.shift();
         // gutil.log('copyLibs', path);
       }))
       .pipe(gulp.dest(path.join(buildPath, 'libs')));

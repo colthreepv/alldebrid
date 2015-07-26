@@ -1,6 +1,10 @@
 {
   "overrides": {
     "angular": "node_modules/angular/angular.js",
-    "bootstrap": "node_modules/bootstrap/dist/js/bootstrap.js"
+    "bootstrap": false
+  },
+  "additional": {
+    "bootstrap": "node_modules/bootstrap/dist/css/bootstrap.css",
+    "bootstrap-theme": "node_modules/bootstrap/dist/css/bootstrap-theme.css"
   }
 }
