@@ -1,21 +1,26 @@
-var httpProxy = require('http-proxy');
-var ad = httpProxy.createProxyServer({ changeOrigin: true });
-
-ad.on('proxyRes', function (proxyRes, req, res, options) {
-  console.log(proxyRes.headers);
-  // proxyRes.setHeader('X-Special-Proxy-Header', 'foobar');
-});
+var // node modules
+  httpProxy = require('http-proxy'),
+  express = require('express'),
+  debug = require('debug');
 
 var // node stdLib
   fs = require('fs'),
   path = require('path'),
   url = require('url');
 
-var express = require('express');
-var server = express();
+var
+  server = express(),
+  ad = httpProxy.createProxyServer({ changeOrigin: true }),
+  dbgForward = debug('proxy:forward'),
+  dbgServe = debug('proxy:serve');
 
 const baseDir = 'build';
 var dirs = ['fonts', 'libs', ''];
+
+ad.on('proxyRes', function (proxyRes, req, res, options) {
+  dbgForward(proxyRes.headers);
+  // proxyRes.setHeader('X-Special-Proxy-Header', 'foobar');
+});
 
 /**
  * This section creates a list of urls to be served manually
@@ -38,15 +43,22 @@ server.use(function (req, res, next) {
   var parsedUrl = url.parse(req.url);
   var pathname = parsedUrl.pathname;
   if (localFiles.indexOf(pathname) === -1) return next();
-  console.log('Serving', pathname, 'by hand.');
+  dbgServe('Serving', pathname, 'by hand.');
   res.sendFile(pathname, { root: path.join(__dirname, 'build') });
 });
 
 server.use(function (req, res) {
-  console.log('Forwarding request:', req.url);
+  dbgForward('Forwarding request:', req.url);
   ad.web(req, res, { target: 'http://www.alldebrid.com' });
 });
 
-server.listen(3000, '127.0.0.1', function () {
-  console.log('Server listening to port 3000');
-});
+if (require.main === module) {
+  server.set('port', process.env.PORT || 8080);
+  server.set('hostname', process.env.HOSTNAME || '127.0.0.1');
+
+  var listen = server.listen(server.get('port'), server.get('hostname'), function () {
+    console.log('\x1b[36m%s\x1b[0m %s', 'Express server listening on:', 'http://' + listen.address().address + ':' + listen.address().port + '/');
+  });
+}
+
+module.exports = server;
