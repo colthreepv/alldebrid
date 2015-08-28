@@ -11,9 +11,7 @@ let // gulp deps
 let // external deps
   del = require('del');
 
-let
-  proxy = require('./dev-proxy'),
-  tasks = require('./tasks');
+let tasks = require('./tasks');
 
 const destDir = 'build';
 const staticList = [
@@ -56,7 +54,8 @@ gulp.task('watch', function (done) {
   gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
   gulp.watch('src/**/*.js', tasks.browserify.build(destDir));
 
-  var listen = proxy.listen(3000, '127.0.0.1', function () {
+  let proxy = require('./dev-proxy');
+  let listen = proxy.listen(3000, '127.0.0.1', function () {
     gutil.log(gutil.colors.magenta('Proxy server listening on:'), 'http://' + listen.address().address + ':' + listen.address().port + '/');
     done();
   });
