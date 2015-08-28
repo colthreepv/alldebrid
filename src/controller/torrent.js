@@ -3,7 +3,7 @@
 const torrentUrl = '/ad/api/torrent.php';
 const torrentUrl2 = '/ad/torrent/';
 
-module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeStorage, $filter) {
+module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter) {
   // initial values
   $scope.torrentStatus = 'working';
   $scope.retryCount = 0;
@@ -23,7 +23,7 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeS
   var lastChecked;
 
   /**
-   * Cooldown and Forever settings are stored in chromeStorage
+   * Cooldown and Forever settings are stored in storage
    * the app retrieves them as soon TorrentController gets initialized.
    *
    * In case of failure, default values applies.
@@ -32,7 +32,7 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeS
     $scope.$watchGroup(['cooldown', 'forever'], function (newValue, oldValue) {
       if (newValue === oldValue) return;
 
-      chromeStorage.set('loop', {
+      storage.set('loop', {
         cooldown: newValue[0],
         forever: newValue[1]
       });
@@ -50,18 +50,11 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeS
     });
   }
 
-  chromeStorage.get('loop', 'object')
-  .then(function success (loop) {
-    $scope.cooldown = loop.cooldown;
-    $scope.forever = loop.forever;
-  }, function failure () {
-    chromeStorage.set('loop', {
-      cooldown: $scope.cooldown,
-      forever: $scope.forever
-    });
-  })
-  .then(watchOptions, watchOptions)
-  .then(watchCooldown, watchCooldown);
+  let loop = storage.get('loop', 'object');
+  $scope.cooldown = (loop && loop.cooldown !== undefined) ? loop.cooldown : $scope.cooldown;
+  $scope.forever = (loop && loop.forever !== undefined) ? loop.forever : $scope.forever;
+  watchOptions();
+  watchCooldown();
 
   function fetchTorrents (callback) {
     $scope.torrentStatus = 'working';
