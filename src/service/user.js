@@ -1,6 +1,7 @@
 'use strict';
 
-const registerUrl = '/register/';
+const registerUrl = '/ad/register/';
+const retryForever = false;
 
 module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, $timeout, uidFetcher) {
   /**
@@ -47,6 +48,7 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
         resolve(parseLogin(page));
       })
       .error(function () {
+        if (!retryForever) return;
         $timeout(function () {
           resolve(checkLogin());
         }, 5000);
@@ -79,6 +81,7 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
         resolve(parseLogin(page));
       })
       .error(function () {
+        if (!retryForever) return;
         $timeout(function () {
           resolve(attemptLogin(username, password));
         }, 5000);
@@ -101,6 +104,7 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
         resolve(parseLogout(page));
       })
       .error(function () {
+        if (!retryForever) return;
         $timeout(function () {
           resolve(attemptLogout(key));
         }, 5000);
@@ -111,14 +115,14 @@ module.exports = ['$http', '$q', '$timeout', 'uidFetcher', function ($http, $q, 
     // isLogged returns a promise
   this.isLogged = function () {
     return checkLogin().then(function (status) {
-      if (status.logged) return retrieveUid(status.logoutKey);
+      if (status.logged) return retrieveUid(status);
       return $q.reject(status);
     });
   };
 
   this.login = function (username, password) {
     return attemptLogin(username, password).then(function (status) {
-      if (status.logged) return retrieveUid(status.logoutKey);
+      if (status.logged) return retrieveUid(status);
       return $q.reject(status);
     });
   };
