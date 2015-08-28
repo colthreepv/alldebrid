@@ -262,6 +262,9 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage
     }
   });
 
+  // forced bootstrap
+  fetchTorrents(parseTorrents);
+
   $scope.select = function () {
     $scope.selectAll = !$scope.selectAll;
     for (var i = 0; i < $scope.torrents.length; i++) {
