@@ -28,8 +28,8 @@
     "radix": 2,
     "space-after-keywords": [2, "always"],
     "space-before-blocks": 2,
-    "space-before-function-parentheses": 2,
-    "spaced-line-comment": [2, "always", { "exceptions": ["-"]}],
+    "space-before-function-paren": 2,
+    "spaced-comment": [2, "always", { "exceptions": ["-"]}],
     "strict": 0,
     "valid-jsdoc": [0, { "prefer": { "return": "returns"}}]
   }
