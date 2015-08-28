@@ -1,5 +1,8 @@
 'use strict';
 
+const torrentUrl = '/ad/api/torrent.php';
+const torrentUrl2 = '/ad/torrent/';
+
 module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeStorage, $filter) {
   // initial values
   $scope.torrentStatus = 'working';
@@ -64,7 +67,7 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeS
     $scope.torrentStatus = 'working';
     $http({
       method: 'GET',
-      url: 'http://www.alldebrid.com/api/torrent.php',
+      url: torrentUrl,
       params: {
         json: true
       }
@@ -335,7 +338,7 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, chromeS
     var firstTorrent = $scope.checkedTorrents[0];
     $http({
       method: 'GET',
-      url: 'http://www.alldebrid.com/torrent/',
+      url: torrentUrl2,
       params: {
         action: 'remove',
         id: firstTorrent.id

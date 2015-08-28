@@ -17,7 +17,7 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
   });
   $stateProvider.state('login', {
     templateUrl: 'controller/login.tpl.html',
-    controller: 'home'
+    controller: 'login'
   });
 
 }];

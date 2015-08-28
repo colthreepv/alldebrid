@@ -5,12 +5,14 @@
  *
  * It returns a promise, that gets resolved always (forever-loop)
  */
+const torrentUrl = '/ad/torrent/';
+
 module.exports = ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
 
   function fetchPage (callback) {
     $http({
       method: 'GET',
-      url: 'http://www.alldebrid.com/torrent/'
+      url: torrentUrl
     }).success(function (data) {
       var uid = data.match(/name="uid" value="(.*)"/)[1];
       callback(uid);
@@ -21,12 +23,12 @@ module.exports = ['$http', '$q', '$timeout', function ($http, $q, $timeout) {
 
   function getKey (logoutKey) {
     return new $q(function (resolve) {
-      var uid = localStorage.get('uid.' + logoutKey);
+      var uid = localStorage.getItem('uid.' + logoutKey);
       if (uid) return resolve(uid);
 
       // AJAX to resolve the uid
       fetchPage(function (uid) {
-        localStorage.set('uid.' + logoutKey, uid);
+        localStorage.setItem('uid.' + logoutKey, uid);
         resolve(uid);
       });
     });
