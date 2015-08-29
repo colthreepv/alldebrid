@@ -1,15 +1,23 @@
 server {
-    listen 80;
-    server_name yourhost.com;
+  listen 80;
+  server_name yourhost.com;
 
-    location / {
-        proxy_set_header Host www.alldebrid.com;
-        proxy_set_header Accept-Encoding "";
-        proxy_cookie_domain www.alldebrid.com yourhost.com;
-        proxy_redirect http://www.alldebrid.com http://yourhost.com;
-        proxy_pass http://www.alldebrid.com;
-    }
+  location /ad {
+    proxy_set_header Host www.alldebrid.com;
+    proxy_set_header Accept-Encoding "";
+    proxy_cookie_domain www.alldebrid.com yourhost.com;
 
-    access_log      /var/log/nginx/ad/access.log combined;
-    error_log       /var/log/nginx/ad/error.log error;
+    proxy_redirect www.alldebrid.com /ad/;
+    proxy_redirect / /ad/;
+
+    proxy_pass http://www.alldebrid.com/;
+  }
+
+  location / {
+    root /home/valerio/projects/alldebrid/build;
+    expires 60d;
+  }
+
+  access_log      /var/log/nginx/ad/access.log combined;
+  error_log       /var/log/nginx/ad/error.log error;
 }
