@@ -17,6 +17,8 @@
     "guard-for-in": 0,
     "indent": [2, 2],
     "new-cap": 0,
+    "no-delete-var": 2,
+    "no-undef": 2,
     "no-floating-decimal": 2,
     "no-mixed-requires": 0,
     "no-nested-ternary": 2,
