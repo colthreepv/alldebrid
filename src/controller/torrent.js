@@ -1,7 +1,7 @@
 'use strict';
 
-const torrentUrl = '/ad/api/torrent.php';
-const torrentUrl2 = '/ad/torrent/';
+var torrentUrl = '/ad/api/torrent.php';
+var torrentUrl2 = '/ad/torrent/';
 
 module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter) {
   // initial values
@@ -50,7 +50,7 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage
     });
   }
 
-  let loop = storage.get('loop', 'object');
+  var loop = storage.get('loop', 'object');
   $scope.cooldown = (loop && loop.cooldown !== undefined) ? loop.cooldown : $scope.cooldown;
   $scope.forever = (loop && loop.forever !== undefined) ? loop.forever : $scope.forever;
   watchOptions();
