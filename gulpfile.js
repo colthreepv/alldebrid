@@ -50,7 +50,7 @@ gulp.task('templates', function () {
 
 gulp.task('watch', function (done) {
   gulp.watch(staticList, gulp.series('copy-static'));
-  gulp.watch('css/*.less', buildLess);
+  gulp.watch('css/**/*.less', buildLess);
   gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
   gulp.watch('src/**/*.js', tasks.browserify.build(destDir));
 
