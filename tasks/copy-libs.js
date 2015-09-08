@@ -18,7 +18,8 @@ let // gulp modules
  * {
  *   // overrides gets removed from package.dependencies
  *   "overrides": {
- *     "angular": "node_modules/angular/angular.js"
+ *     "angular": "node_modules/angular/angular.js",
+ *     "bootstrap": false <-- make copy-libs ignore this library
  *   },
  *   // additionals gets added to dependencies list
  *   "additional": {

@@ -34,9 +34,9 @@ gulp.task('copy-static', function () {
 
 gulp.task('copy-fonts', function () {
   return gulp.src([
-    'node_modules/bootstrap/fonts/glyphicons-halflings-regular.woff',
-    'node_modules/bootstrap/fonts/glyphicons-halflings-regular.woff2',
-    'node_modules/bootstrap/fonts/glyphicons-halflings-regular.ttf'
+    'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.woff',
+    'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.woff2',
+    'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.ttf'
   ]).pipe(gulp.dest(path.join(destDir, 'fonts')));
 });
 

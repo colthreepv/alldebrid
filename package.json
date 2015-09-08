@@ -45,7 +45,8 @@
     "angular": "^1.4.3",
     "angular-hotkeys": "^1.4.5",
     "angular-ui-router": "^0.2.15",
-    "bootstrap": "^3.3.5"
+    "bootstrap-less": "^3.3.8",
+    "bootswatch-less": "^3.3.4"
   },
   "browserify-shim": {
     "angular": "global:angular"
