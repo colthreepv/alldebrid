@@ -30,7 +30,9 @@
                     <input class="form-control" placeholder="Password" name="password" type="password" ng-model="login.password" ng-change="login.loginFailed = false">
                   </div>
                 </div>
-
+                <div class="alert alert-danger" ng-show="login.loginFailed">
+                  <strong>Error!</strong> Change username/password and try submitting again.
+                </div>
                 <div class="form-group">
                   <button type="submit" class="btn btn-lg btn-primary" ng-disabled="login.loading || login.loginFailed">Log In</button>
                   <button class="btn btn-lg btn-primary" ng-show="login.loading"><span class="glyphicon glyphicon-refresh glyphicon-spin"></span></button>
@@ -41,7 +43,7 @@
         </form>
       </div>
       <div class="panel-footer">
-        Don't have an account! <span ng-click="register()"> Register </span>
+        Don't have an account? <a href="https://www.alldebrid.com/register/" target="_blank">Register on AllDebrid</a>
       </div>
     </div>
   </div>
