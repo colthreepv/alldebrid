@@ -12,11 +12,11 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
   });
 
   $stateProvider.state('home', {
-    templateUrl: 'controller/torrent.tpl.html',
+    templateUrl: 'torrent/torrent.tpl.html',
     controller: 'torrent'
   });
   $stateProvider.state('login', {
-    templateUrl: 'controller/login.tpl.html',
+    templateUrl: 'user/login.tpl.html',
     controller: 'loginCtrl as login'
   });
 
