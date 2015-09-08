@@ -2,15 +2,14 @@
   <div class="col-sm-6 col-md-4 col-md-offset-4">
     <div class="panel panel-default">
       <div class="panel-heading">
-        <strong> Log in to continue</strong>
+        <strong>Alldebrid Login</strong>
       </div>
       <div class="panel-body">
-        <form role="form" ng-submit="loginUser()">
+        <form role="form" ng-submit="login.do()">
           <fieldset>
             <div class="row">
               <div class="center-block">
-                <img class="profile-img"
-                  src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120" alt="">
+                <img class="profile-img" src="/ad/lib/images/default/logo_alldebrid.png">
               </div>
             </div>
             <div class="row">
@@ -20,7 +19,7 @@
                     <span class="input-group-addon">
                       <i class="glyphicon glyphicon-user"></i>
                     </span>
-                    <input class="form-control" placeholder="Username" name="loginname" type="text" autofocus ng-model="login.username">
+                    <input class="form-control" placeholder="Username" name="loginname" type="text" autofocus ng-model="login.username" ng-change="login.loginFailed = false">
                   </div>
                 </div>
                 <div class="form-group">
@@ -28,11 +27,13 @@
                     <span class="input-group-addon">
                       <i class="glyphicon glyphicon-lock"></i>
                     </span>
-                    <input class="form-control" placeholder="Password" name="password" type="password" value="" ng-model="login.password">
+                    <input class="form-control" placeholder="Password" name="password" type="password" ng-model="login.password" ng-change="login.loginFailed = false">
                   </div>
                 </div>
+
                 <div class="form-group">
-                  <input type="submit" class="btn btn-lg btn-primary btn-block" value="Log In">
+                  <button type="submit" class="btn btn-lg btn-primary" ng-disabled="login.loading || login.loginFailed">Log In</button>
+                  <button class="btn btn-lg btn-primary" ng-show="login.loading"><span class="glyphicon glyphicon-refresh glyphicon-spin"></span></button>
                 </div>
               </div>
             </div>
