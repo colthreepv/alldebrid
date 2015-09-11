@@ -1,4 +1,5 @@
-exports = module.exports = function ($http, $q, $timeout, uidFetcher, api) {
+exports = module.exports = function ($http, $q, $timeout, api) {
+  var status = this.status = {};
 
   function parseLogin (response) {
     var page = response.data;
@@ -42,18 +43,31 @@ exports = module.exports = function ($http, $q, $timeout, uidFetcher, api) {
     });
   }
 
+  // applies `user` to internal status and returns it for reference
+  function expose (user) {
+    angular.extend(status, user);
+    return status;
+  };
+
+  // clear status
+  function clean () {
+    for (var key in status) {
+      delete status[key];
+    }
+  }
+
   // isLogged returns a promise
   this.isLogged = function () {
-    return api.checkLogin().then(parseLogin);
+    return api.checkLogin().then(parseLogin).then(expose);
   };
 
   this.login = function (username, password) {
-    return api.doLogin(username, password).then(parseLogin);
+    return api.doLogin(username, password).then(parseLogin).then(expose);
   };
 
   this.logout = function (key) {
-    return api.doLogout(key).then(parseLogout);
+    return api.doLogout(key).then(parseLogout).then(clean);
   };
 
 };
-exports.$inject = ['$http', '$q', '$timeout', 'uidFetcher', 'adApi'];
+exports.$inject = ['$http', '$q', '$timeout', 'adApi'];

@@ -1,7 +1,8 @@
 'use strict';
 var api = {
   register: '/ad/register/',
-  torrent: '/ad/torrent/'
+  torrent: '/ad/torrent/',
+  torrentAjax: '/ad/api/torrent.php'
 };
 var retryForever = true;
 var retryTimeout = 5000;
