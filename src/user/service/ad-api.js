@@ -1,39 +1,71 @@
+'use strict';
 var api = {
-  register: '/ad/register/'
+  register: '/ad/register/',
+  torrent: '/ad/torrent/'
 };
 var retryForever = true;
 var retryTimeout = 5000;
 
 exports = module.exports = function ($http, $q, $timeout) {
 
-  function httpAndRetry () {
+  function httpRetry () {
     var args = arguments;
     var httpPromise = $http.apply(null, args);
 
     // in case there is an error
-    httpPromise.error(function () {
-      if (!retryForever) return $q.resolve(arguments); // FIXME?
-      return $timeout(function () {
-        return httpAndRetry.apply(null, args);
-      }, retryTimeout);
+    return httpPromise.catch(function (error) {
+      // re-throw in case is not an http-error or if retry is disabled
+      if (!error || !error.data || !error.status || !retryForever) throw new Error(error);
+      // applies to timeout extended parameters: https://docs.angularjs.org/api/ng/service/$timeout
+      // the 3 $timeout parameters gets concatenated with original httpRetry arguments, using slice as
+      // `arguments`  it's not a real Array
+      return $timeout.apply(null, [httpRetry, retryTimeout, false].concat(Array.prototype.slice.call(args)));
     });
-
-    return httpPromise;
   }
 
   this.checkLogin = function () {
-    return new $q(function (resolve) {
-      $http({
-        method: 'GET',
-        url: api.register,
-        responseType: 'document'
-      }).success(function (page) {
-        resolve(page);
-      });
+    return httpRetry({
+      method: 'GET',
+      url: api.register,
+      responseType: 'document'
     });
   };
 
-  this.httpAndRetry = httpAndRetry;
+  this.fetchUid = function () {
+    return httpRetry({
+      method: 'GET',
+      url: api.torrent
+    }).then(function (response) {
+      return response.data.match(/name="uid" value="(.*)"/)[1];
+    });
+  };
 
+  this.doLogin = function (username, password) {
+    return httpRetry({
+      method: 'GET',
+      url: api.register,
+      params: {
+        action: 'login',
+        'login_login': username,
+        'login_password': password
+      },
+      responseType: 'document'
+    });
+  };
+
+  this.doLogout = function (key) {
+    return httpRetry({
+      method: 'GET',
+      url: api.register,
+      params: {
+        action: 'logout',
+        key: key
+      },
+      responseType: 'document'
+    });
+  };
+
+
+  this.httpRetry = httpRetry;
 };
 exports.$inject = ['$http', '$q', '$timeout'];
