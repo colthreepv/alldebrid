@@ -12,12 +12,24 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
   });
 
   $stateProvider.state('home', {
-    templateUrl: 'torrent/torrent.tpl.html',
-    controller: 'torrent'
+    views: {
+      navbar: {
+        controller: 'navbarCtrl as navbar',
+        templateUrl: 'navbar/logged.tpl.html'
+      },
+      '': {
+        templateUrl: 'torrent/torrent.tpl.html',
+        controller: 'torrent'
+      }
+    }
   });
   $stateProvider.state('login', {
-    templateUrl: 'user/login.tpl.html',
-    controller: 'loginCtrl as login'
+    views: {
+      '': {
+        templateUrl: 'user/login.tpl.html',
+        controller: 'loginCtrl as login',
+      }
+    }
   });
 
 }];

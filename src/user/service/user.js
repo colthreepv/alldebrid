@@ -65,8 +65,8 @@ exports = module.exports = function ($http, $q, $timeout, api) {
     return api.doLogin(username, password).then(parseLogin).then(expose);
   };
 
-  this.logout = function (key) {
-    return api.doLogout(key).then(parseLogout).then(clean);
+  this.logout = function () {
+    return api.doLogout(status.logoutKey).then(parseLogout).then(clean);
   };
 
 };
