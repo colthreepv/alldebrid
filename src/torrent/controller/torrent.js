@@ -3,7 +3,7 @@
 var torrentUrl = '/ad/api/torrent.php';
 var torrentUrl2 = '/ad/torrent/';
 
-exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter) {
+exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter, $state) {
   // initial values
   $scope.torrentStatus = 'working';
   $scope.retryCount = 0;
@@ -383,8 +383,9 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
     });
 
     // send event only in case there's something to convert!
-    if (Object.keys(torrentHash).length) {
-      $scope.$emit('torrentLinks', torrentHash);
+    if (Object.keys(torrentHash).length > 0) {
+      // $scope.$emit('torrentLinks', torrentHash); nah no more emits!
+      $state.go('home.links', { links: torrentHash });
     }
   };
 
@@ -409,3 +410,4 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
   });
 
 };
+exports.$inject = ['$scope', '$rootScope', '$http', '$timeout', 'hotkeys', 'storage', '$filter', '$state'];

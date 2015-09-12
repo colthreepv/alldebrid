@@ -41,11 +41,10 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
     }
   })
   .state('home.links', {
+    params: {
+      links: undefined
+    },
     views: {
-      navbar: {
-        controller: 'navbarCtrl as navbar',
-        templateUrl: 'navbar/logged.tpl.html'
-      },
       '': {
         templateUrl: 'links/links.tpl.html',
         controller: 'linksCtrl as links'
