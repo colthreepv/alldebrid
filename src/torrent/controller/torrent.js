@@ -3,7 +3,7 @@
 var torrentUrl = '/ad/api/torrent.php';
 var torrentUrl2 = '/ad/torrent/';
 
-module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter) {
+exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter) {
   // initial values
   $scope.torrentStatus = 'working';
   $scope.retryCount = 0;
@@ -101,20 +101,20 @@ module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage
     }
     var multiplier;
     switch (s[1]) {
-      case 'Bytes':
-        multiplier = 1;
-        break;
-      case 'KB':
-        multiplier = 1024;
-        break;
-      case 'MB':
-        multiplier = 1024 * 1024;
-        break;
-      case 'GB':
-        multiplier = 1024 * 1024 * 1024;
-        break;
-      default:
-        console.error('torrent size not handled', sizeStr, s[1]);
+    case 'Bytes':
+      multiplier = 1;
+      break;
+    case 'KB':
+      multiplier = 1024;
+      break;
+    case 'MB':
+      multiplier = 1024 * 1024;
+      break;
+    case 'GB':
+      multiplier = 1024 * 1024 * 1024;
+      break;
+    default:
+      console.error('torrent size not handled', sizeStr, s[1]);
     }
     // try parsing quantity
     var quantity;

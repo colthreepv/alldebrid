@@ -8,13 +8,18 @@ var retryForever = true;
 var retryTimeout = 5000;
 
 exports = module.exports = function ($http, $q, $timeout) {
+  var httpWorking = false;
 
   function httpRetry () {
     var args = arguments;
     var httpPromise = $http.apply(null, args);
+    sendAjax(true);
 
+    return httpPromise.then(function (response) {
+      sendAjax(false);
+      return response;
     // in case there is an error
-    return httpPromise.catch(function (error) {
+    }).catch(function (error) {
       // re-throw in case is not an http-error or if retry is disabled
       if (!error || !error.data || !error.status || !retryForever) throw new Error(error);
       // applies to timeout extended parameters: https://docs.angularjs.org/api/ng/service/$timeout
@@ -38,6 +43,16 @@ exports = module.exports = function ($http, $q, $timeout) {
       url: api.torrent
     }).then(function (response) {
       return response.data.match(/name="uid" value="(.*)"/)[1];
+    });
+  };
+
+  this.fetchTorrents = function () {
+    return httpRetry({
+      method: 'GET',
+      url: api.torrentAjax,
+      params: {
+        json: true
+      }
     });
   };
 
@@ -66,6 +81,16 @@ exports = module.exports = function ($http, $q, $timeout) {
     });
   };
 
+  // pub/sub to broadcast AJAX events through all application
+  var ajaxListeners = [];
+  function sendAjax (newValue) {
+    ajaxListeners.forEach(function (cb) {
+      cb(newValue);
+    });
+  }
+  this.onAjax = function (cb) {
+    ajaxListeners.push(cb);
+  };
 
   this.httpRetry = httpRetry;
 };

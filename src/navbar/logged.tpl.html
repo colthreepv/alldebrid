@@ -1,9 +1,29 @@
 <div class="navbar navbar-default" role="navigation">
-  <div class="navbar-collapse">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle collapsed" ng-click="navbar.collapsed = !navbar.collapsed">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#">AllDebrid</a>
+    <a class="navbar-brand" ng-show="navbar.ajax">
+      <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+      <span>loading</span>
+    </a>
+  </div>
+  <div class="collapse navbar-collapse" ng-class="!navbar.collapsed && 'in'">
     <!-- Navbar links -->
     <ul class="nav navbar-nav">
-      <li class="desktop">
+      <li>
         <a>{{ navbar.page() }}</a>
+      </li>
+      <li>
+        <!-- Spinner -->
+        <button class="btn btn-default navbar-btn" ng-show="navbar.ajax">
+          <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+          <span>loading</span>
+        </button>
       </li>
       <li ng-class="{ active: showLinks }">
         <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showLinks = !showLinks : null">Unrestricted Links</a>
@@ -12,11 +32,6 @@
         <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showTorrents = !showTorrents : null">Add Torrent</a>
       </li>
     </ul>
-    <!-- Spinner -->
-    <button class="btn btn-default navbar-btn" ng-show="false">
-      <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
-      <span>loading</span>
-    </button>
 
     <!-- right side of the navbar -->
     <!-- Logout Form -->
@@ -33,7 +48,7 @@
           <span ng-show="!navbar.user.remainingDays">
             <span class="text-error">No paid days left, <a href="http://www.alldebrid.com/offer/" target="_blank">renew</a> to use this application</span>
           </span>
-          <button type="submit" class="btn btn-link btn-lg mobile">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+          <button type="submit" class="btn btn-default mobile">Logout <span class="glyphicon glyphicon-log-out"></span></button>
         </span>
       </div>
       <div class="form-group desktop">
