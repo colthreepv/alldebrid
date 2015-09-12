@@ -6,15 +6,14 @@ server {
     proxy_set_header Host www.alldebrid.com;
     proxy_set_header Accept-Encoding "";
     proxy_cookie_domain www.alldebrid.com yourhost.com;
-
     proxy_redirect www.alldebrid.com /ad/;
     proxy_redirect / /ad/;
-
+    proxy_redirect http://www.alldebrid.com /ad/;
     proxy_pass http://www.alldebrid.com/;
   }
 
   location / {
-    root /home/valerio/projects/alldebrid/build;
+    root <build directory>;
     expires 60d;
   }
 
