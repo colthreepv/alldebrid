@@ -1,0 +1,61 @@
+<div class="showLinks">
+  <div class="row">
+    <div class="col-md-12">
+      <form role="form">
+        <div class="form-group">
+          <label>Links to request</label>
+          <span>use one link per line, newline is <b>required</b> between them</span>
+          <textarea class="form-control long-text" placeholder="place links here" autofocus ng-model="requestedLinks"></textarea>
+        </div>
+        <div class="form-group" ng-show="displayMode === 'textarea'">
+          <label>Unrestricted links</label>
+          <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." autofocus ng-model="unrestrictedLinks"></textarea>
+        </div>
+        <div class="form-group" ng-show="displayMode === 'clickable'">
+          <div ng-repeat="(linkName, linkList) in clickableLinks">
+            <div class="alert alert-success" role="alert">
+              {{ linkName }}
+            </div>
+            <ul class="list-group">
+              <li class="list-group-item" ng-class="{ 'list-group-item-danger': link.error }" ng-repeat="link in linkList">
+                <span class="badge" title="{{ link.error }}" ng-show="link.error">hover for error</span>
+                <a href="{{ link.link }}" target="_blank" ng-show="link.filename">{{ link.filename }}</a>
+                <a href="{{ link.link }}" target="_blank" ng-show="!link.filename">{{ link.link }}</a>
+                <a href="link.streaming" target="_blank" ng-show="!!link.streaming.length">{{ link.streaming }}</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="form-group text-center">
+          <label class="radio-inline">
+            <input type="radio" value="clickable" ng-model="displayMode">Clickable
+          </label>
+          <label class="radio-inline">
+            <input type="radio" value="textarea" ng-model="displayMode">Textarea
+          </label>
+          <button class="btn btn-lg"
+            ng-class="{ 'btn-default': !generatingLinks, 'btn-success': generatingLinks }" ng-click="unrestrictLinks()" ng-disabled="generatingLinks">
+            Unrestrict links <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="generatingLinks"></span>
+          </button>
+          <div class="desktop">
+            <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
+              Clear <span class="glyphicon glyphicon-remove"></span>
+            </button>
+            <button class="btn btn-lg btn-warning" ng-click="$parent.showLinks = false">
+              Close <span class="glyphicon glyphicon-eject"></span>
+            </button>
+          </div>
+        </div>
+        <!-- close buttons are split in mobile -->
+        <div class="form-group text-center mobile">
+          <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
+            Clear <span class="glyphicon glyphicon-remove"></span>
+          </button>
+          <button class="btn btn-lg btn-warning" ng-click="$parent.showLinks = false">
+            Close <span class="glyphicon glyphicon-eject"></span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

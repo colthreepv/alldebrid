@@ -15,7 +15,7 @@ exports = module.exports = function ($scope, $state, user) {
     ctrl.loading = true;
     user.login(ctrl.username, ctrl.password)
     .then(function () {
-      $state.go('home');
+      $state.go('home.torrents');
     })
     .catch(function () {
       ctrl.loginFailed = true;
