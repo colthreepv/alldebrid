@@ -24,7 +24,7 @@ exports = module.exports = function ($http, $q, $timeout) {
     // in case there is an error
     }).catch(function (error) {
       // re-throw in case is not an http-error or if retry is disabled
-      if (!error || !error.data || !error.status || !retryForever) throw new Error(error);
+      if (!error || !error.config || !retryForever) throw new Error(error);
       // applies to timeout extended parameters: https://docs.angularjs.org/api/ng/service/$timeout
       // the 3 $timeout parameters gets concatenated with original httpRetry arguments, using slice as
       // `arguments`  it's not a real Array

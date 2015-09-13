@@ -4,14 +4,14 @@ exports = module.exports = function ($state, user, api) {
   this.user = user.status;
 
   this.ajax = false;
-
-  this.page = function () {
-    return $state.current.name;
-  };
-
   api.onAjax(function (newStatus) {
     self.ajax = newStatus;
   });
+
+  this.newMagnet = '';
+  this.addMagnet = function () {
+    console.info('Yet TBD!', self.newMagnet);
+  };
 
   this.logout = function () {
     user.logout().then(function () {
