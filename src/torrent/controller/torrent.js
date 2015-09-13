@@ -375,18 +375,24 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
     //   'torrent-name': ['link1', 'link2', 'link3'],
     //   'another-torrent-name': ['link1']
     // }
-    var torrentHash = {};
-    $scope.checkedTorrents.filter(function (torrent, idx) {
-      return !!torrent.links.length;
-    }).forEach(function (torrent, idx) {
-      torrentHash[torrent.name] = angular.copy(torrent.links);
-    });
 
+    // OLD CODE
+    // var torrentHash = {};
+    // $scope.checkedTorrents.filter(function (torrent, idx) {
+    //   return !!torrent.links.length;
+    // }).forEach(function (torrent, idx) {
+    //   torrentHash[torrent.name] = angular.copy(torrent.links);
+    // });
+
+    var links = $scope.checkedTorrents.reduce(function (arr, torrent) {
+      return arr.concat(torrent.links);
+    }, []);
+
+    $state.go('home.unrestrict', { links: links });
     // send event only in case there's something to convert!
-    if (Object.keys(torrentHash).length > 0) {
+    // if (Object.keys(torrentHash).length > 0) {
       // $scope.$emit('torrentLinks', torrentHash); nah no more emits!
-      $state.go('home.links', { links: torrentHash });
-    }
+    // }
   };
 
   // hold shift to multi-select

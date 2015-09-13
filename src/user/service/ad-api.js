@@ -2,14 +2,17 @@
 var api = {
   register: '/ad/register/',
   torrent: '/ad/torrent/',
-  torrentAjax: '/ad/api/torrent.php'
+  torrentAjax: '/ad/api/torrent.php',
+  convert: '/ad/service.php'
 };
 var retryForever = true;
 var retryTimeout = 5000;
 
 exports = module.exports = function ($http, $q, $timeout) {
-  var httpWorking = false;
-
+  /**
+   * httpRetry is a function to substitute to normal $http call
+   * @return {Promise} -> $http response
+   */
   function httpRetry () {
     var args = arguments;
     var httpPromise = $http.apply(null, args);
@@ -56,6 +59,17 @@ exports = module.exports = function ($http, $q, $timeout) {
     });
   };
 
+  this.convert = function (link) {
+    return httpRetry({
+      method: 'GET',
+      url: api.convert,
+      params: {
+        link: link,
+        json: true
+      }
+    });
+  };
+
   this.doLogin = function (username, password) {
     return httpRetry({
       method: 'GET',
@@ -80,6 +94,7 @@ exports = module.exports = function ($http, $q, $timeout) {
       responseType: 'document'
     });
   };
+
 
   // pub/sub to broadcast AJAX events through all application
   var ajaxListeners = [];
