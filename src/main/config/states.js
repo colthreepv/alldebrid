@@ -40,7 +40,7 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
     views: {
       '': {
         templateUrl: 'torrent/torrent.tpl.html',
-        controller: 'torrent'
+        controller: 'torrentCtrl'
       }
     }
   })
@@ -53,6 +53,15 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
       '': {
         templateUrl: 'unrestrict/from-torrent.tpl.html',
         controller: 'unrestrictCtrl as unr'
+      }
+    }
+  })
+  .state('home.add', {
+    url: '/add',
+    views: {
+      '': {
+        templateUrl: 'add/add.tpl.html',
+        controller: 'addCtrl as add'
       }
     }
   });
