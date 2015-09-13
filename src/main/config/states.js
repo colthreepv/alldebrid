@@ -2,6 +2,7 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
   $urlRouterProvider.otherwise('/torrents');
 
   function isLogged ($state, $q, user) {
+    if (user.status.logged) return $q.resolve();
     return user.isLogged().catch(function () {
       return $state.go('login');
     });
