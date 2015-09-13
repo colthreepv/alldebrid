@@ -30,7 +30,7 @@
         </ul>
       </div>
       <div ng-show="unr.textMode">
-        <textarea class="form-control long-text" placeholder="unrestricted links" rows="5" autofocus ng-model="unr.unrestrictedText"></textarea>
+        <textarea class="form-control long-text" placeholder="unrestricted links" rows="{{ unr.unrestricted.length + 2 }}" autofocus ng-model="unr.unrestrictedText"></textarea>
       </div>
       <button class="btn btn-lg btn-danger" ng-click="unr.done()" ng-disabled="unr.working">
         Done <span class="glyphicon glyphicon-ok"></span>

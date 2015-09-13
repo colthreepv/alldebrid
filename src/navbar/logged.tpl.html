@@ -1,7 +1,9 @@
 <div class="navbar navbar-default" role="navigation">
   <div class="navbar-header">
+    <button type="button" class="navbar-toggle btn btn-default" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
     <button type="button" class="navbar-toggle collapsed" ng-click="navbar.collapsed = !navbar.collapsed">
       <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
@@ -13,37 +15,15 @@
     </a>
   </div>
   <div class="collapse navbar-collapse" ng-class="!navbar.collapsed && 'in'">
-    <!-- Navbar links -->
-    <ul class="nav navbar-nav">
-      <li>
-        <a>{{ navbar.page() }}</a>
-      </li>
-      <li>
-        <a href="#" ui-sref="home.unrestrict">links</a>
-      </li>
-    </ul>
-
-    <!-- right side of the navbar -->
-    <!-- Logout Form -->
-    <form class="navbar-form navbar-right" role="logout" ng-submit="navbar.logout()">
-      <div class="form-group">
-        <span>
-          <span class="glyphicon glyphicon-user"></span>
-          <span class="right-spacer">{{ navbar.user.username }}</span>
-          <span ng-show="paid">
-            <span class="glyphicon glyphicon-time"></span>
-            <span class="text-success desktop">remaining days: {{ navbar.user.remainingDays }}</span>
-            <span class="text-success mobile">days: {{ navbar.user.remainingDays }}</span>
-          </span>
-          <span ng-show="!navbar.user.remainingDays">
-            <span class="text-error">No paid days left, <a href="http://www.alldebrid.com/offer/" target="_blank">renew</a> to use this application</span>
-          </span>
-          <button type="submit" class="btn btn-default mobile">Logout <span class="glyphicon glyphicon-log-out"></span></button>
-        </span>
-      </div>
-      <div class="form-group desktop">
-        <button type="submit" class="btn btn-default">Logout <span class="glyphicon glyphicon-log-out"></span></button>
-      </div>
-    </form>
+    <span class="navbar-brand">
+      <span class="glyphicon glyphicon-user"></span>
+      <span class="right-spacer">{{ navbar.user.username }}</span>
+    </span>
+    <span class="navbar-brand">
+      <span ng-show="navbar.user.remainingDays">days left: {{ navbar.user.remainingDays }}</span>
+      <span ng-show="!navbar.user.remainingDays">no days left</span>
+      <a href="http://www.alldebrid.com/offer/" target="_blank" ng-show="!navbar.user.remainingDays">renew</a>
+    </span>
+    <button type="button" class="btn btn-default navbar-btn navbar-right hidden-xs hidden-sm" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
   </div>
 </div>
