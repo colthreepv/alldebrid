@@ -1,4 +1,5 @@
-exports = module.exports = function ($stateProvider) {
+exports = module.exports = function ($stateProvider, $urlRouterProvider) {
+  $urlRouterProvider.otherwise('/torrents');
 
   function isLogged ($state, $q, user) {
     return user.isLogged().catch(function () {
@@ -9,7 +10,7 @@ exports = module.exports = function ($stateProvider) {
 
   $stateProvider
   .state('login', {
-    url: 'login',
+    url: '/login',
     views: {
       '': {
         templateUrl: 'user/login.tpl.html',
@@ -20,19 +21,21 @@ exports = module.exports = function ($stateProvider) {
   .state('home', {
     abstract: true,
     url: '',
-    // resolve: isLogged,
     views: {
       navbar: {
         controller: 'navbarCtrl as navbar',
         templateUrl: 'navbar/logged.tpl.html'
       },
       '': {
-        template: '<ui-view/>'
+        template: '<ui-view/>',
+        resolve: {
+          isLogged: isLogged
+        }
       }
     }
   })
   .state('home.torrents', {
-    url: 'torrents',
+    url: '/torrents',
     views: {
       '': {
         templateUrl: 'torrent/torrent.tpl.html',
@@ -41,7 +44,7 @@ exports = module.exports = function ($stateProvider) {
     }
   })
   .state('home.unrestrict', {
-    url: 'unrestrict',
+    url: '/unrestrict',
     params: {
       links: undefined
     },
@@ -55,4 +58,4 @@ exports = module.exports = function ($stateProvider) {
 
 };
 
-exports.$inject = ['$stateProvider'];
+exports.$inject = ['$stateProvider', '$urlRouterProvider'];
