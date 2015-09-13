@@ -21,19 +21,6 @@
       <li>
         <a href="#" ui-sref="home.unrestrict">links</a>
       </li>
-      <li>
-        <!-- Spinner -->
-        <button class="btn btn-default navbar-btn" ng-show="navbar.ajax">
-          <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
-          <span>loading</span>
-        </button>
-      </li>
-      <li ng-class="{ active: showLinks }">
-        <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showLinks = !showLinks : null">Unrestricted Links</a>
-      </li>
-      <li ng-class="{ active: showTorrents }">
-        <a ng-class="{ 'pointer': paid, 'denied': !paid }" ng-click="paid ? showTorrents = !showTorrents : null">Add Torrent</a>
-      </li>
     </ul>
 
     <!-- right side of the navbar -->

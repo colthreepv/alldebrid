@@ -20,12 +20,20 @@
           <button class="btn btn-xs btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">generate links</button>
           <button class="btn btn-xs btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">clear selection</button>
         </div>
-        <div class="form-group mobile">
-          <button class="btn btn-lg btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
-            remove <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
-          </button>
-          <button class="btn btn-lg btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">generate links</button>
-          <button class="btn btn-lg btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">deselect all</button>
+        <div class="row mobile">
+          <div class="btn-group btn-group-justified" role="group" aria-label="...">
+            <div class="btn-group">
+              <button class="btn btn-md btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
+                remove <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
+              </button>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-md btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">get links</button>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn-md btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">deselect</button>
+            </div>
+          </div>
         </div>
       </form>
     </div>

@@ -1,4 +1,4 @@
-exports = module.exports = function ($params, $q, api) {
+exports = module.exports = function ($params, $q, $window, api) {
   var self = this;
   this.working = false;
   this.textMode = false;
@@ -6,18 +6,21 @@ exports = module.exports = function ($params, $q, api) {
   this.unrestrictedText = '';
   this.unrestricted = [];
 
-  function convertLinks (links, progressFn) {
-    if (!links.length) return $q.resolve();
-    if (progressFn === undefined) progressFn = angular.noop;
-
-    return api.convert(links.pop())
-    .then(progressFn)
-    .then(convertLinks.bind(null, links, progressFn));
-  }
-
   // each link getting unrestricted pass by this handler function, showing progress to user
   function progressHandler (linkResponse) {
     self.unrestricted.push(linkResponse.data);
+    self.unrestrictedText = self.unrestricted.reduce(function (text, file) {
+      if (file.error !== '') return text += 'ERROR: ' + file.error;
+      return text += file.link + '\n';
+    }, '');
+  }
+
+  function convertLinks (links) {
+    if (!links.length) return $q.resolve();
+
+    return api.convert(links.pop())
+    .then(progressHandler)
+    .then(convertLinks.bind(null, links));
   }
 
   function unrestrict (links) {
@@ -28,7 +31,11 @@ exports = module.exports = function ($params, $q, api) {
     });
   }
 
-  unrestrict($params.links);
+  this.done = function () {
+    $window.history.back();
+  };
+
+  if ($params.links) unrestrict($params.links);
 };
 
-exports.$inject = ['$stateParams', '$q', 'adApi'];
+exports.$inject = ['$stateParams', '$q', '$window', 'adApi'];

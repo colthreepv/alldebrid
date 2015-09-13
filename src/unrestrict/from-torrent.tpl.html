@@ -1,55 +1,40 @@
-<div class="showLinks">
-  <div class="row">
-    <div class="col-md-12">
-      <form role="form">
-<!--         <div class="form-group">
-          <label>Links to request</label>
-          <span>use one link per line, newline is <b>required</b> between them</span>
-          <textarea class="form-control long-text" placeholder="place links here" autofocus ng-model="requestedLinks"></textarea>
-        </div>
-        <div class="form-group" ng-show="unr.textMode">
-          <label>Unrestricted links</label>
-          <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." autofocus ng-model="unr.unrestrictedText"></textarea>
-        </div> -->
-        <div class="form-group text-center">
-          <div class="checkbox">
-            <label>
-              <input type="checkbox" ng-model="unr.textMode"> Text mode
-            </label>
-          </div>
-          <div class="form-group" ng-show="!unr.textMode">
-            <ul class="list-group">
-              <li class="list-group-item" ng-class="{ 'list-group-item-danger': file.error }" ng-repeat="file in unr.unrestricted">
-                <span class="badge" title="{{ file.error }}" ng-if="file.error">{{ file.error }}</span>
-                <span>
-                  <img class="img-thumbnail" ng-src="{{ '/ad/' + file.icon }}" ng-if="file.icon">
-                  <a href="{{ file.link }}" target="_blank" ng-if="file.filename">{{ file.filename }}</a>
-                  <a href="{{ file.link }}" target="_blank" ng-if="!file.filename">{{ file.link }}</a>
-                  <!-- does it ever happen anymore to get 'streaming'? -->
-                  <a href="{{ file.streaming }}" target="_blank" ng-if="!!file.streaming.length">{{ file.streaming }}</a>
-                <span>
-              </li>
-            </ul>
-          </div>
-          <div class="desktop">
-            <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
-              Clear <span class="glyphicon glyphicon-remove"></span>
-            </button>
-            <button class="btn btn-lg btn-warning" ng-click="$parent.showLinks = false">
-              Close <span class="glyphicon glyphicon-eject"></span>
-            </button>
-          </div>
-        </div>
-        <!-- close buttons are split in mobile -->
-        <div class="form-group text-center mobile">
-          <button class="btn btn-lg btn-danger" ng-click="clearLinks()" ng-disabled="generatingLinks">
-            Clear <span class="glyphicon glyphicon-remove"></span>
-          </button>
-          <button class="btn btn-lg btn-warning" ng-click="$parent.showLinks = false">
-            Close <span class="glyphicon glyphicon-eject"></span>
-          </button>
-        </div>
-      </form>
+<div class="row">
+  <div>
+    <!-- <form role="form"></form> -->
+      <!-- <div class="form-group">
+        <label>Links to request</label>
+        <span>use one link per line, newline is <b>required</b> between them</span>
+        <textarea class="form-control long-text" placeholder="place links here" autofocus ng-model="requestedLinks"></textarea>
+      </div>
+      <div class="form-group" ng-show="unr.textMode">
+        <label>Unrestricted links</label>
+        <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." autofocus ng-model="unr.unrestrictedText"></textarea>
+      </div> -->
+
+
+    <div class="text-center">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="unr.textMode"> Text mode
+        </label>
+      </div>
+      <div ng-show="!unr.textMode">
+        <ul class="list-group">
+          <li class="list-group-item" ng-class="{ 'list-group-item-danger': file.error }" ng-repeat="file in unr.unrestricted">
+            <span class="badge" title="{{ file.error }}" ng-if="file.error">{{ file.error }}</span>
+            <a href="{{ file.link }}" target="_blank" ng-if="file.filename">{{ file.filename }}</a>
+            <a href="{{ file.link }}" target="_blank" ng-if="!file.filename">{{ file.link }}</a>
+            <!-- does it ever happen anymore to get 'streaming'? -->
+            <a href="{{ file.streaming }}" target="_blank" ng-if="!!file.streaming.length">{{ file.streaming }}</a>
+          </li>
+        </ul>
+      </div>
+      <div ng-show="unr.textMode">
+        <textarea class="form-control long-text" placeholder="unrestricted links" rows="5" autofocus ng-model="unr.unrestrictedText"></textarea>
+      </div>
+      <button class="btn btn-lg btn-danger" ng-click="unr.done()" ng-disabled="unr.working">
+        Done <span class="glyphicon glyphicon-ok"></span>
+      </button>
     </div>
   </div>
 </div>
