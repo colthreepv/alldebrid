@@ -1,27 +1,26 @@
-module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvider, $urlRouterProvider) {
-  $urlRouterProvider.otherwise(function ($injector) {
-    var // injecting modules
-      $state = $injector.get('$state'),
-      user = $injector.get('user');
+exports = module.exports = function ($stateProvider) {
 
-    user.isLogged().then(function () {
-      $state.go('home.torrents');
-    }, function () {
-      $state.go('login');
+  function isLogged ($state, $q, user) {
+    return user.isLogged().catch(function () {
+      return $state.go('login');
     });
-  });
+  }
+  isLogged.$inject = ['$state', '$q', 'user'];
 
   $stateProvider
   .state('login', {
+    url: 'login',
     views: {
       '': {
         templateUrl: 'user/login.tpl.html',
-        controller: 'loginCtrl as login',
+        controller: 'loginCtrl as login'
       }
     }
   })
   .state('home', {
     abstract: true,
+    url: '',
+    // resolve: isLogged,
     views: {
       navbar: {
         controller: 'navbarCtrl as navbar',
@@ -33,6 +32,7 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
     }
   })
   .state('home.torrents', {
+    url: 'torrents',
     views: {
       '': {
         templateUrl: 'torrent/torrent.tpl.html',
@@ -40,16 +40,19 @@ module.exports = ['$stateProvider', '$urlRouterProvider', function ($stateProvid
       }
     }
   })
-  .state('home.links', {
+  .state('home.unrestrict', {
+    url: 'unrestrict',
     params: {
       links: undefined
     },
     views: {
       '': {
-        templateUrl: 'links/links.tpl.html',
-        controller: 'linksCtrl as links'
+        templateUrl: 'unrestrict/from-torrent.tpl.html',
+        controller: 'unrestrictCtrl as unr'
       }
     }
   });
 
-}];
+};
+
+exports.$inject = ['$stateProvider'];
