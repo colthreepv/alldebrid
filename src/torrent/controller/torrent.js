@@ -1,11 +1,8 @@
 'use strict';
 
-var torrentUrl = '/ad/api/torrent.php';
-var torrentUrl2 = '/ad/torrent/';
-
-exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkeys, storage, $filter, $state) {
+exports = module.exports = function ($scope, $timeout, $filter, $state, hotkeys, storage, api) {
   // initial values
-  $scope.torrentStatus = 'working';
+  $scope.torrentStatus = 'done';
   $scope.retryCount = 0;
   $scope.torrents = [];
   $scope.cooldown = 5000;
@@ -57,28 +54,8 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
   watchCooldown();
 
   function fetchTorrents (callback) {
-    $scope.torrentStatus = 'working';
-    $http({
-      method: 'GET',
-      url: torrentUrl,
-      params: {
-        json: true
-      }
-    })
-    .success(function (data, status, headers, config) {
-      $scope.torrentStatus = 'done';
-      $scope.retryCount = 0;
-      callback(data);
-    })
-    .error(function (data, status, headers, config) {
-      $scope.torrentStatus = 'retrying';
-
-      // retry connection
-      $timeout(function () {
-        $scope.retryCount += 1;
-        console.log('retry torrent fetch...');
-        fetchTorrents(callback);
-      }, 5000 * Math.max(($scope.retryCount + 1), 10));
+    api.fetchTorrents().then(function (response) {
+      callback(response.data);
     });
   }
 
@@ -237,20 +214,6 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
     }
   }
 
-  // start forever loop
-  $rootScope.$watch('loginStatus', function (newValue, oldValue) {
-    if (newValue === oldValue) return;
-
-    if (newValue === 'login') {
-      fetchTorrents(parseTorrents);
-    }
-    if (newValue === 'anon') { // in case the user logs out, clear the $timeout
-      $timeout.cancel(cooldownTimeout);
-      // also clear the torrent list.
-      $scope.torrents = [];
-    }
-  });
-
   $scope.checkForever = function () {
     if (!$scope.forever) fetchTorrents(parseTorrents);
   };
@@ -332,14 +295,7 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
     if (!$scope.checkedTorrents.length) return callback();
 
     var firstTorrent = $scope.checkedTorrents[0];
-    $http({
-      method: 'GET',
-      url: torrentUrl2,
-      params: {
-        action: 'remove',
-        id: firstTorrent.id
-      }
-    }).success(function (data, status, headers, config) {
+    api.removeTorrents(firstTorrent.id).then(function () {
       var idx;
       // cleaning data structures
       if (idx = $scope.checkedTorrents.indexOf(firstTorrent), idx !== -1) {
@@ -357,8 +313,6 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
       }
       // go again
       removeTorrents(callback);
-    }).error(function (data, status, headers, config) {
-      $timeout(removeTorrents.bind(null, callback), 5000);
     });
   }
 
@@ -416,4 +370,4 @@ exports = module.exports = function ($scope, $rootScope, $http, $timeout, hotkey
   });
 
 };
-exports.$inject = ['$scope', '$rootScope', '$http', '$timeout', 'hotkeys', 'storage', '$filter', '$state'];
+exports.$inject = ['$scope', '$timeout', '$filter', '$state', 'hotkeys', 'storage', 'adApi'];

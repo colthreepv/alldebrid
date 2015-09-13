@@ -14,7 +14,7 @@
       <span>loading</span>
     </a>
   </div>
-  <div class="collapse navbar-collapse" ng-class="!navbar.collapsed && 'in'">
+  <div class="collapse navbar-collapse pull-right" ng-class="!navbar.collapsed && 'in'">
     <span class="navbar-brand">
       <span class="glyphicon glyphicon-user"></span>
       <span class="right-spacer">{{ navbar.user.username }}</span>
@@ -24,6 +24,6 @@
       <span ng-show="!navbar.user.remainingDays">no days left</span>
       <a href="http://www.alldebrid.com/offer/" target="_blank" ng-show="!navbar.user.remainingDays">renew</a>
     </span>
-    <button type="button" class="btn btn-default navbar-btn navbar-right hidden-xs hidden-sm" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+    <button type="button" class="btn btn-default navbar-btn pull-right hidden-xs" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
   </div>
 </div>

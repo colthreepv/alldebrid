@@ -59,6 +59,17 @@ exports = module.exports = function ($http, $q, $timeout) {
     });
   };
 
+  this.removeTorrents = function (id) {
+    return httpRetry({
+      method: 'GET',
+      url: api.torrent,
+      params: {
+        action: 'remove',
+        id: id
+      }
+    });
+  };
+
   this.convert = function (link) {
     return httpRetry({
       method: 'GET',
