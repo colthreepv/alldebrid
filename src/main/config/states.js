@@ -9,6 +9,11 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
   }
   isLogged.$inject = ['$state', '$q', 'user'];
 
+  function startTorrents (torrent) {
+    return torrent.start();
+  }
+  startTorrents.$inject = ['torrent'];
+
   $stateProvider
   .state('login', {
     url: '/login',
@@ -40,7 +45,10 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
     views: {
       '': {
         templateUrl: 'torrent/torrent.tpl.html',
-        controller: 'torrentCtrl'
+        controller: 'torrentCtrlNew as torrent',
+        resolve: {
+          startTorrents: startTorrents
+        }
       }
     }
   })

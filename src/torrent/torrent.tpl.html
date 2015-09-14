@@ -3,10 +3,10 @@
     <div class="col-md-8">
       <form class="form-inline">
         <div class="checkbox desktop">
-          <span>Forever </span><input type="checkbox" ng-model="forever" ng-click="checkForever()">
+          <span>Forever </span><input type="checkbox" ng-model="torrent.forever" ng-click="checkForever()">
         </div>
         <div class="form-group desktop">
-          <select ng-model="cooldown">
+          <select ng-model="torrent.cooldown">
             <option value="30000">30 sec</option>
             <option value="15000">15 sec</option>
             <option value="10000">10 sec</option>
@@ -14,24 +14,24 @@
           </select>
         </div>
         <div class="form-group desktop">
-          <button class="btn btn-xs btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
-            remove selected <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
+          <button class="btn btn-xs btn-danger" ng-disabled="!torrent.checked.length || torrent.removing" ng-click="torrent.removeChecked()">
+            remove selected <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrent.removing"></span>
           </button>
-          <button class="btn btn-xs btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">generate links</button>
-          <button class="btn btn-xs btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">clear selection</button>
+          <button class="btn btn-xs btn-info" ng-disabled="!torrent.checked.length" ng-click="torrent.generateLinks()">generate links</button>
+          <button class="btn btn-xs btn-default" ng-disabled="!torrent.checked.length" ng-click="torrent.deselect()">clear selection</button>
         </div>
         <div class="row mobile">
           <div class="btn-group btn-group-justified" role="group" aria-label="...">
             <div class="btn-group">
-              <button class="btn btn-md btn-danger" ng-disabled="!checkedTorrents.length || removing" ng-click="removeChecked()">
-                remove <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="removing"></span>
+              <button class="btn btn-md btn-danger" ng-disabled="!torrent.checked.length || torrent.removing" ng-click="torrent.removeChecked()">
+                remove <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-show="torrent.removing"></span>
               </button>
             </div>
             <div class="btn-group">
-              <button class="btn btn-md btn-info" ng-disabled="!checkedTorrents.length" ng-click="generateLinks()">get links</button>
+              <button class="btn btn-md btn-info" ng-disabled="!torrent.checked.length" ng-click="torrent.generateLinks()">get links</button>
             </div>
             <div class="btn-group">
-              <button class="btn btn-md btn-default" ng-disabled="!checkedTorrents.length" ng-click="deselect()">deselect</button>
+              <button class="btn btn-md btn-default" ng-disabled="!torrent.checked.length" ng-click="torrent.deselect()">deselect</button>
             </div>
           </div>
         </div>
@@ -41,109 +41,110 @@
       <span class="pull-right" ng-show="torrentStatus === 'working'">Updating <span class="glyphicon glyphicon-refresh glyphicon-spin"></span></span>
     </div>
     <div class="col-md-2">
-      <span class="pull-right" ng-show="!!torrents.length">{{ torrents.length }} torrents</span>
+      <span class="pull-right" ng-show="!!torrent.db.length">{{ torrent.db.length }} torrents</span>
     </div>
   </div>
-  <div class="row" ng-show="!!torrents.length">
+  <div class="row" ng-show="!!torrent.db.length">
     <table class="table torrents">
       <thead>
         <tr>
-          <th class="select"><input type="checkbox" ng-click="select()" ng-model="selectAll"></th>
+          <th class="select"><input type="checkbox" ng-click="torrent.select()" ng-model="torrent.selectAll"></th>
           <th class="id">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'id'}" ng-click="orderByField = 'id'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'id'}" ng-click="torrent.orderByField = 'id'; torrent.orderReversed = !torrent.orderReversed">
             ID <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'id'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'id'"></span>
             </a>
           </th>
           <th class="server">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'server'}" ng-click="orderByField = 'server'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'server'}" ng-click="torrent.orderByField = 'server'; torrent.orderReversed = !torrent.orderReversed">
             server <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'server'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'server'"></span>
             </a>
           </th>
           <th class="name">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'name'}" ng-click="orderByField = 'name'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'name'}" ng-click="torrent.orderByField = 'name'; torrent.orderReversed = !torrent.orderReversed">
             Filename <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'name'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'name'"></span>
             </a>
           </th>
           <th class="status">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'status'}" ng-click="orderByField = 'status'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'status'}" ng-click="torrent.orderByField = 'status'; torrent.orderReversed = !torrent.orderReversed">
             status <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'status'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'status'"></span>
             </a>
           </th>
           <th class="downloaded">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'downloaded'}" ng-click="orderByField = 'downloaded'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'downloaded'}" ng-click="torrent.orderByField = 'downloaded'; torrent.orderReversed = !torrent.orderReversed">
             downloaded <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'downloaded'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'downloaded'"></span>
             </a>
           </th>
           <th class="size">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'size'}" ng-click="orderByField = 'size'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'size'}" ng-click="torrent.orderByField = 'size'; torrent.orderReversed = !torrent.orderReversed">
             size <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'size'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'size'"></span>
             </a>
           </th>
           <th class="seeders">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'seeders'}" ng-click="orderByField = 'seeders'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'seeders'}" ng-click="torrent.orderByField = 'seeders'; torrent.orderReversed = !torrent.orderReversed">
             seeders <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'seeders'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'seeders'"></span>
             </a>
           </th>
           <th class="speed">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'speed'}" ng-click="orderByField = 'speed'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'speed'}" ng-click="torrent.orderByField = 'speed'; torrent.orderReversed = !torrent.orderReversed">
             speed <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'speed'"></span>
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
+                ng-show="torrent.orderByField === 'speed'"></span>
             </a>
           </th>
           <th class="added_date">
             <a class="pointer"
-            ng-class="{ 'ordered': orderByField === 'added_date'}" ng-click="orderByField = 'added_date'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'added_date'}" ng-click="torrent.orderByField = 'added_date'; orderReversed = !orderReversed">
             date <span class="glyphicon"
                 ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
-                ng-show="orderByField === 'added_date'"></span>
+                ng-show="torrent.orderByField === 'added_date'"></span>
             </a>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="torrent in torrents | orderBy:orderByField:orderReversed" ng-class="{ 'warning': torrent.checked }" ng-click="check(torrent)">
-          <td class="select"><input type="checkbox" ng-model="torrent.checked"></td>
-          <td class="id">{{ torrent.id }}</td>
-          <td class="server">{{ torrent.server }}</td>
-          <td class="name">{{ torrent.name }}</td>
-          <td class="status">{{ torrent.status }}</td>
-          <td class="downloaded">{{ torrent.downloaded }}</td>
-          <td class="size">{{ torrent.size | bytes:2 }}</td>
-          <td class="seeders">{{ torrent.seeder }}</td>
-          <td class="speed">{{ torrent.speed }}</td>
-          <td class="added_date">{{ torrent.added_date | date:'dd/MM hh:mm' }}</td>
+        <tr ng-repeat="t in torrent.db | orderBy:torrent.orderByField:torrent.orderReversed" ng-class="{ 'warning': t.checked }" ng-click="torrent.check(t)">
+          <td class="select"><input type="checkbox" ng-model="t.checked"></td>
+          <td class="id">{{ t.id }}</td>
+          <td class="server">{{ t.server }}</td>
+          <td class="name">{{ t.name }}</td>
+          <td class="status">{{ t.status }}</td>
+          <td class="downloaded">{{ t.downloaded }}</td>
+          <td class="size">{{ t.size | bytes:2 }}</td>
+          <td class="seeders">{{ t.seeder }}</td>
+          <td class="speed">{{ t.speed }}</td>
+          <td class="added_date">{{ t.added_date | date:'dd/MM hh:mm' }}</td>
         </tr>
       </tbody>
     </table>
   </div>
-  <div class="row" ng-show="(torrentStatus !== 'working' && !torrents.length) || !torrents.length">
+  <div class="row" ng-show="!torrent.db.length">
     <div class="col-md-12 well-sm">
       <div class="jumbotron">
         <h1>No torrents detected</h1>
         <p>add your first one now</p>
+        <!-- FIXME Add button -->
         <p><a class="btn btn-primary btn-lg" ng-click="$parent.showTorrents = true" ng-disabled="!paid">Add Torrent</a></p>
       </div>
     </div>
