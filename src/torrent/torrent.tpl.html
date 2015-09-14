@@ -115,16 +115,16 @@
           </th>
           <th class="added_date">
             <a class="pointer"
-            ng-class="{ 'ordered': torrent.orderByField === 'added_date'}" ng-click="torrent.orderByField = 'added_date'; orderReversed = !orderReversed">
+            ng-class="{ 'ordered': torrent.orderByField === 'added_date'}" ng-click="torrent.orderByField = 'added_date'; torrent.orderReversed = !torrent.orderReversed">
             date <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': orderReversed, 'glyphicon-chevron-up': !orderReversed }"
+                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
                 ng-show="torrent.orderByField === 'added_date'"></span>
             </a>
           </th>
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="t in torrent.db | orderBy:torrent.orderByField:torrent.orderReversed" ng-class="{ 'warning': t.checked }" ng-click="torrent.check(t)">
+        <tr class="pointer" ng-repeat="t in torrent.db | orderBy:torrent.orderByField:torrent.orderReversed" ng-class="{ 'warning': t.checked }" ng-click="torrent.check(t)">
           <td class="select"><input type="checkbox" ng-model="t.checked"></td>
           <td class="id">{{ t.id }}</td>
           <td class="server">{{ t.server }}</td>
