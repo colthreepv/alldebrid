@@ -3,6 +3,7 @@ server {
   server_name yourhost.com;
 
   location /ad {
+    # add_header Content-Security-Policy "default-src 'self' kastatic.com";
     proxy_set_header Host www.alldebrid.com;
     proxy_set_header Accept-Encoding "";
     proxy_cookie_domain www.alldebrid.com yourhost.com;
@@ -12,8 +13,14 @@ server {
     proxy_pass http://www.alldebrid.com/;
   }
 
+  location /torrent/ {
+    proxy_set_header Host upload.alldebrid.com;
+    proxy_redirect http://www.alldebrid.com /ad;
+    proxy_pass http://upload.alldebrid.com/uploadtorrent.php;
+  }
+
   location / {
-    root <build directory>;
+    root /home/valerio/projects/alldebrid/build;
     expires 60d;
   }
 
