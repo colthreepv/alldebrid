@@ -66,6 +66,11 @@ server.use('/ad', function (req, res) {
   ad.web(req, res, { target: 'http://www.alldebrid.com' });
 });
 
+server.use('/torrent', function (req, res) {
+  dbgForward('Forwarding request:', req.url);
+  ad.web(req, res, { target: 'http://upload.alldebrid.com/uploadtorrent.php' });
+});
+
 if (require.main === module) {
   server.set('port', process.env.PORT || 3000);
   server.set('hostname', process.env.HOSTNAME || '127.0.0.1');

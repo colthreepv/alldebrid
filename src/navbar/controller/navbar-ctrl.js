@@ -1,6 +1,7 @@
-exports = module.exports = function ($state, user, api) {
+exports = module.exports = function ($state, user, api, torrent) {
   var self = this;
   this.collapsed = true; // navbar starts collapsed
+  this.showMagnet = false;
   this.user = user.status;
 
   this.ajax = false;
@@ -10,7 +11,10 @@ exports = module.exports = function ($state, user, api) {
 
   this.newMagnet = '';
   this.addMagnet = function () {
-    console.info('Yet TBD!', self.newMagnet);
+    torrent.add(self.newMagnet).then(function () {
+      self.newMagnet = '';
+      self.showMagnet = false;
+    });
   };
 
   this.logout = function () {
@@ -20,4 +24,4 @@ exports = module.exports = function ($state, user, api) {
   };
 };
 
-exports.$inject = ['$state', 'user', 'adApi'];
+exports.$inject = ['$state', 'user', 'adApi', 'torrent'];

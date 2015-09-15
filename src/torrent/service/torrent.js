@@ -1,12 +1,14 @@
 // external parsing functions
 var parse = require('./_parse-functions');
-exports = module.exports = function ($timeout, $q, api) {
+exports = module.exports = function ($timeout, $q, api, user) {
   var loopForever = true;
   var cooldownTimer = 5000;
   var db = this.db = [];
   var hash = this.hash = {};
 
   function parseTorrents (response) {
+    // in case API responds with non-valid Array means we logged off or something bad happened, stopping forever loop
+    if (!angular.isArray(response.data)) return loopForever = false;
     response.data.forEach(function (torrent) {
       var torrentID = parseInt(torrent[1], 10);
 
@@ -72,7 +74,15 @@ exports = module.exports = function ($timeout, $q, api) {
     api.fetchTorrents().then(parseTorrents).then(await).then(forever);
   }
 
-  // removeTorrents chains as many functions in this project, calls callback when done (no params)
+  function add (link) {
+    return api.addTorrent(link, user.status.uid);
+  }
+
+  /**
+   * remove torrents passed in input
+   * @param  {Array} list of torrent IDs to be removed, even if 1, it must be encased in array
+   * @return {Promise} => undefined useful to track completion
+   */
   function remove (list) {
     if (!list.length) return $q.resolve();
     var firstTorrent = list[0];
@@ -88,6 +98,7 @@ exports = module.exports = function ($timeout, $q, api) {
     }).then(remove.bind(null, list));
   }
 
+  this.add = add;
   this.remove = remove;
 
   // start forever loop here
@@ -100,4 +111,4 @@ exports = module.exports = function ($timeout, $q, api) {
     loopForever = false;
   };
 };
-exports.$inject = ['$timeout', '$q', 'adApi'];
+exports.$inject = ['$timeout', '$q', 'adApi', 'user'];

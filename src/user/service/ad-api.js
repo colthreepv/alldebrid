@@ -3,12 +3,13 @@ var api = {
   register: '/ad/register/',
   torrent: '/ad/torrent/',
   torrentAjax: '/ad/api/torrent.php',
-  convert: '/ad/service.php'
+  convert: '/ad/service.php',
+  postTorrent: '/torrent/'
 };
 var retryForever = true;
 var retryTimeout = 5000;
 
-exports = module.exports = function ($http, $q, $timeout) {
+exports = module.exports = function ($http, $q, $timeout, transformReq) {
   /**
    * httpRetry is a function to substitute to normal $http call
    * @return {Promise} -> $http response
@@ -106,6 +107,19 @@ exports = module.exports = function ($http, $q, $timeout) {
     });
   };
 
+  this.addTorrent = function (link, uid) {
+    return httpRetry({
+      method: 'POST',
+      url: api.postTorrent,
+      transformRequest: transformReq,
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded; charset=utf-8' },
+      data: {
+        domain: 'http://www.alldebrid.com/torrent/',
+        uid: uid,
+        magnet: link
+      }
+    });
+  };
 
   // pub/sub to broadcast AJAX events through all application
   var ajaxListeners = [];
@@ -120,4 +134,4 @@ exports = module.exports = function ($http, $q, $timeout) {
 
   this.httpRetry = httpRetry;
 };
-exports.$inject = ['$http', '$q', '$timeout'];
+exports.$inject = ['$http', '$q', '$timeout', 'transformReq'];

@@ -14,23 +14,25 @@
       <span>loading</span>
     </a>
   </div>
-  <div class="collapse navbar-collapse" ng-class="!navbar.collapsed && 'in'">
-    <div class="pull-right">
-      <button type="button" class="btn btn-default navbar-btn" ng-click="navbar.showMagnet = !navbar.showMagnet" ng-show="navbar.newMagnet.length === 0">New</button>
-      <button type="button" class="btn btn-warning navbar-btn" ng-click="navbar.addMagnet()" ng-show="navbar.newMagnet.length > 0">Add</button>
-      <span class="navbar-brand">
-        <span class="glyphicon glyphicon-user"></span>
-        <span class="right-spacer">{{ navbar.user.username }}</span>
-      </span>
-      <span class="navbar-brand">
-        <span ng-show="navbar.user.remainingDays">days left: {{ navbar.user.remainingDays }}</span>
-        <span ng-show="!navbar.user.remainingDays">no days left</span>
-        <a href="http://www.alldebrid.com/offer/" target="_blank" ng-show="!navbar.user.remainingDays">renew</a>
-      </span>
-      <button type="button" class="btn btn-default navbar-btn pull-right hidden-xs" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+  <form name="addMagnet" ng-submit="navbar.addMagnet()">
+    <div class="collapse navbar-collapse" ng-class="!navbar.collapsed && 'in'">
+      <div class="pull-right">
+        <button type="button" class="btn btn-default navbar-btn" ng-click="navbar.showMagnet = !navbar.showMagnet" ng-show="navbar.newMagnet.length === 0">New</button>
+        <button type="submit" class="btn btn-warning navbar-btn" ng-show="navbar.newMagnet.length > 0">Add</button>
+        <span class="navbar-brand">
+          <span class="glyphicon glyphicon-user"></span>
+          <span class="right-spacer">{{ navbar.user.username }}</span>
+        </span>
+        <span class="navbar-brand">
+          <span ng-show="navbar.user.remainingDays">days left: {{ navbar.user.remainingDays }}</span>
+          <span ng-show="!navbar.user.remainingDays">no days left</span>
+          <a href="http://www.alldebrid.com/offer/" target="_blank" ng-show="!navbar.user.remainingDays">renew</a>
+        </span>
+        <button type="button" class="btn btn-default navbar-btn pull-right hidden-xs" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
+      </div>
     </div>
-  </div>
-  <div class="add-magnet" ng-show="navbar.showMagnet">
-    <textarea class="form-control long-text" placeholder="new magnet" rows="{{ navbar.newMagnet.split('\n').length }}" autofocus ng-model="navbar.newMagnet"></textarea>
-  </div>
+    <div class="add-magnet" ng-show="navbar.showMagnet">
+      <input type="text" class="form-control long-text" name="magnet" placeholder="new magnet" autofocus ng-model="navbar.newMagnet">
+    </div>
+  </form>
 </div>
