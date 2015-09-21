@@ -1,4 +1,4 @@
-exports = module.exports = function ($scope, $state, user) {
+exports = module.exports = function ($scope, $stateParams, $state, user) {
   var ctrl = this;
 
   // login functions
@@ -15,7 +15,9 @@ exports = module.exports = function ($scope, $state, user) {
     ctrl.loading = true;
     user.login(ctrl.username, ctrl.password)
     .then(function () {
-      $state.go('home.torrents');
+      // in case login has been invoked with a return url, it gets triggered now!
+      if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
+      else $state.go('home.torrents');
     })
     .catch(function () {
       ctrl.loginFailed = true;
@@ -27,4 +29,4 @@ exports = module.exports = function ($scope, $state, user) {
 
 };
 
-exports.$inject = ['$scope', '$state', 'user'];
+exports.$inject = ['$scope', '$stateParams', '$state', 'user'];

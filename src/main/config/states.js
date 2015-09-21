@@ -1,22 +1,17 @@
-exports = module.exports = function ($stateProvider, $urlRouterProvider) {
+exports = module.exports = function ($stateProvider, $urlRouterProvider, $locationProvider) {
   $urlRouterProvider.otherwise('/torrents');
+  // hashbang
+  $locationProvider.hashPrefix('!');
 
-  function isLogged ($state, $q, user) {
-    if (user.status.logged) return $q.resolve();
-    return user.isLogged().catch(function () {
-      return $state.go('login');
-    });
-  }
-  isLogged.$inject = ['$state', '$q', 'user'];
-
-  function startTorrents (torrent) {
-    return torrent.start();
-  }
-  startTorrents.$inject = ['torrent'];
+  var resolve = require('./_resolve');
 
   $stateProvider
   .state('login', {
     url: '/login',
+    params: {
+      goTo: undefined,
+      params: undefined
+    },
     views: {
       '': {
         templateUrl: 'user/login.tpl.html',
@@ -31,16 +26,16 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
   .state('home', {
     abstract: true,
     url: '',
+    resolve: {
+      isLogged: resolve.isLogged
+    },
     views: {
       navbar: {
         controller: 'navbarCtrl as navbar',
         templateUrl: 'navbar/logged.tpl.html'
       },
       '': {
-        template: '<ui-view/>',
-        resolve: {
-          isLogged: isLogged
-        }
+        template: '<ui-view/>'
       },
       'footer': {
         controller: 'footerCtrl as footer',
@@ -55,7 +50,7 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
         templateUrl: 'torrent/torrent.tpl.html',
         controller: 'torrentCtrlNew as torrent',
         resolve: {
-          startTorrents: startTorrents
+          startTorrents: resolve.startTorrents
         }
       }
     }
@@ -72,16 +67,13 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
       }
     }
   })
-  .state('home.add', {
-    url: '/add',
-    views: {
-      '': {
-        templateUrl: 'add/add.tpl.html',
-        controller: 'addCtrl as add'
-      }
+  .state('home.add-external', {
+    url: '/add/:magnet',
+    resolve: {
+      addMagnet: resolve.addMagnet
     }
   });
 
 };
 
-exports.$inject = ['$stateProvider', '$urlRouterProvider'];
+exports.$inject = ['$stateProvider', '$urlRouterProvider', '$locationProvider'];
