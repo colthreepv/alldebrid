@@ -21,6 +21,10 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
       '': {
         templateUrl: 'user/login.tpl.html',
         controller: 'loginCtrl as login'
+      },
+      'footer': {
+        controller: 'footerCtrl as footer',
+        templateUrl: 'footer/footer.tpl.html'
       }
     }
   })
@@ -37,6 +41,10 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider) {
         resolve: {
           isLogged: isLogged
         }
+      },
+      'footer': {
+        controller: 'footerCtrl as footer',
+        templateUrl: 'footer/footer.tpl.html'
       }
     }
   })
