@@ -1,22 +1,37 @@
 server {
   listen 80;
   server_name yourhost.com;
+  return 301 https://$host$request_uri;
+
+  access_log /var/log/nginx/ad/access.log;
+  error_log /var/log/nginx/ad/error.log error;
+}
+
+server {
+  listen 443 ssl spdy default_server;
+  server_name yourhost.com;
+
+  include /etc/nginx/sites-available/ssl-config.partial;
+
+  # http://security.stackexchange.com/questions/55790/nginx-how-to-prevent-processing-requests-with-undefined-server-names-with-http
+  if ( $http_host !~* ^(yourhost\.com)$ ) {
+    return 444;
+  }
 
   location /ad {
-    # add_header Content-Security-Policy "default-src 'self' kastatic.com";
     proxy_set_header Host www.alldebrid.com;
     proxy_set_header Accept-Encoding "";
     proxy_cookie_domain www.alldebrid.com yourhost.com;
     proxy_redirect www.alldebrid.com /ad/;
     proxy_redirect / /ad/;
-    proxy_redirect http://www.alldebrid.com /ad/;
-    proxy_pass http://www.alldebrid.com/;
+    proxy_redirect https://www.alldebrid.com /ad/;
+    proxy_pass https://www.alldebrid.com/;
   }
 
   location /torrent/ {
     proxy_set_header Host upload.alldebrid.com;
-    proxy_redirect http://www.alldebrid.com /ad;
-    proxy_pass http://upload.alldebrid.com/uploadtorrent.php;
+    proxy_redirect ~*^(http|https)://www.alldebrid.com /ad;
+    proxy_pass https://upload.alldebrid.com/uploadtorrent.php;
   }
 
   location / {
@@ -24,6 +39,6 @@ server {
     expires 60d;
   }
 
-  access_log      /var/log/nginx/ad/access.log combined;
-  error_log       /var/log/nginx/ad/error.log error;
+  access_log /var/log/nginx/ad/access.log combined;
+  error_log /var/log/nginx/ad/error.log error;
 }
