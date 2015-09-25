@@ -63,11 +63,12 @@ gulp.task('watch', function (done) {
 
 gulp.task('code-build', tasks.browserify.build(destDir));
 gulp.task('clean', del.bind(null, destDir));
+gulp.task('git', tasks.git);
 gulp.task('less', buildLess);
 
 // build only task
 gulp.task('build', gulp.series(
-  'clean',
+  gulp.parallel('clean', 'git'),
   gulp.parallel('copy-static', 'copy-fonts', 'copy-libs', 'less', 'templates', 'code-build')
 ));
 

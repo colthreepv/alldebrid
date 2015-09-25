@@ -13,6 +13,7 @@ let b = browserify({
 });
 b.transform('bulkify');
 b.transform('browserify-shim');
+b.transform('envify');
 b.add('src/index.js');
 
 exports.build = function (destDir) {

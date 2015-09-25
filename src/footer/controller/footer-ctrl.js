@@ -17,5 +17,7 @@ module.exports = function ($window) {
   } catch (e) {}
 
   this.regeditURL = regURL;
+
+  this.version = process.env.GITREV;
 };
 exports.$inject = ['$window'];
