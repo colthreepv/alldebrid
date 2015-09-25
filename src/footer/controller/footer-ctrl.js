@@ -7,6 +7,7 @@ module.exports = function ($window) {
     '@="URL:magnet"\n'
   ];
 
+  this.win10 = $window.navigator.userAgent.indexOf('Windows NT 10.0') !== -1;
   this.blobSupport = false;
   var regBlob, regURL;
   try {
