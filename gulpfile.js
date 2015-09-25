@@ -62,7 +62,6 @@ gulp.task('watch', function (done) {
 });
 
 gulp.task('code-build', tasks.browserify.build(destDir));
-gulp.task('code-watch', tasks.browserify.watch(destDir));
 gulp.task('clean', del.bind(null, destDir));
 gulp.task('less', buildLess);
 
