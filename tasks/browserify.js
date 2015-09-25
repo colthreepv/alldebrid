@@ -2,6 +2,8 @@
 
 let // gulp
   gulp = require('gulp'),
+  rev = require('gulp-rev'),
+  buffer = require('gulp-buffer'),
   source = require('vinyl-source-stream');
 
 let // external deps
@@ -16,11 +18,14 @@ b.transform('browserify-shim');
 b.transform('envify');
 b.add('src/index.js');
 
-exports.build = function (destDir) {
+function createBrowserify (destDir) {
   return function browserifyBuild () {
 
     return b.bundle()
       .pipe(source('bundle.js'))
+      .pipe(buffer())
+      .pipe(rev())
       .pipe(gulp.dest(destDir));
   };
 };
+module.exports = createBrowserify;

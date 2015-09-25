@@ -4,6 +4,7 @@ let path = require('path');
 
 let // gulp
   gulp = require('gulp'),
+  rev = require('gulp-rev'),
   less = require('gulp-less');
 
 function buildLess (destDir) {
@@ -14,6 +15,7 @@ function buildLess (destDir) {
           path.join(process.cwd(), 'node_modules')
         ]
       }))
+      .pipe(rev())
       .pipe(gulp.dest(destDir));
   };
 }

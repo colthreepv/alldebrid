@@ -9,6 +9,7 @@ let // node stdlib
 
 let // gulp modules
   gulp = require('gulp'),
+  rev = require('gulp-rev'),
   rename = require('gulp-rename');
   // gutil = require('gulp-util');
 
@@ -67,6 +68,7 @@ module.exports = function (buildPath) {
         path.basename = deps.shift();
         // gutil.log('copyLibs', path);
       }))
+      .pipe(rev())
       .pipe(gulp.dest(path.join(buildPath, 'libs')));
   };
 };
