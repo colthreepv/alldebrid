@@ -69,6 +69,10 @@ module.exports = function (buildPath) {
         // gutil.log('copyLibs', path);
       }))
       .pipe(rev())
+      .pipe(gulp.dest(path.join(buildPath, 'libs')))
+      .pipe(rev.manifest({
+        merge: true
+      }))
       .pipe(gulp.dest(path.join(buildPath, 'libs')));
   };
 };

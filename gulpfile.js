@@ -21,9 +21,8 @@ const staticList = [
 
 gulp.task('copy-libs', tasks.copyLibs(destDir));
 
-gulp.task('rev-static', function () {
-  return gulp.src('build/*.js')
-    .pipe(rev())
+gulp.task('rev', function () {
+  return gulp.src('build/*')
     .pipe(gulp.dest(destDir));
 });
 
@@ -47,6 +46,10 @@ gulp.task('templates', function () {
       standalone: true
     }))
     .pipe(rev())
+    .pipe(gulp.dest(destDir))
+    .pipe(rev.manifest({
+      merge: true
+    }))
     .pipe(gulp.dest(destDir));
 });
 
