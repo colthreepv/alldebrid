@@ -5,7 +5,6 @@ let path = require('path');
 let // gulp deps
   gulp = require('gulp'),
   gutil = require('gulp-util'),
-  less = require('gulp-less'),
   tmpl = require('gulp-angular-templatecache');
 
 let // external deps
@@ -17,14 +16,6 @@ const destDir = 'build';
 const staticList = [
   'index.html'
 ];
-
-function buildLess () {
-  return gulp.src('css/*.less').pipe(less({
-    paths: [
-      path.join(__dirname, 'node_modules')
-    ]
-  })).pipe(gulp.dest(destDir));
-}
 
 gulp.task('copy-libs', tasks.copyLibs(destDir));
 
@@ -50,7 +41,7 @@ gulp.task('templates', function () {
 
 gulp.task('watch', function (done) {
   gulp.watch(staticList, gulp.series('copy-static'));
-  gulp.watch('css/**/*.less', buildLess);
+  gulp.watch('css/**/*.less', tasks.less(destDir));
   gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
   gulp.watch('src/**/*.js', tasks.browserify.build(destDir));
 
@@ -64,7 +55,7 @@ gulp.task('watch', function (done) {
 gulp.task('code-build', tasks.browserify.build(destDir));
 gulp.task('clean', del.bind(null, destDir));
 gulp.task('git', tasks.git);
-gulp.task('less', buildLess);
+gulp.task('less', tasks.less(destDir));
 
 // build only task
 gulp.task('build', gulp.series(
