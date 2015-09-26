@@ -9,3 +9,4 @@ npm-debug.log
 *.zip
 build/
 nginx/
+variables.nginx.js
