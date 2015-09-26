@@ -1,6 +1,6 @@
 {
   "name": "alldebrid",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "\"alternative interface for AllDebrid",
   "main": "main.js",
   "devDependencies": {
