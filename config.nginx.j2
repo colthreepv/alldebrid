@@ -15,7 +15,7 @@ server {
   include /etc/nginx/sites-available/ssl-config.partial;
 
   # http://security.stackexchange.com/questions/55790/nginx-how-to-prevent-processing-requests-with-undefined-server-names-with-http
-  if ( $http_host !~* ^(<< hostname | replace(r/\./, '\\.') >>)$ ) {
+  if ( $http_host !~* ^(<< hostname | replace(r/\./g, '\\.') >>)$ ) {
     return 444;
   }
 
