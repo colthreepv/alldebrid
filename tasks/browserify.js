@@ -25,10 +25,6 @@ function createBrowserify (destDir) {
       .pipe(source('bundle.js'))
       .pipe(buffer())
       .pipe(rev())
-      .pipe(gulp.dest(destDir))
-      .pipe(rev.manifest({
-        merge: true
-      }))
       .pipe(gulp.dest(destDir));
   };
 };

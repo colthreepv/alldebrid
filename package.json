@@ -1,6 +1,6 @@
 {
-  "name": "alldebrid-chrome",
-  "version": "0.5.3",
+  "name": "alldebrid",
+  "version": "1.0.0",
   "description": "\"alternative interface for AllDebrid",
   "main": "main.js",
   "devDependencies": {
@@ -15,13 +15,11 @@
     "git-rev": "^0.2.1",
     "gulp": "gulpjs/gulp#4.0",
     "gulp-angular-templatecache": "^1.7.0",
-    "gulp-angular-templates": "0.0.2",
     "gulp-buffer": "0.0.2",
     "gulp-less": "^3.0.3",
     "gulp-nunjucks-render": "^1.0.0",
     "gulp-rename": "^1.2.2",
-    "gulp-rev": "^6.0.1",
-    "gulp-rev-all": "^0.8.21",
+    "gulp-rev": "colthreepv/gulp-rev",
     "gulp-util": "^3.0.6",
     "http-proxy": "^1.11.1",
     "vinyl-source-stream": "^1.1.0"

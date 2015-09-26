@@ -5,7 +5,7 @@ let path = require('path');
 let // gulp deps
   gulp = require('gulp'),
   gutil = require('gulp-util'),
-  nunjucks = require('gulp-nunjucks-render'),
+  nunjucksRender = require('gulp-nunjucks-render'),
   rev = require('gulp-rev'),
   tmpl = require('gulp-angular-templatecache');
 
@@ -14,6 +14,15 @@ let // external deps
 
 let tasks = require('./tasks');
 
+// nunjucks configuration
+nunjucksRender.nunjucks.configure([process.cwd()], {
+  tags: { // custom tags to not collide with angular
+    variableStart: '<<',
+    variableEnd: '>>'
+  },
+  watch: false
+});
+
 const destDir = 'build';
 const staticList = [
   'index.j2'
@@ -21,14 +30,9 @@ const staticList = [
 
 gulp.task('copy-libs', tasks.copyLibs(destDir));
 
-gulp.task('rev', function () {
-  return gulp.src('build/*')
-    .pipe(gulp.dest(destDir));
-});
-
-gulp.task('index', function () {
+gulp.task('j2', function () {
   return gulp.src(staticList)
-    .pipe(nunjucks())
+    .pipe(nunjucksRender({ rev: rev.data }))
     .pipe(gulp.dest(destDir));
 });
 
@@ -46,18 +50,14 @@ gulp.task('templates', function () {
       standalone: true
     }))
     .pipe(rev())
-    .pipe(gulp.dest(destDir))
-    .pipe(rev.manifest({
-      merge: true
-    }))
     .pipe(gulp.dest(destDir));
 });
 
 gulp.task('watch', function (done) {
-  gulp.watch(staticList, gulp.series('copy-static'));
-  gulp.watch('css/**/*.less', tasks.less(destDir));
-  gulp.watch('src/**/*.tpl.html', gulp.series('templates'));
-  gulp.watch('src/**/*.js', tasks.browserify(destDir));
+  gulp.watch('index.j2', gulp.series('j2'));
+  gulp.watch('css/**/*.less', gulp.series('less', 'j2'));
+  gulp.watch('src/**/*.tpl.html', gulp.series('templates', 'j2'));
+  gulp.watch('src/**/*.js', gulp.series('code-build', 'j2'));
 
   let proxy = require('./dev-proxy');
   let listen = proxy.listen(3000, '127.0.0.1', function () {
@@ -75,7 +75,7 @@ gulp.task('less', tasks.less(destDir));
 gulp.task('build', gulp.series(
   gulp.parallel('clean', 'git'),
   gulp.parallel('copy-fonts', 'copy-libs', 'less', 'templates', 'code-build'),
-  gulp.series('index')
+  gulp.series('j2')
 ));
 
 // watch
