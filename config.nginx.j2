@@ -1,6 +1,6 @@
 server {
   listen 80;
-  server_name yourhost.com;
+  server_name << hostname >>;
   return 301 https://$host$request_uri;
 
   access_log /var/log/nginx/ad/access.log;
@@ -9,19 +9,20 @@ server {
 
 server {
   listen 443 ssl spdy default_server;
-  server_name yourhost.com;
+  server_name << hostname >>;
+  root << buildpath >>;
 
   include /etc/nginx/sites-available/ssl-config.partial;
 
   # http://security.stackexchange.com/questions/55790/nginx-how-to-prevent-processing-requests-with-undefined-server-names-with-http
-  if ( $http_host !~* ^(yourhost\.com)$ ) {
+  if ( $http_host !~* ^(<< hostname | replace(r/\./, '\\.') >>)$ ) {
     return 444;
   }
 
   location /ad {
     proxy_set_header Host www.alldebrid.com;
     proxy_set_header Accept-Encoding "";
-    proxy_cookie_domain www.alldebrid.com yourhost.com;
+    proxy_cookie_domain www.alldebrid.com << hostname >>;
     proxy_redirect www.alldebrid.com /ad/;
     proxy_redirect / /ad/;
     proxy_redirect https://www.alldebrid.com /ad/;
@@ -35,8 +36,11 @@ server {
   }
 
   location / {
-    root /home/valerio/projects/alldebrid/build;
-    expires 60d;
+    expires max;
+  }
+
+  location = /index.html {
+    expires off;
   }
 
   access_log /var/log/nginx/ad/access.log combined;

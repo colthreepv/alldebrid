@@ -1,6 +1,6 @@
 {
   "name": "alldebrid",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "\"alternative interface for AllDebrid",
   "main": "main.js",
   "devDependencies": {
@@ -25,6 +25,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
+    "deploy-ubuntu": "gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/",
     "start": "node_modules/.bin/gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

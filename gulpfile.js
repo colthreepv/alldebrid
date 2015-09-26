@@ -7,6 +7,7 @@ let // gulp deps
   gutil = require('gulp-util'),
   nunjucksRender = require('gulp-nunjucks-render'),
   rev = require('gulp-rev'),
+  rename = require('gulp-rename'),
   tmpl = require('gulp-angular-templatecache');
 
 let // external deps
@@ -77,6 +78,17 @@ gulp.task('build', gulp.series(
   gulp.parallel('copy-fonts', 'copy-libs', 'less', 'templates', 'code-build'),
   gulp.series('j2')
 ));
+
+gulp.task('nginx', function () {
+  let vars = require('./variables.nginx');
+  return gulp.src('config.nginx.j2')
+    .pipe(nunjucksRender(vars))
+    .pipe(rename({
+      basename: vars.hostname,
+      extname: ''
+    }))
+    .pipe(gulp.dest('nginx'));
+});
 
 // watch
 gulp.task('default', gulp.series('build', 'watch'));

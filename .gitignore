@@ -8,3 +8,4 @@ npm-debug.log
 # built packages
 *.zip
 build/
+nginx/
