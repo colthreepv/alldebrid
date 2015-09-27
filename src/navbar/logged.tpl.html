@@ -1,4 +1,4 @@
-<div class="navbar navbar-default" role="navigation">
+<div class="navbar navbar-default" ng-class="navbar.ajax && 'psycload'" role="navigation">
   <div class="navbar-header">
     <button type="button" class="navbar-toggle btn btn-default" ng-click="navbar.logout()">Logout <span class="glyphicon glyphicon-log-out"></span></button>
     <button type="button" class="navbar-toggle collapsed" ng-click="navbar.collapsed = !navbar.collapsed">
@@ -8,11 +8,8 @@
       <span class="icon-bar"></span>
       <span class="icon-bar"></span>
     </button>
-    <a class="navbar-brand" href="#" ui-sref="home.torrents">AllDebrid</a>
-    <a class="navbar-brand" ng-show="navbar.ajax">
-      <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
-      <span>loading</span>
-    </a>
+    <a class="navbar-brand" href="#" ui-sref="home.torrents" ng-show="!navbar.ajax">AllDebrid</a>
+    <a class="navbar-brand" href="#" ui-sref="home.torrents" ng-show="navbar.ajax">Loading</a>
   </div>
   <form name="addMagnet" ng-submit="navbar.addMagnet()">
     <div class="collapse navbar-collapse" ng-class="!navbar.collapsed && 'in'">
