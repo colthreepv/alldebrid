@@ -1,11 +1,11 @@
-exports = module.exports = function ($state, user, api, torrent) {
+exports = module.exports = function ($state, user, http, torrent) {
   var self = this;
   this.collapsed = true; // navbar starts collapsed
   this.showMagnet = false;
   this.user = user.status;
 
   this.ajax = false;
-  api.onAjax(function (newStatus) {
+  http.onAjax(function (newStatus) {
     self.ajax = newStatus;
   });
 
@@ -24,4 +24,4 @@ exports = module.exports = function ($state, user, api, torrent) {
   };
 };
 
-exports.$inject = ['$state', 'user', 'adApi', 'torrent'];
+exports.$inject = ['$state', 'user', 'http', 'torrent'];
