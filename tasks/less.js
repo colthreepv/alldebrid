@@ -5,6 +5,7 @@ let path = require('path');
 let // gulp
   gulp = require('gulp'),
   rev = require('gulp-rev'),
+  revHash = require('./rev-hash'),
   less = require('gulp-less');
 
 function buildLess (destDir) {
@@ -16,6 +17,7 @@ function buildLess (destDir) {
         ]
       }))
       .pipe(rev())
+      .pipe(revHash())
       .pipe(gulp.dest(destDir));
   };
 }

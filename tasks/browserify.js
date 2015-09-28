@@ -3,6 +3,7 @@
 let // gulp
   gulp = require('gulp'),
   rev = require('gulp-rev'),
+  revHash = require('./rev-hash'),
   buffer = require('gulp-buffer'),
   source = require('vinyl-source-stream');
 
@@ -25,6 +26,7 @@ function createBrowserify (destDir) {
       .pipe(source('bundle.js'))
       .pipe(buffer())
       .pipe(rev())
+      .pipe(revHash())
       .pipe(gulp.dest(destDir));
   };
 };

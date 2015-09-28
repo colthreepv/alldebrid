@@ -7,8 +7,7 @@ let // gulp deps
   gutil = require('gulp-util'),
   nunjucksRender = require('gulp-nunjucks-render'),
   rev = require('gulp-rev'),
-  rename = require('gulp-rename'),
-  tmpl = require('gulp-angular-templatecache');
+  rename = require('gulp-rename');
 
 let // external deps
   del = require('del');
@@ -33,7 +32,7 @@ gulp.task('copy-libs', tasks.copyLibs(destDir));
 
 gulp.task('j2', function () {
   return gulp.src(staticList)
-    .pipe(nunjucksRender({ rev: rev.data }))
+    .pipe(nunjucksRender({ rev: tasks.revHash.data }))
     .pipe(gulp.dest(destDir));
 });
 
@@ -43,15 +42,6 @@ gulp.task('copy-fonts', function () {
     'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.woff2',
     'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.ttf'
   ]).pipe(gulp.dest(path.join(destDir, 'fonts')));
-});
-
-gulp.task('templates', function () {
-  return gulp.src('src/**/*.tpl.html')
-    .pipe(tmpl({
-      standalone: true
-    }))
-    .pipe(rev())
-    .pipe(gulp.dest(destDir));
 });
 
 gulp.task('watch', function (done) {
@@ -67,10 +57,11 @@ gulp.task('watch', function (done) {
   });
 });
 
-gulp.task('code-build', tasks.browserify(destDir));
 gulp.task('clean', del.bind(null, destDir));
+gulp.task('code-build', tasks.browserify(destDir));
 gulp.task('git', tasks.git);
 gulp.task('less', tasks.less(destDir));
+gulp.task('templates', tasks.templates(destDir));
 
 // build only task
 gulp.task('build', gulp.series(
