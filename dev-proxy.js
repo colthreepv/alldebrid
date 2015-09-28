@@ -1,22 +1,19 @@
 'use strict';
 let // node modules
-  httpProxy = require('http-proxy'),
   express = require('express'),
+  httpProxy = require('http-proxy'),
+  serveStatic = require('serve-static'),
   debug = require('debug');
 
 let // node stdLib
-  fs = require('fs'),
-  path = require('path'),
-  url = require('url');
+  path = require('path');
 
 let
   server = express(),
   ad = httpProxy.createProxyServer({ changeOrigin: true }),
-  dbgForward = debug('proxy:forward'),
-  dbgServe = debug('proxy:serve');
+  dbgForward = debug('proxy:forward');
 
 const baseDir = 'build';
-let dirs = ['fonts', 'libs', ''];
 
 ad.on('proxyRes', function (proxyRes, req, res, options) {
   dbgForward(proxyRes.headers);
@@ -36,30 +33,7 @@ ad.on('proxyRes', function (proxyRes, req, res, options) {
   // proxyRes.setHeader('X-Special-Proxy-Header', 'foobar');
 });
 
-/**
- * This section creates a list of urls to be served manually
- * by this script.
- * The array itself is an URL form, ex: /style.css or /libs/angular.js
- */
-let localFiles = ['/'];
-dirs.forEach(function (d) {
-  let dirListing = fs.readdirSync(path.join(__dirname, baseDir, d))
-  .map(function (file) {
-    return [d, file].join('/');
-  });
-  localFiles = localFiles.concat(dirListing);
-});
-localFiles = localFiles.map(function (file) {
-  return (file[0] === '/') ? file : '/' + file;
-});
-
-server.use(function (req, res, next) {
-  let parsedUrl = url.parse(req.url);
-  let pathname = parsedUrl.pathname;
-  if (localFiles.indexOf(pathname) === -1) return next();
-  dbgServe('Serving', pathname, 'by hand.');
-  res.sendFile(pathname, { root: path.join(__dirname, 'build') });
-});
+server.use(serveStatic(path.join(__dirname, baseDir)));
 
 server.use('/ad', function (req, res) {
   dbgForward('Forwarding request:', req.url);
