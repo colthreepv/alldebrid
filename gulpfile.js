@@ -27,7 +27,6 @@ const staticList = [
   'index.j2'
 ];
 
-gulp.task('copy-libs', tasks.copyLibs(destDir));
 
 gulp.task('j2', function () {
   return gulp.src(staticList)
@@ -56,16 +55,29 @@ gulp.task('watch', function (done) {
   });
 });
 
+// tasks created from dir
 gulp.task('clean', del.bind(null, destDir));
 gulp.task('code-build', tasks.browserify(destDir));
+gulp.task('copy-libs', tasks.copyLibs(destDir));
 gulp.task('git', tasks.git);
 gulp.task('less', tasks.less(destDir));
 gulp.task('templates', tasks.templates(destDir));
 
-// build only task
+// specific for production, implies minification
+gulp.task('code-build-dist', tasks.browserify(destDir, true));
+gulp.task('copy-libs', tasks.copyLibs(destDir, true));
+
+// build for development
 gulp.task('build', gulp.series(
   gulp.parallel('clean', 'git'),
   gulp.parallel('copy-fonts', 'copy-libs', 'less', 'templates', 'code-build'),
+  gulp.series('j2')
+));
+
+// build for production
+gulp.task('build-dist', gulp.series(
+  gulp.parallel('clean', 'git'),
+  gulp.parallel('copy-fonts', 'copy-libs', 'less', 'templates', 'code-build-dist'),
   gulp.series('j2')
 ));
 
