@@ -1,4 +1,4 @@
-module.exports = function ($window) {
+exports = module.exports = function ($window) {
   // windows 10 registry file will contain this
   var regContent = [
     'Windows Registry Editor Version 5.00\n',
