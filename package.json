@@ -56,6 +56,11 @@
     "bootstrap-less": "^3.3.8",
     "bootswatch-less": "^3.3.4"
   },
+  "production-deps": {
+    "angular": "//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js",
+    "angular-hotkeys": "//cdnjs.cloudflare.com/ajax/libs/angular-hotkeys/1.6.0/hotkeys.min.js",
+    "angular-ui-router": "//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"
+  },
   "browserify-shim": {
     "angular": "global:angular"
   }

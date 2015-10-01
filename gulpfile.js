@@ -5,7 +5,6 @@ let path = require('path');
 let // gulp deps
   gulp = require('gulp'),
   gutil = require('gulp-util'),
-  nunjucksRender = require('gulp-nunjucks-render'),
   rename = require('gulp-rename');
 
 let // external deps
@@ -13,26 +12,7 @@ let // external deps
 
 let tasks = require('./tasks');
 
-// nunjucks configuration
-nunjucksRender.nunjucks.configure([process.cwd()], {
-  tags: { // custom tags to not collide with angular
-    variableStart: '<<',
-    variableEnd: '>>'
-  },
-  watch: false
-});
-
 const destDir = 'build';
-const staticList = [
-  'index.j2'
-];
-
-
-gulp.task('j2', function () {
-  return gulp.src(staticList)
-    .pipe(nunjucksRender({ rev: tasks.revHash.data }))
-    .pipe(gulp.dest(destDir));
-});
 
 gulp.task('copy-fonts', function () {
   return gulp.src([
@@ -56,6 +36,7 @@ gulp.task('watch', function (done) {
 });
 
 // tasks created from dir
+gulp.task('j2', tasks.nunjucks(destDir));
 gulp.task('clean', del.bind(null, destDir));
 gulp.task('code-build', tasks.browserify(destDir));
 gulp.task('copy-libs', tasks.copyLibs(destDir));
@@ -65,7 +46,7 @@ gulp.task('templates', tasks.templates(destDir));
 
 // specific for production, implies minification
 gulp.task('code-build-dist', tasks.browserify(destDir, true));
-gulp.task('copy-libs', tasks.copyLibs(destDir, true));
+gulp.task('j2-dist', tasks.nunjucks(destDir, true));
 
 // build for development
 gulp.task('build', gulp.series(
@@ -77,14 +58,14 @@ gulp.task('build', gulp.series(
 // build for production
 gulp.task('build-dist', gulp.series(
   gulp.parallel('clean', 'git'),
-  gulp.parallel('copy-fonts', 'copy-libs', 'less', 'templates', 'code-build-dist'),
-  gulp.series('j2')
+  gulp.parallel('copy-fonts', 'less', 'templates', 'code-build-dist'),
+  gulp.series('j2-dist')
 ));
 
 gulp.task('nginx', function () {
   let vars = require('./variables.nginx');
   return gulp.src('config.nginx.j2')
-    .pipe(nunjucksRender(vars))
+    .pipe(tasks.nunjucks.render(vars))
     .pipe(rename({
       basename: vars.hostname,
       extname: ''

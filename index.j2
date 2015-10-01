@@ -27,10 +27,18 @@
   </div>
   <div ui-view="footer"></div>
   {# js #}
+  {% if build == 'development' -%}
   <script src="/libs/<< rev['angular.js'] >>"></script>
   <script src="/libs/<< rev['angular-ui-router.js'] >>"></script>
   <script src="/libs/<< rev['angular-hotkeys.js'] >>"></script>
   <script src="<< rev['bundle.js'] >>"></script>
   <script src="<< rev['templates.js'] >>"></script>
+  {% else -%}
+  <script src="<< libs['angular'] >>"></script>
+  <script src="<< libs['angular-ui-router'] >>"></script>
+  <script src="<< libs['angular-hotkeys'] >>"></script>
+  <script src="<< rev['bundle.js'] >>"></script>
+  <script src="<< rev['templates.js'] >>"></script>
+  {% endif -%}
 </body>
 </html>
