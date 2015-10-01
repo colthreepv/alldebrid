@@ -29,7 +29,7 @@
     "vinyl-source-stream": "^1.1.0"
   },
   "scripts": {
-    "deploy-ubuntu": "gulp build && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
+    "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
     "start": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
