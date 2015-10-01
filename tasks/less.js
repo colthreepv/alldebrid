@@ -10,7 +10,7 @@ let // gulp
 
 function buildLess (destDir) {
   return function () {
-    return gulp.src('css/*.less')
+    return gulp.src('css/style.less')
       .pipe(less({
         paths: [
           path.join(process.cwd(), 'node_modules')
