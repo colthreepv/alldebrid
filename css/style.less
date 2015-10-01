@@ -13,7 +13,14 @@
   75%  { background-color: #E24494; }
   100% { background-color: #2DA0E2; }
 }
-
 .psycload {
   animation: psyc-background 0.5s infinite;
+}
+
+@keyframes spin2 {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+.glyphicon-spin {
+  animation: spin2 .7s infinite linear;
 }

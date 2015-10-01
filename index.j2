@@ -12,11 +12,6 @@
 
   <link rel="stylesheet" href="/<< rev['style.css'] >>">
   <link rel="stylesheet" type="text/css" href="/<< rev['custom-bootstrap.css'] >>">
-  <script src="/libs/<< rev['angular.js'] >>"></script>
-  <script src="/libs/<< rev['angular-ui-router.js'] >>"></script>
-  <script src="/libs/<< rev['angular-hotkeys.js'] >>"></script>
-  <script src="<< rev['bundle.js'] >>"></script>
-  <script src="<< rev['templates.js'] >>"></script>
 </head>
 <body>
   <div ui-view="navbar"></div>
@@ -34,5 +29,11 @@
     </div>
   </div>
   <div ui-view="footer"></div>
+  {# js #}
+  <script src="/libs/<< rev['angular.js'] >>"></script>
+  <script src="/libs/<< rev['angular-ui-router.js'] >>"></script>
+  <script src="/libs/<< rev['angular-hotkeys.js'] >>"></script>
+  <script src="<< rev['bundle.js'] >>"></script>
+  <script src="<< rev['templates.js'] >>"></script>
 </body>
 </html>

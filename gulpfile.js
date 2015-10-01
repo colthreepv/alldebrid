@@ -6,7 +6,6 @@ let // gulp deps
   gulp = require('gulp'),
   gutil = require('gulp-util'),
   nunjucksRender = require('gulp-nunjucks-render'),
-  rev = require('gulp-rev'),
   rename = require('gulp-rename');
 
 let // external deps
