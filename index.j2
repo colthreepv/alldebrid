@@ -34,11 +34,11 @@
   <script src="<< rev['bundle.js'] >>"></script>
   <script src="<< rev['templates.js'] >>"></script>
   {% else -%}
-  <script async src="<< libs['angular'] >>"></script>
-  <script async src="<< libs['angular-ui-router'] >>"></script>
-  <script async src="<< libs['angular-hotkeys'] >>"></script>
-  <script async src="<< rev['bundle.js'] >>"></script>
-  <script async src="<< rev['templates.js'] >>"></script>
+  <script defer src="<< libs['angular'] >>"></script>
+  <script defer src="<< libs['angular-ui-router'] >>"></script>
+  <script defer src="<< libs['angular-hotkeys'] >>"></script>
+  <script defer src="<< rev['bundle.js'] >>"></script>
+  <script defer src="<< rev['templates.js'] >>"></script>
   {% endif -%}
 </body>
 </html>
