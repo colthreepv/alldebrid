@@ -13,4 +13,10 @@ Requests to alldebrid gets done via a simple NGINX proxy ([configuration](config
 ### Aim of the project
 Create an user-made frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
 
+# Start It Up
+Complete step-by-step guide will be added, for now there are only steps that *even I* often forget ^^
+
+ * Copy `nginx-vars.sample.js` to `nginx-vars.js` and customize your hostname.
+
+
 [ad]: http://www.alldebrid.com/

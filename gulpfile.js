@@ -63,7 +63,7 @@ gulp.task('build-dist', gulp.series(
 ));
 
 gulp.task('nginx', function () {
-  let vars = require('./variables.nginx');
+  let vars = require('./nginx-vars');
   return gulp.src('config.nginx.j2')
     .pipe(tasks.nunjucks.render(vars))
     .pipe(rename({
