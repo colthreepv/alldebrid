@@ -14,9 +14,17 @@ Requests to alldebrid gets done via a simple NGINX proxy ([configuration](config
 Create an user-made frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
 
 # Start It Up
-Complete step-by-step guide will be added, for now there are only steps that *even I* often forget ^^
+This should resemble a step-by-step guide to get this project up and running.
 
- * Copy `nginx-vars.sample.js` to `nginx-vars.js` and customize your hostname.
+ * git clone repo
+ * npm install
 
+**development**:
+ * run `gulp`
+ * open your browser to the default `http://localhost:3000/`
+
+**deploy**
+ * copy `nginx-vars.sample.js` to `nginx-vars.js` and customize your hostname.
+ * run `npm run deploy-ubuntu` or create another script for your current distro [and make a PR](https://github.com/colthreepv/alldebrid/pulls)
 
 [ad]: http://www.alldebrid.com/
