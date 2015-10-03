@@ -94,6 +94,7 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
       return arr.concat(torrent.links);
     }, []);
 
+    self.deselect();
     $state.go('home.unrestrict', { links: links });
   };
 
