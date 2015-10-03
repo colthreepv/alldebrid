@@ -48,7 +48,7 @@ exports = module.exports = function ($stateProvider, $urlRouterProvider, $locati
     views: {
       '': {
         templateUrl: 'torrent/torrent.tpl.html',
-        controller: 'torrentCtrlNew as torrent',
+        controller: 'torrentCtrl as torrent',
         resolve: {
           startTorrents: resolve.startTorrents
         }
