@@ -30,8 +30,9 @@ ad.on('proxyRes', function (proxyRes, req, res, options) {
     dbgForward('fixing header Location', partialUrl);
     proxyRes.headers.location = 'http://localhost:3000/ad' + partialUrl;
   }
-  // proxyRes.setHeader('X-Special-Proxy-Header', 'foobar');
 });
+
+ad.on('error', console.log);
 
 server.use(serveStatic(path.join(__dirname, baseDir)));
 

@@ -6,8 +6,8 @@ let // gulp
   revHash = require('./rev-hash'),
   tmpl = require('gulp-angular-templatecache');
 
-function angularTemplates (destDir) {
-  return function () {
+function createAngularTemplates (destDir) {
+  return function angularTemplates() {
     return gulp.src('src/**/*.tpl.html')
       .pipe(tmpl({
         standalone: true
@@ -17,4 +17,4 @@ function angularTemplates (destDir) {
       .pipe(gulp.dest(destDir));
   };
 }
-module.exports = angularTemplates;
+module.exports = createAngularTemplates;
