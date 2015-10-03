@@ -3,16 +3,12 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
 
   // initial values
   this.db = torrent.db;
-  this.forever = true;
   this.selectAll = false;
   this.checked = [];
   this.removing = false;
 
   this.orderByField = 'added_date';
   this.orderReversed = true;
-  this.multiSelect = false;
-
-  var lastChecked;
 
   this.select = function () {
     self.selectAll = !self.selectAll;
@@ -24,7 +20,6 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
 
   this.deselect = function () {
     self.selectAll = false;
-    lastChecked = undefined;
     for (var i = 0; i < self.db.length; i++) {
       self.db[i].checked = false;
     }
@@ -32,41 +27,8 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
   };
 
   this.check = function (torrent) {
-    var foundIdx, lastIdx, firstIdx;
-    var orderedTorrents;
+    var foundIdx;
 
-    if (self.multiSelect && angular.isDefined(lastChecked)) {
-      orderedTorrents = $filter('orderBy')(self.db, self.orderByField, self.orderReversed);
-      lastIdx = orderedTorrents.indexOf(lastChecked);
-      firstIdx = orderedTorrents.indexOf(torrent);
-
-      // in case of bottom->up selection use this particular strategy to select
-      if (lastIdx > firstIdx) {
-        for (lastIdx--; firstIdx <= lastIdx; firstIdx++) {
-          orderedTorrents[firstIdx].checked = !orderedTorrents[firstIdx].checked;
-          if (orderedTorrents[firstIdx].checked) { // if it gets checked, add it to the list
-            self.checked.push(orderedTorrents[firstIdx]);
-          } else { // otherwise remove it
-            self.checked.splice(self.checked.indexOf(orderedTorrents[firstIdx]), 1);
-          }
-        }
-      } else {
-        // otherwise
-        for (lastIdx++, firstIdx++; lastIdx < firstIdx; lastIdx++) {
-          orderedTorrents[lastIdx].checked = !orderedTorrents[lastIdx].checked;
-          if (orderedTorrents[lastIdx].checked) { // if it gets checked, add it to the list
-            self.checked.push(orderedTorrents[lastIdx]);
-          } else { // otherwise remove it
-            self.checked.splice(self.checked.indexOf(orderedTorrents[lastIdx]), 1);
-          }
-        }
-      }
-
-      lastChecked = torrent;
-      return;
-    }
-
-    lastChecked = torrent;
     if (foundIdx = self.checked.indexOf(torrent), foundIdx === -1) {
       torrent.checked = true;
       self.checked.push(torrent);
@@ -74,6 +36,11 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
       torrent.checked = false;
       self.checked.splice(foundIdx, 1);
     }
+  };
+
+  this.orderBy = function (column) {
+    if (self.orderByField === column) self.orderReversed = !self.orderReversed;
+    self.orderByField = column;
   };
 
   this.removeChecked = function () {
