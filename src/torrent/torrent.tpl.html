@@ -60,14 +60,6 @@
                 ng-show="torrent.orderByField === 'status'"></span>
             </a>
           </th>
-          <th class="downloaded">
-            <a class="pointer"
-            ng-class="{ 'ordered': torrent.orderByField === 'downloaded'}" ng-click="torrent.orderBy('downloaded')">
-            downloaded <span class="glyphicon"
-                ng-class="{ 'glyphicon-chevron-down': torrent.orderReversed, 'glyphicon-chevron-up': !torrent.orderReversed }"
-                ng-show="torrent.orderByField === 'downloaded'"></span>
-            </a>
-          </th>
           <th class="size">
             <a class="pointer"
             ng-class="{ 'ordered': torrent.orderByField === 'size'}" ng-click="torrent.orderBy('size')">
@@ -109,7 +101,6 @@
           <td class="server">{{ t.server }}</td>
           <td class="name">{{ t.name }}</td>
           <td class="status">{{ t.status }}</td>
-          <td class="downloaded">{{ t.downloaded }}</td>
           <td class="size">{{ t.size | bytes:2 }}</td>
           <td class="seeders">{{ t.seeder }}</td>
           <td class="speed">{{ t.speed }}</td>

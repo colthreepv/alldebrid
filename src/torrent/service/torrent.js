@@ -12,22 +12,22 @@ exports = module.exports = function ($timeout, $q, api, user) {
     response.data.forEach(function (torrent) {
       var torrentID = parseInt(torrent[1], 10);
 
-      var newTorrent, torrentPtr, seeds;
+      var torrentPtr, seeds;
+      var newTorrent = {
+        id: torrentID,
+        server: parseInt(torrent[2], 10),
+        name: torrent[3].slice(31, -7),
+        status: parse.status(torrent[4]),
+        downloaded: parse.size(torrent[5]),
+        size: parse.size(torrent[6]),
+        seeder: (seeds = parseInt(torrent[7], 10), !isNaN(seeds)) ? seeds : 0,
+        speed: parse.speed(torrent[8]),
+        'added_date': parse.date(torrent[9]),
+        links: parse.links(torrent[10])
+      };
 
       // if exists, replace
       if (torrentPtr = hash[torrentID], torrentPtr !== undefined) {
-        newTorrent = {
-          id: torrentID,
-          server: parseInt(torrent[2], 10),
-          name: torrent[3].slice(31, -7),
-          status: parse.status(torrent[4]),
-          downloaded: torrent[5],
-          size: parse.size(torrent[6]),
-          seeder: (seeds = parseInt(torrent[7], 10), !isNaN(seeds)) ? seeds : 0,
-          speed: parse.speed(torrent[8]),
-          'added_date': parse.date(torrent[9]),
-          links: parse.links(torrent[10])
-        };
 
         for (var attrName in torrentPtr) {
           // in case the links array differ in length
@@ -46,20 +46,7 @@ exports = module.exports = function ($timeout, $q, api, user) {
           }
         }
       } else { // else add
-        newTorrent = {
-          id: torrentID,
-          server: parseInt(torrent[2], 10),
-          name: torrent[3].slice(31, -7),
-          status: parse.status(torrent[4]),
-          downloaded: torrent[5],
-          size: parse.size(torrent[6]),
-          seeder: parseInt(torrent[7], 10),
-          speed: parse.speed(torrent[8]),
-          'added_date': parse.date(torrent[9]),
-          links: parse.links(torrent[10])
-        };
         db.push(newTorrent);
-
         hash[torrentID] = newTorrent;
       }
     });

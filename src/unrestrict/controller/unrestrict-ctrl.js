@@ -42,8 +42,6 @@ exports = module.exports = function ($params, $q, $window, api, storage) {
     });
   }
 
-
-
   if ($params.links) unrestrict($params.links);
 };
 
