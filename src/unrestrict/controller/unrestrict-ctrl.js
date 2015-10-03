@@ -1,10 +1,21 @@
-exports = module.exports = function ($params, $q, $window, api) {
+exports = module.exports = function ($params, $q, $window, api, storage) {
   var self = this;
   this.working = false;
-  this.textMode = false;
+  this.textMode = storage.get('links-display') === 'text' ? true : false;
   // this.requestedLinks = '';
   this.unrestrictedText = '';
   this.unrestricted = [];
+
+  this.done = function () {
+    $window.history.back();
+  };
+
+  this.swapDisplayMode = swapDisplayMode;
+
+  function swapDisplayMode () {
+    self.textMode = !self.textMode;
+    storage.set('links-display', self.textMode ? 'text' : 'link');
+  }
 
   // each link getting unrestricted pass by this handler function, showing progress to user
   function progressHandler (linkResponse) {
@@ -31,11 +42,9 @@ exports = module.exports = function ($params, $q, $window, api) {
     });
   }
 
-  this.done = function () {
-    $window.history.back();
-  };
+
 
   if ($params.links) unrestrict($params.links);
 };
 
-exports.$inject = ['$stateParams', '$q', '$window', 'adApi'];
+exports.$inject = ['$stateParams', '$q', '$window', 'adApi', 'storage'];
