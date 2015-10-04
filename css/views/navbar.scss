@@ -6,4 +6,10 @@
   .right-spacer {
     margin-right: 10px;
   }
+  @media (max-width: $screen-md-max) {
+    li a {
+      text-align: center;
+      font-size: x-large;
+    }
+  }
 }

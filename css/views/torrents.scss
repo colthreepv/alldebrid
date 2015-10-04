@@ -1,7 +1,34 @@
 .torrents {
-  .table {
+  &.table {
     font-size: 12px;
     max-height: 640px;
+
+    // show id and server only on big desktop and above
+    @media (max-width: $screen-sm-max) {
+      .id, .server { display: none; }
+    }
+
+    // portrait cellphone
+    @media (max-width: $screen-ms-max) {
+      table-layout: fixed;
+      text-overflow: ellipsis;
+
+      tr { font-size: medium; }
+      .name { overflow: hidden; }
+      .select input {
+        min-width: 26px;
+        min-height: 26px;
+      }
+
+      // hide big columns
+      .seeders, .speed, .added_date { display: none; }
+
+      // columns width
+      .name { width: 180px; }
+      .status { width: 74px; }
+      .size { width: 60px; }
+      .select { width: 32px; }
+    }
 
     .added_date {
       min-width: 90px;

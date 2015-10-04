@@ -4,16 +4,13 @@ let path = require('path');
 
 let // gulp
   gulp = require('gulp'),
-  gulpif = require('gulp-if'),
   rev = require('gulp-rev'),
   revHash = require('./rev-hash'),
-  sass = require('gulp-sass'),
-  sourcemaps = require('gulp-sourcemaps');
+  sass = require('gulp-sass');
 
-function buildLess (destDir, production) {
-  return function () {
+function createSassBuilder (destDir) {
+  return function sassBuilder () {
     return gulp.src('css/style.scss')
-      .pipe(sourcemaps.init())
       .pipe(sass({
         includePaths: [
           path.join(process.cwd(), 'node_modules')
@@ -21,10 +18,8 @@ function buildLess (destDir, production) {
       }))
       .pipe(rev())
       .pipe(revHash())
-        .pipe(gulpif(production, sourcemaps.write('.')))
-      .pipe(gulpif(!production, sourcemaps.write()))
       .pipe(gulp.dest(destDir));
   };
 }
 
-module.exports = buildLess;
+module.exports = createSassBuilder;
