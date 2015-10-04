@@ -5,11 +5,11 @@
 
     // show id and server only on big desktop and above
     @media (max-width: $screen-sm-max) {
-      .id, .server { display: none; }
+      .id, .server, .seeders { display: none; }
     }
 
     // portrait cellphone
-    @media (max-width: $screen-ms-max) {
+    @media (max-width: $screen-ms) {
       table-layout: fixed;
       text-overflow: ellipsis;
 
@@ -30,18 +30,10 @@
       .select { width: 32px; }
     }
 
-    .added_date {
-      min-width: 90px;
-    }
-
-    .name {
-      text-overflow: ellipsis;
-    }
-
-    .size {
-      min-width: 80px;
-    }
-
+    // default rules
+    .added_date { min-width: 90px; }
+    .name { text-overflow: ellipsis; }
+    .size { min-width: 80px; }
     .ordered {
       /* same as .bg-primary */
       color: #fff;
