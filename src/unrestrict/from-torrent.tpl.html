@@ -16,10 +16,10 @@
     <div class="text-center">
       <div class="checkbox">
         <label>
-          <input type="checkbox" ng-model="unr.textMode"> Text mode
+          <input type="checkbox" ng-model="unr.textMode" ng-model-options="{ getterSetter: true }"> Text mode
         </label>
       </div>
-      <div ng-show="!unr.textMode">
+      <div ng-show="!unr.textMode()">
         <ul class="list-group">
           <li class="list-group-item" ng-class="{ 'list-group-item-danger': file.error }" ng-repeat="file in unr.unrestricted">
             <span class="badge" title="{{ file.error }}" ng-if="file.error">{{ file.error }}</span>
@@ -30,7 +30,7 @@
           </li>
         </ul>
       </div>
-      <div ng-show="unr.textMode">
+      <div ng-show="unr.textMode()">
         <textarea class="form-control long-text" placeholder="unrestricted links" rows="{{ unr.unrestricted.length + 2 }}" autofocus ng-model="unr.unrestrictedText"></textarea>
       </div>
       <button class="btn btn-lg btn-danger" ng-click="unr.done()" ng-disabled="unr.working">

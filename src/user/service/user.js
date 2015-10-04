@@ -1,4 +1,4 @@
-exports = module.exports = function ($http, $q, $timeout, api) {
+exports = module.exports = function ($http, $q, $timeout, api, storage) {
   var status = this.status = {};
 
   function parseLogin (response) {
@@ -30,14 +30,14 @@ exports = module.exports = function ($http, $q, $timeout, api) {
   // when retrieving details of an user, it misses an unique uid necessary for logout
   // this function helps in that
   function attachUid (user) {
-    var uid = localStorage.getItem('uid.' + user.logoutKey);
+    var uid = storage.get('uid.' + user.logoutKey);
     if (uid) { // cache hit
       user.uid = uid;
       return user;
     }
 
     return api.fetchUid().then(function (uid) {
-      localStorage.setItem('uid.' + user.logoutKey, uid);
+      storage.set('uid.' + user.logoutKey, uid);
       user.uid = uid;
       return user;
     });
@@ -70,4 +70,4 @@ exports = module.exports = function ($http, $q, $timeout, api) {
   };
 
 };
-exports.$inject = ['$http', '$q', '$timeout', 'adApi'];
+exports.$inject = ['$http', '$q', '$timeout', 'adApi', 'storage'];

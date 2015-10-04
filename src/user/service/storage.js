@@ -7,8 +7,8 @@ exports = module.exports = function () {
       return localStorage.setItem(name, angular.toJson(value));
     }
   };
-  this.get = function (name, type) {
-    if (type === 'string') return localStorage.getItem(name);
-    return angular.fromJson(localStorage.getItem(name));
+  this.get = function (name, isJSON) {
+    if (isJSON) return angular.fromJson(localStorage.getItem(name));
+    return localStorage.getItem(name);
   };
 };

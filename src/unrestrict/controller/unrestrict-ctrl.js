@@ -1,7 +1,7 @@
 exports = module.exports = function ($params, $q, $window, api, storage) {
   var self = this;
   this.working = false;
-  this.textMode = storage.get('links-display') === 'text' ? true : false;
+  this.linksDisplay = storage.get('links-display') === 'text' ? true : false;
   // this.requestedLinks = '';
   this.unrestrictedText = '';
   this.unrestricted = [];
@@ -10,11 +10,12 @@ exports = module.exports = function ($params, $q, $window, api, storage) {
     $window.history.back();
   };
 
-  this.swapDisplayMode = swapDisplayMode;
+  this.textMode = textMode;
 
-  function swapDisplayMode () {
-    self.textMode = !self.textMode;
-    storage.set('links-display', self.textMode ? 'text' : 'link');
+  function textMode (value) {
+    if (value === undefined) return self.linksDisplay;
+    self.linksDisplay = !self.linksDisplay;
+    storage.set('links-display', self.linksDisplay ? 'text' : 'link');
   }
 
   // each link getting unrestricted pass by this handler function, showing progress to user
