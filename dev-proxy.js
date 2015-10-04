@@ -32,7 +32,10 @@ ad.on('proxyRes', function (proxyRes, req, res, options) {
   }
 });
 
-ad.on('error', console.log);
+ad.on('error', function (err) {
+  console.log('error occurred!');
+  console.error(err.stack);
+});
 
 server.use(serveStatic(path.join(__dirname, baseDir)));
 
