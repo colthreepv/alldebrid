@@ -1,13 +1,4 @@
-@import "custom-bootstrap.less";
-// Custom code
-@import (inline) "old-style.css";
-@import "snippets/login.less";
-
-.add-magnet {
-  margin: 0 5px 5px;
-}
-
-@keyframes psyc-background {
+@keyframes psyc {
   0%   { background-color: #7B6CA0; }
   25%  { background-color: #7CC256; }
   50%  { background-color: #FEF730; }
@@ -15,7 +6,7 @@
   100% { background-color: #2DA0E2; }
 }
 .psycload {
-  animation: psyc-background 0.5s infinite;
+  animation: psyc 0.5s infinite;
 }
 
 @keyframes spin2 {

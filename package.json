@@ -21,10 +21,12 @@
     "gulp-nunjucks-render": "^1.0.0",
     "gulp-rename": "^1.2.2",
     "gulp-rev": "^6.0.1",
+    "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-uglify": "^1.4.1",
     "gulp-util": "^3.0.6",
     "http-proxy": "^1.11.1",
+    "pretty-error": "^1.2.0",
     "serve-static": "^1.10.0",
     "vinyl-source-stream": "^1.1.0"
   },
@@ -53,8 +55,8 @@
     "angular": "^1.4.3",
     "angular-hotkeys": "^1.4.5",
     "angular-ui-router": "^0.2.15",
-    "bootstrap-less": "^3.3.8",
-    "bootswatch-less": "^3.3.4"
+    "bootstrap-sass": "^3.3.5",
+    "bootswatch-scss": "^3.2.0"
   },
   "production-deps": {
     "angular": "//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js",

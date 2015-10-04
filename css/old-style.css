@@ -1,48 +1,3 @@
-.right-spacer {
-  margin-right: 10px;
-}
-
-.long-text {
-  white-space: nowrap;
-}
-
-table.table.torrents {
-  font-size: 12px;
-  max-height: 640px;
-}
-
-.table.torrents .added_date {
-  min-width: 90px;
-}
-
-.table.torrents .name {
-  text-overflow: ellipsis;
-}
-
-.table.torrents .size {
-  min-width: 80px;
-}
-
-.table.torrents .ordered {
-  /* same as .bg-primary */
-  color: #fff;
-  background-color: #428bca;
-  padding: 2px;
-  border-radius: 3px;
-}
-
-.pointer {
-  cursor: pointer;
-}
-
-.nav.navbar-nav li .denied {
-  opacity: 0;
-}
-
-html {
-  overflow-y: scroll;
-}
-
 /* Smartphones (portrait and landscape) ----------- */
 @media only screen and (max-width : 480px) {
   .desktop {
@@ -52,12 +7,6 @@ html {
   .navbar-nav li a {
     text-align: center;
     font-size: x-large;
-  }
-  .showLinks, .showTorrents {
-    margin-bottom: 10px;
-    background: linear-gradient(to bottom, #ffffff 0%,#ededed 50%,#d2d2d2 100%);
-    border-radius: 5px;
-    box-shadow: 1px 1px 5px 0px rgba(50, 50, 50, 0.75);
   }
   .torrents tr {
     font-size: medium;

@@ -1,15 +1,17 @@
 'use strict';
 let // node modules
   express = require('express'),
+  debug = require('debug'),
   httpProxy = require('http-proxy'),
-  serveStatic = require('serve-static'),
-  debug = require('debug');
+  PrettyError = require('pretty-error'),
+  serveStatic = require('serve-static');
 
 let // node stdLib
   path = require('path');
 
 let
   server = express(),
+  pe = new PrettyError(),
   ad = httpProxy.createProxyServer({ changeOrigin: true }),
   dbgForward = debug('proxy:forward');
 
@@ -32,9 +34,8 @@ ad.on('proxyRes', function (proxyRes, req, res, options) {
   }
 });
 
-ad.on('error', function (err) {
-  console.log('error occurred!');
-  console.error(err.stack);
+ad.on('error', function errorHandler (err) {
+  console.error(pe.render(err));
 });
 
 server.use(serveStatic(path.join(__dirname, baseDir)));

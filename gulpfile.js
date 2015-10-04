@@ -16,15 +16,15 @@ const destDir = 'build';
 
 gulp.task('copy-fonts', function () {
   return gulp.src([
-    'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.woff',
-    'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.woff2',
-    'node_modules/bootstrap-less/fonts/glyphicons-halflings-regular.ttf'
-  ]).pipe(gulp.dest(path.join(destDir, 'fonts')));
+    'node_modules/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff',
+    'node_modules/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.woff2',
+    'node_modules/bootstrap-sass/assets/fonts/bootstrap/glyphicons-halflings-regular.ttf'
+  ]).pipe(gulp.dest(path.join(destDir, 'fonts/')));
 });
 
 gulp.task('watch', function (done) {
   gulp.watch('index.j2', gulp.series('j2'));
-  gulp.watch('css/**/*.less', gulp.series('less', 'j2'));
+  gulp.watch('css/**/*.scss', gulp.series('sass', 'j2'));
   gulp.watch('src/**/*.tpl.html', gulp.series('templates', 'j2'));
   gulp.watch('src/**/*.js', gulp.series('code-build', 'j2'));
 
@@ -41,7 +41,7 @@ gulp.task('clean', del.bind(null, destDir));
 gulp.task('code-build', tasks.browserify(destDir));
 gulp.task('copy-libs', tasks.copyLibs(destDir));
 gulp.task('git', tasks.git);
-gulp.task('less', tasks.less(destDir));
+gulp.task('sass', tasks.sass(destDir));
 gulp.task('templates', tasks.templates(destDir));
 
 // specific for production, implies minification
@@ -51,14 +51,14 @@ gulp.task('j2-dist', tasks.nunjucks(destDir, true));
 // build for development
 gulp.task('build', gulp.series(
   gulp.parallel('clean', 'git'),
-  gulp.parallel('copy-fonts', 'copy-libs', 'less', 'templates', 'code-build'),
+  gulp.parallel('copy-fonts', 'copy-libs', 'sass', 'templates', 'code-build'),
   gulp.series('j2')
 ));
 
 // build for production
 gulp.task('build-dist', gulp.series(
   gulp.parallel('clean', 'git'),
-  gulp.parallel('copy-fonts', 'less', 'templates', 'code-build-dist'),
+  gulp.parallel('copy-fonts', 'sass', 'templates', 'code-build-dist'),
   gulp.series('j2-dist')
 ));
 

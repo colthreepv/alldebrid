@@ -1,0 +1,26 @@
+.torrents {
+  .table {
+    font-size: 12px;
+    max-height: 640px;
+
+    .added_date {
+      min-width: 90px;
+    }
+
+    .name {
+      text-overflow: ellipsis;
+    }
+
+    .size {
+      min-width: 80px;
+    }
+
+    .ordered {
+      /* same as .bg-primary */
+      color: #fff;
+      background-color: #428bca;
+      padding: 2px;
+      border-radius: 3px;
+    }
+  }
+}

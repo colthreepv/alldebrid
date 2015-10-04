@@ -1,0 +1,17 @@
+@import "custom-bootstrap";
+
+// Custom code
+@import "loaders";
+
+// specific parts of HTML
+@import "views/login";
+@import "views/navbar";
+@import "views/torrents";
+
+.long-text {
+  white-space: nowrap;
+}
+
+.pointer {
+  cursor: pointer;
+}
