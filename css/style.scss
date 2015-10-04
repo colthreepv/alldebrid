@@ -8,10 +8,7 @@
 @import "views/navbar";
 @import "views/torrents";
 
-.long-text {
-  white-space: nowrap;
-}
-
-.pointer {
-  cursor: pointer;
-}
+// common rules
+body { overflow-x: hidden; }
+.long-text { white-space: nowrap; }
+.pointer { cursor: pointer; }
