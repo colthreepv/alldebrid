@@ -14,6 +14,10 @@ server {
   include /etc/nginx/sites-available/ssl-config.partial;
   gzip_types application/javascript text/css;
 
+  proxy_read_timeout 2s;
+  proxy_send_timeout 2s;
+  proxy_connect_timeout 2s;
+
   # http://security.stackexchange.com/questions/55790/nginx-how-to-prevent-processing-requests-with-undefined-server-names-with-http
   if ( $http_host !~* ^(<< hostname | replace(r/\./g, '\\.') >>)$ ) {
     return 444;
