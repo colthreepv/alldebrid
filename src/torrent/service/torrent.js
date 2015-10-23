@@ -1,7 +1,6 @@
 // external parsing functions
-var parse = require('./_parse-functions');
-exports = module.exports = function ($timeout, $q, api, user) {
-  var loopForever = true;
+exports = module.exports = function ($timeout, $q, api, user, parse) {
+  var loopForever = false;
   var cooldownTimer = 5000;
   var db = this.db = [];
   var hash = this.hash = {};
@@ -90,6 +89,7 @@ exports = module.exports = function ($timeout, $q, api, user) {
 
   // start forever loop here
   this.start = function () {
+    if (loopForever) return; // avoids making parallel forever loops
     loopForever = true;
     forever();
   };
@@ -98,4 +98,4 @@ exports = module.exports = function ($timeout, $q, api, user) {
     loopForever = false;
   };
 };
-exports.$inject = ['$timeout', '$q', 'adApi', 'user'];
+exports.$inject = ['$timeout', '$q', 'adApi', 'user', 'parseFn'];
