@@ -18,9 +18,14 @@ exports = module.exports = function ($params, $q, $window, api, storage) {
     storage.set('links-display', self.linksDisplay ? 'text' : 'link');
   }
 
+  function toSecure (unrestrictData) {
+    if (unrestrictData && unrestrictData.link) unrestrictData.link = unrestrictData.link.replace('http', 'https');
+    return unrestrictData;
+  }
+
   // each link getting unrestricted pass by this handler function, showing progress to user
   function progressHandler (linkResponse) {
-    self.unrestricted.push(linkResponse.data);
+    self.unrestricted.push(toSecure(linkResponse.data));
     self.unrestrictedText = self.unrestricted.reduce(function (text, file) {
       if (file.error !== '') return text += 'ERROR: ' + file.error;
       return text += file.link + '\n';
