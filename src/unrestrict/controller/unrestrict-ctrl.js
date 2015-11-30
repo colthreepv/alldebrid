@@ -19,7 +19,7 @@ exports = module.exports = function ($params, $q, $window, api, storage) {
   }
 
   function toSecure (unrestrictData) {
-    if (unrestrictData && unrestrictData.link) unrestrictData.link = unrestrictData.link.replace('http', 'https');
+    if (unrestrictData && unrestrictData.link) unrestrictData.link = unrestrictData.link.replace('http:', 'https:');
     return unrestrictData;
   }
 
