@@ -68,7 +68,7 @@ exports = module.exports = function ($log) {
 
     // when in queue, ad gives short-format dates
     if (d === null) {
-      d = dateStr.match(/(\d{2})-(\d{2}):(\d{2})/);
+      d = dateStr.match(/(\d{2})[ -](\d{2}):(\d{2})/);
       if (d.length) {
         newd.setDate(parseInt(d[1], 10));
         newd.setHours(parseInt(d[2], 10));
