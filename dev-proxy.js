@@ -42,12 +42,12 @@ server.use(serveStatic(path.join(__dirname, baseDir)));
 
 server.use('/ad', function (req, res) {
   dbgForward('Forwarding request:', req.url);
-  ad.web(req, res, { target: 'http://www.alldebrid.com' });
+  ad.web(req, res, { target: 'https://www.alldebrid.com' });
 });
 
 server.use('/torrent', function (req, res) {
   dbgForward('Forwarding request:', req.url);
-  ad.web(req, res, { target: 'http://upload.alldebrid.com/uploadtorrent.php' });
+  ad.web(req, res, { target: 'https://upload.alldebrid.com/uploadtorrent.php' });
 });
 
 if (require.main === module) {
