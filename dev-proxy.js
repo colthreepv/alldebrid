@@ -38,7 +38,7 @@ ad.on('error', function errorHandler (err) {
   console.error(pe.render(err));
 });
 
-server.use(serveStatic(path.join(__dirname, baseDir)));
+server.use(serveStatic(path.join(__dirname, baseDir), { etag: false, lastModified: false }));
 
 server.use('/ad', function (req, res) {
   dbgForward('Forwarding request:', req.url);
