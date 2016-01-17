@@ -1,8 +1,8 @@
 <footer class="footer">
   <div class="container">
     <p ng-show="footer.blobSupport && footer.win10 && !footer.win10Hide">
-      <b>Want to handle magnet URI?</b> Fix Windows 10 magnet URI handling <a ng-href="{{ footer.regeditURL }}" target="_blank" download="magnet.reg">with this reg file</a>
-      <button class="btn btn-sm btn-default" ng-click="footer.hideWin10()">hide</button>
+      <b>Want to handle magnet URI?</b> Use <a ng-href="{{ footer.regeditURL }}" target="_blank" download="magnet.reg">this reg file</a> on Windows 10
+      <button class="btn btn-sm btn-default" ng-click="footer.win10Done()">Done</button>
     </p>
     <p class="text-muted">version: <a ng-href="https://github.com/colthreepv/alldebrid/commit/{{ footer.version }}">{{ footer.version }}</a></p>
   </div>
