@@ -1,4 +1,4 @@
-exports = module.exports = function ($window, storage) {
+exports = module.exports = function ($window, storage, magnet) {
   this.version = process.env.GITREV;
 
   // from here on, there's only logic for the reg
@@ -12,7 +12,7 @@ exports = module.exports = function ($window, storage) {
 
   this.win10 = $window.navigator.userAgent.indexOf('Windows NT 10.0') !== -1;
   this.win10Hide = storage.get('win10-notification') === 'hide' ? true : false;
-  this.hideWin10 = hideWin10;
+  this.win10Done = win10Done;
   this.blobSupport = false;
   var regBlob, regURL;
   try {
@@ -23,10 +23,10 @@ exports = module.exports = function ($window, storage) {
 
   this.regeditURL = regURL;
 
-  function hideWin10 () {
+  function win10Done () {
     storage.set('win10-notification', 'hide');
     this.win10Hide = true;
+    magnet.register();
   }
-
 };
-exports.$inject = ['$window', 'storage'];
+exports.$inject = ['$window', 'storage', 'magnetHandler'];
