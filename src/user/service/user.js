@@ -47,7 +47,7 @@ exports = module.exports = function ($http, $q, $timeout, api, storage) {
   function expose (user) {
     angular.extend(status, user);
     return status;
-  };
+  }
 
   // clear status
   function clean () {

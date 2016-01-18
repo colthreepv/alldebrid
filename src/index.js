@@ -4,7 +4,7 @@ var bulk = require('bulk-require');
 var modules = bulk(__dirname, ['./*/**/!(index|_*|*.spec).js']);
 
 var angular = require('angular');
-var AD = angular.module('ad', ['cfp.hotkeys', 'ui.router', 'templates']);
+var AD = angular.module('ad', ['ui.router', 'templates']);
 
 angular.forEach(modules, function (moduleObj) { // cycle all app components: home, user...
   angular.forEach(moduleObj, function (moduleCollection, moduleType) { // cycle angular types: constant, service, controller....

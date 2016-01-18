@@ -30,13 +30,11 @@
   {% if build == 'development' -%}
   <script src="/libs/<< rev['angular.js'] >>"></script>
   <script src="/libs/<< rev['angular-ui-router.js'] >>"></script>
-  <script src="/libs/<< rev['angular-hotkeys.js'] >>"></script>
   <script src="<< rev['bundle.js'] >>"></script>
   <script src="<< rev['templates.js'] >>"></script>
   {% else -%}
   <script defer src="<< libs['angular'] >>"></script>
   <script defer src="<< libs['angular-ui-router'] >>"></script>
-  <script defer src="<< libs['angular-hotkeys'] >>"></script>
   <script defer src="<< rev['bundle.js'] >>"></script>
   <script defer src="<< rev['templates.js'] >>"></script>
   {% endif -%}
