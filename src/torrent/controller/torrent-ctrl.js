@@ -1,4 +1,4 @@
-exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
+exports = module.exports = function ($state, $filter, torrent) {
   var self = this;
 
   // initial values
@@ -7,8 +7,8 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
   this.checked = [];
   this.removing = false;
 
-  this.orderByField = 'added_date';
-  this.orderReversed = true;
+  this.orderByField = 'name';
+  this.orderReversed = false;
 
   this.select = function () {
     self.selectAll = !self.selectAll;
@@ -65,24 +65,5 @@ exports = module.exports = function ($state, $filter, torrent, api, hotkeys) {
     $state.go('home.unrestrict', { links: links });
   };
 
-  // hold shift to multi-select
-  hotkeys.add({
-    combo: 'shift',
-    description: 'activate multi selection in table',
-    action: 'keydown',
-    callback: function (event, hotkey) {
-      if (self.multiSelect) return;
-      self.multiSelect = true;
-    }
-  });
-  hotkeys.add({
-    combo: 'shift',
-    description: 'dectivate multi selection in table',
-    action: 'keyup',
-    callback: function (event, hotkey) {
-      self.multiSelect = false;
-    }
-  });
-
 };
-exports.$inject = ['$state', '$filter', 'torrent', 'adApi', 'hotkeys'];
+exports.$inject = ['$state', '$filter', 'torrent'];
