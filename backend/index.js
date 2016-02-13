@@ -13,8 +13,8 @@ app.post('/api/convert');
 module.exports = app;
 
 function listenCallback () {
-  console.log(this.address());
-  console.log(`Server listening to ${ this.address() }`);
+  const address = this.address();
+  console.log(`Server listening to http://${ address.address }:${ address.port }/`);
 }
 
-if (require.main === module) app.listen(8080, listenCallback);
+if (require.main === module) app.listen(8080, '127.0.0.1', listenCallback);

@@ -55,9 +55,14 @@
   "dependencies": {
     "angular": "^1.4.3",
     "angular-ui-router": "^0.2.15",
+    "bluebird": "^3.2.1",
     "bootstrap-sass": "^3.3.5",
     "bootswatch-scss": "^3.2.0",
-    "express": "^4.13.4"
+    "cheerio": "^0.20.0",
+    "express": "^4.13.4",
+    "ioredis": "^1.15.0",
+    "joi": "^7.2.3",
+    "request-promise": "^2.0.0"
   },
   "production-deps": {
     "angular": "//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js",
