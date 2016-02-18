@@ -3,7 +3,8 @@
   "env": {
     "browser": true,
     "es6": true,
-    "node": true
+    "node": true,
+    "mocha": true
   },
   "globals": {
     "angular": false,
@@ -30,7 +31,7 @@
     "quotes": [1, "single"],
     "radix": 2,
     "semi": [2, "always"],
-    "space-after-keywords": [2, "always"],
+    "keyword-spacing": 2,
     "space-before-blocks": 2,
     "space-before-function-paren": 2,
     "spaced-comment": [2, "always", { "exceptions": ["-"]}],

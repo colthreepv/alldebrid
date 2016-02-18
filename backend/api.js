@@ -4,32 +4,31 @@ const Joi = require('joi');
 const rp = require('request-promise');
 const ad = require('./ad');
 const parse = require('./parse');
+const storage = require('./storage');
 // all those functions will return a promise
 
 // sets a cookie
 function login (req) {
-  const email = req.body.email;
+  const username = req.body.username;
   const password = req.body.password;
   const jar = rp.jar();
   return rp({
     url: ad.register,
     qs: {
       action: 'login',
-      'login_login': email,
+      'login_login': username,
       'login_password': password
     },
     jar
   })
-  .then(parse.login)
-  .then(data => {
-    console.log(data);
-    console.log(jar.getCookies());
+  .then((page) => {
+    return storage.setCookies(username, jar.getCookies(ad.base)).return(page);
   })
-  .catch(console.log);
+  .then(parse.login);
 }
 login['@validation'] = {
   body: {
-    email: Joi.string().email().required(),
+    username: Joi.string().required(),
     password: Joi.string().required()
   }
 };
@@ -52,5 +51,10 @@ function torrent (req) {}
 function add (req) {}
 // converts torrent to http links
 function convert (req) {}
+
+function pprint (err) {
+  const util = require('util');
+  console.log(util.inspect(err.stack, { colors: true, depth: null }));
+}
 
 module.exports = { login, torrent, add, convert };

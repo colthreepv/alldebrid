@@ -1,27 +1,32 @@
 'use strict';
-const ad = require('./ad');
+const fs = require('fs');
+
 const cheerio = require('cheerio');
 const Promise = require('bluebird');
 const rp = require('request-promise');
-const storage = require('./storage');
-const redis = storage.redis;
 
-const fs = require('fs');
+const util = require('./util');
+const ad = require('./ad');
+const storage = require('./storage');
+const lvl = storage.lvl;
 
 function parseLogin (pageBody) {
   fs.writeFileSync('page.html', pageBody);
   const $ = cheerio.load(pageBody);
-  if ($('.login textarea[name="recaptcha_challenge_field"]')) {
+  const recaptcha = $('.login textarea[name="recaptcha_challenge_field"]');
+  if (recaptcha.length) {
     // A wild recaptcha appears
     return Promise.reject({ logged: false, recaptcha: true });
   }
-  if ($('#toolbar span a.toolbar_welcome')) {
+  const welcomeBar = $('#toolbar span a.toolbar_welcome');
+  if (welcomeBar.length) {
     return Promise.reject({ logged: false, recaptcha: false });
   }
-  if ($('strong a')) {
-    const days = $('.toolbar_welcome').textContent.match(/in (\d*) days/);
-    const username = $('strong a').textContent;
-    const logoutKey = $('.toolbar_disconnect').getAttribute('href').split('key=')[1];
+  const toolbar = $('.toolbar_welcome strong a');
+  if (toolbar.length) {
+    const days = $('.toolbar_welcome').text().match(/in (\d*) days/);
+    const username = $('.toolbar_welcome strong a').text();
+    const logoutKey = $('.toolbar_disconnect').attr('href').split('key=')[1];
 
     // retrieve user UID and give back to user
     return retrieveUid(username, logoutKey).then(uid => {
@@ -36,31 +41,29 @@ function parseLogin (pageBody) {
   }
 }
 
-
 // when retrieving details of an user, it misses an unique uid necessary for logout
 // this function helps in that
 function retrieveUid (username, logoutKey) {
-  return redis
-    .get(`user:uid:${ logoutKey }`)
-    .then((value) => {
-      if (value == null) return fetchUid(logoutKey);
-      return value;
+  return lvl.getAsync(`user:uid:${ logoutKey }`)
+    .catch(storage.NotFoundError, () => {
+      return fetchUid(username, logoutKey);
     });
 }
 
+// fetchUid from AD
 function fetchUid (username, logoutKey) {
-  storage
+  return storage
     .getCookies(username)
-    .then(cookies => {
-      const j = rp.jar(cookies);
+    .then(util.makeJar)
+    .then(jar => {
       return rp({
         url: ad.torrent,
-        jar: j
+        jar: jar
       });
     })
     .then(pageBody => {
       const uid = pageBody.match(/name="uid" value="(.*)"/)[1];
-      return redis.set(`user:uid:${ logoutKey }`, uid).return(uid); // write uid back
+      return lvl.putAsync(`user:uid:${ logoutKey }`, uid).return(uid); // write uid back
     });
 }
 

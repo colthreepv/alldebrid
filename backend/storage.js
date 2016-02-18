@@ -1,22 +1,33 @@
 'use strict';
-const Redis = require('ioredis');
-const redis = new Redis();
+const path = require('path');
+
+const Promise = require('bluebird');
+const levelup = require('levelup');
+const lvl = levelup(path.join(__dirname, '..', 'level.db'));
+
+Promise.promisifyAll(lvl);
 
 function getCookies (username) {
-  return redis.get(`user:${ username }:cookies`).then(data => JSON.parse(data));
+  return lvl.getAsync(`user:${ username }:cookies`).then(data => JSON.parse(data));
 }
 
-function setCookies (username, data) {
-  return redis.set(`user:${ username }:cookies`, JSON.stringify(data));
+function setCookies (username, cookies) {
+  const stringCookies = cookies.map(c => c.toString());
+  return lvl.putAsync(`user:${ username }:cookies`, JSON.stringify(stringCookies));
 }
 
 function clearCookies (username) {
-  return redis.del(`user:${ username }:cookies`);
+  return lvl.delAsync(`user:${ username }:cookies`);
+}
+
+function NotFoundError (err) {
+  return err.notFound;
 }
 
 module.exports = {
   getCookies,
   setCookies,
   clearCookies,
-  redis
+  lvl,
+  NotFoundError
 };
