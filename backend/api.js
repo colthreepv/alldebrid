@@ -1,14 +1,19 @@
 'use strict';
+const path = require('path');
 
 const Joi = require('joi');
 const rp = require('request-promise');
+const XError = require('x-error');
+
 const ad = require('./ad');
+const config = require(path.join(__dirname, '..', 'config.json'));
 const parse = require('./parse');
 const storage = require('./storage');
+const lvl = storage.lvl;
 // all those functions will return a promise
 
 // sets a cookie
-function login (req) {
+function login (req, res) {
   const username = req.body.username;
   const password = req.body.password;
   const jar = rp.jar();
@@ -21,10 +26,24 @@ function login (req) {
     },
     jar
   })
-  .then((page) => {
-    return storage.setCookies(username, jar.getCookies(ad.base)).return(page);
+  .then(parse.login)
+  // .then() - HANDLE login failure
+  .then(login => {
+    // if (login.logged !== true) throw new XError(1000).m('invalid username/password').hc(401);
+    if (login.logged !== true) {
+      res.status(401).send('Invalid username/password combination');
+      return false;
+    }
+    return login;
   })
-  .then(parse.login);
+  .then(login => {
+    return storage.setCookies(username, jar.getCookies(ad.base)).return(login);
+  })
+  .then(login => lvl.putAsync(`user:${ login.uid }:uid`, login.username).return(login))
+  .then(login => {
+    res.cookie('uid', login.uid,  { domain: config.domain, secure: true, httpOnly: true });
+    res.redirect('/');
+  });
 }
 login['@validation'] = {
   body: {
@@ -32,6 +51,7 @@ login['@validation'] = {
     password: Joi.string().required()
   }
 };
+login['@type'] = 'raw';
 
 function authValidator (req, res, next) {
   // if (req.cookie && )
@@ -39,6 +59,7 @@ function authValidator (req, res, next) {
 
 // clears the cookie, does not return promise
 function logout (req, res) {
+  const username = req.user.username;
   // res.setHeader "clear cookie";
 }
 logout['@before'] = [authValidator];
@@ -51,10 +72,5 @@ function torrent (req) {}
 function add (req) {}
 // converts torrent to http links
 function convert (req) {}
-
-function pprint (err) {
-  const util = require('util');
-  console.log(util.inspect(err.stack, { colors: true, depth: null }));
-}
 
 module.exports = { login, torrent, add, convert };
