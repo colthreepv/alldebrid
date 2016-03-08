@@ -3,7 +3,9 @@ const path = require('path');
 
 const Promise = require('bluebird');
 const levelup = require('levelup');
-const lvl = levelup(path.join(__dirname, '..', 'level.db'));
+const ttl = require('level-ttl');
+const lvlVanilla = levelup(path.join(__dirname, '..', 'level.db'));
+const lvl = ttl(lvlVanilla);
 
 Promise.promisifyAll(lvl);
 

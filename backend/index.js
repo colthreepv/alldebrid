@@ -1,13 +1,20 @@
 'use strict';
 const express = require('express');
 const jsonParser = require('body-parser').json();
-const cookieParser = require('cookie-parser')();
 const promesso = require('./promesso');
+const session = require('express-session');
+const LevelStore = require('express-session-level')(session);
+const sessionStorage = require('level')('session.db');
 const api = require('./api');
 
 const app = express();
 app.use(jsonParser);
-app.use(cookieParser);
+
+app.use(session({
+  // merge with config.session
+  store: new LevelStore(sessionStorage)
+}));
+
 
 app.post('/login', promesso(api.login));
 app.post('/logout');
