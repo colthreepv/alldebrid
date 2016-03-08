@@ -27,4 +27,25 @@ This should resemble a step-by-step guide to get this project up and running.
  * copy `nginx-vars.sample.js` to `nginx-vars.js` and customize your hostname.
  * run `npm run deploy-ubuntu` or create another script for your current distro [and make a PR](https://github.com/colthreepv/alldebrid/pulls)
 
+### Configuration files
+
+**test-account.json** - it's an Alldebrid fully working account to test login/logout
+
+Example:
+```json
+{
+  "username": "username",
+  "password": "password"
+}
+```
+
+**config.json** - various website configuration options
+
+Example:
+```json
+{
+  "domain": "yourhost.com"
+}
+```
+
 [ad]: http://www.alldebrid.com/
