@@ -19,7 +19,13 @@ function handleFactory (handler) {
   // handle more cases
   return function (req, res) {
     handler(req, res)
-    .then(payload => res.status(200).send(payload))
+    .then(response => {
+      if (Array.isArray(response)) { // array structure
+        response.forEach(r => res[r.method].apply(null, r.args));
+      } else {
+        res.status(200).send(response);
+      }
+    })
     .catch(XError, err => {
       console.log(`Error: ${ err.code } - ${ err.message }`);
       console.dir(err);

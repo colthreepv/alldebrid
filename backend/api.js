@@ -41,8 +41,16 @@ function login (req, res) {
   })
   .then(login => lvl.putAsync(`user:${ login.uid }:uid`, login.username).return(login))
   .then(login => {
-    res.cookie('uid', login.uid,  { domain: config.domain, secure: true, httpOnly: true });
-    res.redirect('/');
+    return [
+      {
+        method: 'cookie',
+        args: [ 'uid', login.uid, { domain: config.domain, secure: true, httpOnly: true } ]
+      },
+      {
+        method: 'redirect',
+        args: [ '/' ]
+      }
+    ];
   });
 }
 login['@validation'] = {

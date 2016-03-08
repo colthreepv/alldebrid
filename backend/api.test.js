@@ -6,7 +6,7 @@ const api = require('./api');
 const testAccount = require(path.join(__dirname, '..', 'test-account.json'));
 
 describe('login API', function () {
-  it.only('should not work with incorrect values', (done) => {
+  it('should not work with incorrect values', (done) => {
     const req = {
       body: {
         username: 'dood',
@@ -35,8 +35,9 @@ describe('login API', function () {
     return api.login(req).then(response => {
       // console.log('Login Response');
       // console.dir(response);
-      expect(response).to.contain.keys(['uid', 'logged', 'username', 'remainingDays']);
-      expect(response.username).to.be.equal('mrgamer');
+      expect(response).to.have.lengthOf(2);
+      expect(response[0].method).to.be.equal('cookie');
+      expect(response[1].method).to.be.equal('redirect');
     });
   });
 });
