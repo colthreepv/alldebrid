@@ -27,30 +27,20 @@ function login (req, res) {
     jar
   })
   .then(parse.login)
-  // .then() - HANDLE login failure
-  .then(login => {
-    // if (login.logged !== true) throw new XError(1000).m('invalid username/password').hc(401);
-    if (login.logged !== true) {
-      res.status(401).send('Invalid username/password combination');
-      return false;
-    }
-    return login;
+  .catch(() => {
+    throw new XError(1000).m('invalid username/password').hc(401);
   })
   .then(login => {
     return storage.setCookies(username, jar.getCookies(ad.base)).return(login);
   })
   .then(login => lvl.putAsync(`user:${ login.uid }:uid`, login.username).return(login))
   .then(login => {
-    return [
-      {
-        method: 'cookie',
-        args: [ 'uid', login.uid, { domain: config.domain, secure: true, httpOnly: true } ]
-      },
-      {
-        method: 'redirect',
-        args: [ '/' ]
-      }
-    ];
+    req.session.uid = login.uid;
+
+    return {
+      method: 'redirect',
+      args: [ '/' ]
+    };
   });
 }
 login['@validation'] = {
@@ -59,9 +49,10 @@ login['@validation'] = {
     password: Joi.string().required()
   }
 };
-login['@type'] = 'raw';
 
 function authValidator (req, res, next) {
+  const sess = req.session;
+  if (!sess || !sess.uid) throw new XError()
   // if (req.cookie && )
 }
 
