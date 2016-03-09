@@ -1,20 +1,22 @@
 'use strict';
+const path = require('path');
 const express = require('express');
 const jsonParser = require('body-parser').json();
-const promesso = require('./promesso');
 const session = require('express-session');
 const LevelStore = require('express-session-level')(session);
-const sessionStorage = require('level')('session.db');
+const sessionStorage = require('level')(path.join(__dirname, '..', 'session.db'));
+
+const config = require(path.join(__dirname, '..', 'config.json'));
+const promesso = require('./promesso');
 const api = require('./api');
 
 const app = express();
 app.use(jsonParser);
 
-app.use(session({
-  // merge with config.session
+const sessionConf = Object.assign({}, config.session, {
   store: new LevelStore(sessionStorage)
-}));
-
+});
+app.use(session(sessionConf));
 
 app.post('/login', promesso(api.login));
 app.post('/logout');
