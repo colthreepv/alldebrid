@@ -48,4 +48,15 @@ Example:
 }
 ```
 
+## Promesso documentation
+
+Promesso is a middleware adapter that converts a promise-based middleware to a standard Express middleware.
+
+It supports annotations in the form of `@validation` or `@before`.
+
+The promesso middleware can reply with:
+*  a payload that gets sent to `res.send`
+*  an Object like `{ method: 'redirect', args: ['/'] }` for custom `res[method]` calls
+*  an Array for a sequence of `res[method]` calls
+
 [ad]: http://www.alldebrid.com/

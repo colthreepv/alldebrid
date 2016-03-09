@@ -21,9 +21,10 @@ function handleFactory (handler) {
     handler(req, res)
     .then(response => {
       if (Array.isArray(response)) { // array structure
-        response.forEach(r => res[r.method].apply(null, r.args));
+        response.forEach(r => res[r.method].apply(res, r.args));
       } else {
-        res.status(200).send(response);
+        if (isObject(response)) res[response.method].apply(res, response.args);
+        else res.status(200).send(response);
       }
     })
     .catch(XError, err => {
@@ -34,6 +35,16 @@ function handleFactory (handler) {
       const httpResponse = err.httpResponse;
       if (httpResponse) res.status(httpCode).send(httpResponse);
       else res.sendStatus(httpCode);
+    })
+    .catch(Error, err => {
+      console.dir(err, 'coding error', { body: req.body, query: req.query, params: req.params, ip: req.ip, status: 500 });
+      // if (page) return res.status(500).render('error');
+      return res.sendStatus(500);
+    })
+    .catch(err => {
+      console.error('Non-Error Error, probably string:');
+      console.error(err);
+      return res.sendStatus(500);
     });
   };
 }
