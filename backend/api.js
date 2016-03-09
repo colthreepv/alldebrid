@@ -27,7 +27,8 @@ function login (req, res) {
     jar
   })
   .then(parse.login)
-  .catch(() => {
+  .catch((login) => {
+    if (login.recaptcha) throw new XError(1002).m('recaptcha appeared').hc(403);
     throw new XError(1000).m('invalid username/password').hc(401);
   })
   .then(login => {
@@ -37,10 +38,10 @@ function login (req, res) {
   .then(login => {
     req.session.uid = login.uid;
 
-    return {
+    return [{
       method: 'redirect',
       args: [ '/' ]
-    };
+    }];
   });
 }
 login['@validation'] = {
@@ -50,19 +51,19 @@ login['@validation'] = {
   }
 };
 
-function authValidator (req, res, next) {
+function authValidator (req) {
   const sess = req.session;
-  if (!sess || !sess.uid) throw new XError()
-  // if (req.cookie && )
+  if (!sess || !sess.uid) throw new XError(1001).m('this endpoint requires Login').hc(401);
 }
 
-// clears the cookie, does not return promise
-function logout (req, res) {
-  const username = req.user.username;
-  // res.setHeader "clear cookie";
+// clears the cookie
+function logout (req) {
+  console.log('Reached logout!');
+  const sess = req.session;
+  sess.destroy();
+  return { status: 'OK' };
 }
 logout['@before'] = [authValidator];
-logout['@type'] = 'raw';
 
 // authenticated APIs
 // retrieve torrents, all of them
@@ -72,4 +73,4 @@ function add (req) {}
 // converts torrent to http links
 function convert (req) {}
 
-module.exports = { login, torrent, add, convert };
+module.exports = { login, logout, torrent, add, convert };
