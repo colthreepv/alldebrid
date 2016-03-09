@@ -13,6 +13,7 @@ nginx-vars.js
 
 # database
 level.db
+session.db
 
 # private data
 test-account.json
