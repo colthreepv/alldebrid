@@ -1,0 +1,46 @@
+<!doctype html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>AllDebrid Better Frontend</title>
+  <meta name="description" content="">
+  <link rel="shortcut icon" type="image/x-icon" href="//cdn.alldebrid.com/lib/images/default/favicon.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  {# <link rel="stylesheet" href="/<< rev['style.css'] >>"> #}
+</head>
+<body>
+  <div ui-view="navbar"></div>
+  {# main view => '' #}
+  <div class="container-fluid" ui-view>
+    <div class="row">
+      <div class="col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+        <div class="panel panel-default">
+          <div class="panel-heading psycload">
+            <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+            <strong>loading status...</strong>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div ui-view="footer"></div>
+  {# js #}
+  {% if build == 'development' -%}
+  {#
+  <script src="/libs/<< rev['angular.js'] >>"></script>
+  <script src="/libs/<< rev['angular-ui-router.js'] >>"></script>
+  <script src="<< rev['bundle.js'] >>"></script>
+  <script src="<< rev['templates.js'] >>"></script>
+  #}
+  {% else -%}
+  {#
+  <script defer src="<< libs['angular'] >>"></script>
+  <script defer src="<< libs['angular-ui-router'] >>"></script>
+  <script defer src="<< rev['bundle.js'] >>"></script>
+  <script defer src="<< rev['templates.js'] >>"></script>
+  #}
+  {% endif -%}
+</body>
+</html>
