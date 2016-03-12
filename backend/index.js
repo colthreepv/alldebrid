@@ -19,14 +19,17 @@ const sessionConf = Object.assign({}, config.session, {
 app.use(session(sessionConf));
 
 app.post('/login', promesso(api.login));
-app.post('/logout');
+app.post('/logout', promesso(api.logout));
 
 app.get('/api/torrent');
 app.put('/api/torrent'); // add
 app.post('/api/convert');
 
 app.use(function (err, req, res, next) {
-  res.status(400).json(err);
+  if (err && err instanceof SyntaxError) console.log('SYNTAX ERROR!'); // very bad
+  console.log(err);
+  console.dir(err);
+  return res.sendStatus(500);
 });
 
 module.exports = app;

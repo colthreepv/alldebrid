@@ -6,14 +6,13 @@ const rp = require('request-promise');
 const XError = require('x-error');
 
 const ad = require('./ad');
-const config = require(path.join(__dirname, '..', 'config.json'));
+// const config = require(path.join(__dirname, '..', 'config.json'));
 const parse = require('./parse');
 const storage = require('./storage');
 const lvl = storage.lvl;
-// all those functions will return a promise
 
-// sets a cookie
-function login (req, res) {
+// sets a cookie - via express-session
+function login (req) {
   const username = req.body.username;
   const password = req.body.password;
   const jar = rp.jar();
@@ -58,7 +57,6 @@ function authValidator (req) {
 
 // clears the cookie
 function logout (req) {
-  console.log('Reached logout!');
   const sess = req.session;
   sess.destroy();
   return { status: 'OK' };
