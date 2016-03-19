@@ -1,8 +1,5 @@
 alldebrid
 =========
-
-~~Alternative interface for [AllDebrid][ad] as a Chrome App.~~
-I am moving away from Chrome App and creating a webapp that is self-hostable.
 Angular.js 1.x web application that queries the original [alldebrid.com][ad] via XMLHttpRequest as `document` through a simple NGINX proxy ([configuration](config.nginx)).
 
 ![GIF Demo](https://cloud.githubusercontent.com/assets/2657230/13898314/94325992-edcd-11e5-8c89-ec3b88a94ed4.gif)
