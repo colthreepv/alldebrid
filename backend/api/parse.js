@@ -5,9 +5,9 @@ const cheerio = require('cheerio');
 const Promise = require('bluebird');
 const rp = require('request-promise');
 
-const util = require('./util');
-const ad = require('./ad');
-const storage = require('./storage');
+const makeJar = require('../util').makeJar;
+const ad = require('../ad');
+const storage = require('../components/storage');
 const lvl = storage.lvl;
 
 function parseLogin (pageBody) {
@@ -54,7 +54,7 @@ function retrieveUid (username, logoutKey) {
 function fetchUid (username, logoutKey) {
   return storage
     .getCookies(username)
-    .then(util.makeJar)
+    .then(makeJar)
     .then(jar => {
       return rp({
         url: ad.torrent,

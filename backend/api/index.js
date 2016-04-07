@@ -1,14 +1,12 @@
 'use strict';
-const path = require('path');
-
 const Joi = require('joi');
 const rp = require('request-promise');
 const XError = require('x-error');
 
-const ad = require('./ad');
+const ad = require('../ad');
 // const config = require(path.join(__dirname, '..', 'config.json'));
 const parse = require('./parse');
-const storage = require('./storage');
+const storage = require('../components/storage');
 const lvl = storage.lvl;
 
 // sets a cookie - via express-session
@@ -33,7 +31,7 @@ function login (req) {
   .then(login => {
     return storage.setCookies(username, jar.getCookies(ad.base)).return(login);
   })
-  .then(login => lvl.putAsync(`user:${ login.uid }:uid`, login.username).return(login))
+  .then(login => lvl.putAsync(`user:${login.uid}:uid`, login.username).return(login))
   .then(login => {
     req.session.uid = login.uid;
 
