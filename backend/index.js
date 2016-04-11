@@ -5,6 +5,7 @@ const jsonParser = require('body-parser').json();
 const promesso = require('promesso');
 const api = require('./api');
 const controllers = require('./controllers');
+const homepage = require('./homepage');
 const session = require('./components/session');
 const serveStatic = require('./components/serve-static');
 
@@ -33,7 +34,7 @@ app.get('/api/torrent');
 app.put('/api/torrent'); // add
 app.post('/api/convert');
 
-app.get('/', promesso(controllers.home));
+app.get('/', promesso(homepage));
 
 app.use(function (err, req, res, next) {
   if (err && err instanceof SyntaxError) console.log('SYNTAX ERROR!'); // very bad

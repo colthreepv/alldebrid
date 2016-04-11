@@ -11,7 +11,7 @@ const fakeTorrents = {
   byId: {}
 };
 fakeTorrents.byId[firstTorrent.id] = firstTorrent;
-function torrents(state = fakeTorrents, action) {
+function torrents (state = fakeTorrents, action) {
   return state;
 }
 
