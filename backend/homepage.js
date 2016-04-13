@@ -27,7 +27,7 @@ const App = require('../src/app').default;
 const reducers = require('../src/reducers').default;
 
 function homepage () {
-  const initialState = Promise.resolve(undefined); // empty state always for now
+  const initialState = Promise.resolve(require('./initial-state')); // initial state loaded from file
   return initialState.then(templateHome);
 }
 
@@ -61,4 +61,3 @@ function templateHome (initialState) {
   </body>
   </html>`;
 }
-

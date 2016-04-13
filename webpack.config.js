@@ -60,7 +60,7 @@ const browserLibs = [
 ];
 
 module.exports = {
-  devtool: 'cheap-module-source-map', // not sure it works?
+  devtool: '#module-inline-source-map',
   entry: {
     js: path.join(__dirname, 'src', 'main.js'),
     vendor: browserLibs

@@ -7,8 +7,12 @@ import css from '../css/style.scss';
 
 class App extends Component {
   render () {
+    const { torrents } = this.props;
     return (
-      <h1>Hello World!</h1>
+      <div>
+        <h1>Hello World!</h1>
+        {torrents.map(t => <span key={t.key}>{t.name}</span>)}
+      </div>
     );
   }
 }
