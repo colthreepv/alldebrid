@@ -9,23 +9,12 @@ const homepage = require('./homepage');
 const session = require('./components/session');
 const serveStatic = require('./components/serve-static');
 
-const isProd = process.env.NODE_ENV === 'production';
 const app = express();
 
 app.use(jsonParser);
 
 app.use(session);
-
-if (!isProd) {
-  const webpack = require('webpack');
-  const webpackMiddleware = require('webpack-dev-middleware');
-  const webpackConfig = require('../webpack.config');
-  app.use(webpackMiddleware(webpack(webpackConfig), {
-    publicPath: '/build/'
-  }));
-} else {
-  app.get('/build/*', serveStatic);
-}
+app.get('/build/*', serveStatic);
 
 app.post('/login', promesso(api.login));
 app.post('/logout', promesso(api.logout));

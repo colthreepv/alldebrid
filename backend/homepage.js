@@ -23,8 +23,8 @@ const React = require('react');
 const createStore = require('redux').createStore;
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
-const App = require('../src/app').default;
-const reducers = require('../src/reducers').default;
+let App = require('../src/app').default;
+let reducers = require('../src/reducers').default;
 
 function homepage () {
   const initialState = Promise.resolve(require('./initial-state')); // initial state loaded from file
@@ -56,8 +56,23 @@ function templateHome (initialState) {
   <body>
     <div id="container">${html}</div>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
-    <script src="/build/${bundles.vendor}"></script>
-    <script src="/build/${bundles.js}"></script>
+    <script src="${bundles.vendor}"></script>
+    <script src="${bundles.js}"></script>
   </body>
   </html>`;
+}
+
+const isProd = process.env.NODE_ENV === 'production';
+
+if (!isProd) {
+  const watch = require('node-watch');
+  watch(path.resolve(__dirname, '..', 'src'), updateApp);
+}
+
+function updateApp () {
+  delete require.cache[require.resolve('../src/app')];
+  delete require.cache[require.resolve('../src/reducers')];
+  App = require('../src/app').default;
+  reducers = require('../src/reducers').default;
+  console.log('--- homepage: updated App');
 }

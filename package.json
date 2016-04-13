@@ -3,8 +3,6 @@
   "version": "2.0.0-alpha1",
   "description": "alternative interface for AllDebrid",
   "dependencies": {
-    "angular": "^1.4.3",
-    "angular-ui-router": "^0.2.15",
     "assign-deep": "^0.4.5",
     "bluebird": "^3.3.4",
     "body-parser": "^1.15.0",
@@ -12,6 +10,7 @@
     "bootswatch-scss": "^3.2.0",
     "cheerio": "^0.20.0",
     "classnames": "^2.2.3",
+    "concurrently": "^2.0.0",
     "cookie-parser": "^1.4.1",
     "css-modules-require-hook": "^4.0.0",
     "express": "^4.13.4",
@@ -23,6 +22,7 @@
     "level-ttl": "^3.1.0",
     "leveldown": "^1.4.4",
     "levelup": "^1.3.1",
+    "node-watch": "^0.3.5",
     "promesso": "github:colthreepv/promesso",
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
@@ -33,9 +33,11 @@
     "x-error": "0.0.10"
   },
   "scripts": {
+    "dev:backend": "nodemon backend/ -w backend/ -V",
+    "dev:frontend": "webpack-dev-server --inline",
     "clean": "rimraf build && mkdirp build",
     "backend": "node backend/",
-    "development": "nodemon backend/ -w backend/ -V",
+    "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
     "start": "npm run development",
     "test": "mocha -R spec backend/*.test.js"
@@ -76,6 +78,6 @@
     "serve-static": "^1.10.0",
     "style-loader": "^0.13.1",
     "webpack": "^2.1.0-beta.4",
-    "webpack-dev-middleware": "^1.6.1"
+    "webpack-dev-server": "github:webpack/webpack-dev-server"
   }
 }

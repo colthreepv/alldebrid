@@ -3,6 +3,8 @@ const path = require('path');
 const assign = require('assign-deep');
 const privateConf = require('../config.json');
 
+const DEV_SERVER = '//localhost:8080/build';
+
 const config = {
   buildDir: path.join(__dirname, '..', 'build'),
   bundles: null, // placeholder
@@ -25,8 +27,8 @@ if (process.env.NODE_ENV === 'production') {
   config.bundles = require(path.join(config.buildDir, config.bundleFile));
 } else {
   config.bundles = {
-    vendor: 'libs.js',
-    js: 'bundle.js'
+    vendor: `${DEV_SERVER}/libs.js`,
+    js: `${DEV_SERVER}/bundle.js`
   };
 }
 
