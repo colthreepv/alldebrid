@@ -23,18 +23,20 @@ const React = require('react');
 const createStore = require('redux').createStore;
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
+const push = require('react-router-redux').push;
 let App = require('../src/app').default;
 let reducers = require('../src/reducers').default;
 
-function homepage () {
+function homepage (req) {
   const initialState = Promise.resolve(require('./initial-state')); // initial state loaded from file
-  return initialState.then(templateHome);
+  return Promise.join(initialState, req.url).spread(templateHome);
 }
 
 module.exports = homepage;
 
-function templateHome (initialState) {
+function templateHome (initialState, url) {
   const store = createStore(reducers, initialState);
+  console.log('store', store.getState());
   const html = renderToString(
     React.createElement(Provider, { store },
       React.createElement(App)

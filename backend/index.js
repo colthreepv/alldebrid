@@ -23,7 +23,7 @@ app.get('/api/torrent');
 app.put('/api/torrent'); // add
 app.post('/api/convert');
 
-app.get('/', promesso(homepage));
+app.get('*', promesso(homepage));
 
 app.use(function (err, req, res, next) {
   if (err && err instanceof SyntaxError) console.log('SYNTAX ERROR!'); // very bad

@@ -27,6 +27,8 @@
     "react": "^0.14.8",
     "react-dom": "^0.14.8",
     "react-redux": "^4.4.1",
+    "react-router": "^2.2.2",
+    "react-router-redux": "^4.0.2",
     "redux": "^3.3.1",
     "redux-thunk": "^2.0.1",
     "request-promise": "^2.0.0",
@@ -44,20 +46,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:mrgamer/alldebrid-chrome.git"
+    "url": "git@github.com:colthreepv/alldebrid.git"
   },
   "keywords": [
     "alldebrid",
-    "chrome",
-    "app",
-    "angular"
+    "app"
   ],
-  "author": "mrgamer",
+  "author": "colthreepv",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mrgamer/alldebrid-chrome/issues"
+    "url": "https://github.com/colthreepv/alldebrid/issues"
   },
-  "homepage": "https://github.com/mrgamer/alldebrid-chrome",
+  "homepage": "https://github.com/colthreepv/alldebrid",
   "devDependencies": {
     "babel-loader": "^6.2.4",
     "babel-plugin-css-modules-transform": "0.0.9",

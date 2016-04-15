@@ -15,7 +15,7 @@ module.exports = {
     'guard-for-in': 0,
     'keyword-spacing': 2,
     'new-cap': 0,
-    'no-console': 1,
+    'no-console': 0,
     'no-delete-var': 2,
     'no-floating-decimal': 2,
     'no-mixed-requires': 0,

@@ -62,7 +62,7 @@ const browserLibs = [
 module.exports = {
   devtool: '#module-inline-source-map',
   entry: {
-    js: path.join(__dirname, 'src', 'main.js'),
+    js: path.join(__dirname, 'client', 'index.js'),
     vendor: browserLibs
   },
   output: {
