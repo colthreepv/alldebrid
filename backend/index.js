@@ -27,8 +27,7 @@ app.get('*', promesso(homepage));
 
 app.use(function (err, req, res, next) {
   if (err && err instanceof SyntaxError) console.log('SYNTAX ERROR!'); // very bad
-  console.log(err);
-  console.dir(err);
+  console.dir(err.stack);
   return res.sendStatus(500);
 });
 

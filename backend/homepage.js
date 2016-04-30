@@ -5,7 +5,7 @@ const sass = require('node-sass');
 require('babel-register')({
   babelrc: false,
   presets: ['es2015', 'react'],
-  only: 'src'
+  only: 'shared'
 });
 hook({
   extensions: [ '.scss', '.css' ],
@@ -17,29 +17,50 @@ hook({
 });
 const bundles = require('./config').bundles;
 const Promise = require('bluebird');
+const XError = require('x-error');
 
 // client deps
 const React = require('react');
-const createStore = require('redux').createStore;
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
-const push = require('react-router-redux').push;
-let App = require('../src/app').default;
-let reducers = require('../src/reducers').default;
+const RouterContext = require('react-router').RouterContext;
 
-function homepage (req) {
-  const initialState = Promise.resolve(require('./initial-state')); // initial state loaded from file
-  return Promise.join(initialState, req.url).spread(templateHome);
+// for server-side rendering
+const match = Promise.promisify(require('react-router').match, { multiArgs: true });
+const fetchComponentData = require('./util/fetchComponentData');
+
+let routes = require('../shared/routes').default;
+
+// inspiration from bananaoomarang/isomorphic-redux
+function renderView (req) {
+  const store = process.env.NODE_ENV === 'development' ?
+    require('../shared/store.dev').default :
+    require('../shared/store').default;
+
+  // TODO: devo convertire match() a qualcosa che ritorna una promise https://github.com/reactjs/react-router/issues/1990
+  return match({ routes, location: req.url })
+  .catch((err) => { throw new XError(2001).m('match errored').hc(500).debug(err); })
+  .spread((redirectLocation, renderProps) => templateView(store, redirectLocation, renderProps));
 }
 
-module.exports = homepage;
+module.exports = renderView;
 
-function templateHome (initialState, url) {
-  const store = createStore(reducers, initialState);
-  console.log('store', store.getState());
+function templateView (store, redirectLocation, renderProps) {
+  if (!renderProps) throw new XError(2000).m('Not Found').hc(404);
+  console.log('renderProps');
+  console.log(renderProps.components);
+  console.log(renderProps.params);
+  return fetchComponentData(store, renderProps).spread(templateHome);
+}
+
+
+function templateHome (store, renderProps) {
+  const initialState = store.getState();
+  console.log('initialState', initialState);
+
   const html = renderToString(
     React.createElement(Provider, { store },
-      React.createElement(App)
+      React.createElement(RouterContext, renderProps)
     )
   );
 
@@ -68,13 +89,11 @@ const isProd = process.env.NODE_ENV === 'production';
 
 if (!isProd) {
   const watch = require('node-watch');
-  watch(path.resolve(__dirname, '..', 'src'), updateApp);
+  watch(path.resolve(__dirname, '..', 'shared'), updateApp);
 }
 
 function updateApp () {
-  delete require.cache[require.resolve('../src/app')];
-  delete require.cache[require.resolve('../src/reducers')];
-  App = require('../src/app').default;
-  reducers = require('../src/reducers').default;
-  console.log('--- homepage: updated App');
+  delete require.cache[require.resolve('../shared/routes')];
+  routes = require('../shared/routes').default;
+  console.log('--- homepage: updated Routes');
 }

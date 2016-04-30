@@ -1,5 +1,5 @@
 'use strict';
-const generator = require('../src/modules/id-generator').default;
+const generator = require('../shared/modules/id-generator').default;
 
 const firstTorrent = {
   key: generator(),
