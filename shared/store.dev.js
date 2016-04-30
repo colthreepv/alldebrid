@@ -1,6 +1,6 @@
 import { base64, decode64 } from './modules/safe-base64';
 
-const lochash    = location.hash.substr(1);
+const lochash = location.hash.substr(1);
 const hashState = lochash.substr(lochash.indexOf('state=')).split('&')[0].split('=')[1];
 
 if (hashState) { // recover application state from the hash

@@ -4,6 +4,6 @@ import thunk from 'redux-thunk';
 
 export default createStore(
   reducers,
-  window.STATE_FROM_SERVER,
+  // window.STATE_FROM_SERVER,
   applyMiddleware(thunk)
 );
