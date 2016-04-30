@@ -41,8 +41,18 @@
     "backend": "node backend/",
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
+    "info": "npm-scripts-info",
     "start": "npm run development",
     "test": "mocha -R spec backend/*.test.js"
+  },
+  "scripts-info": {
+    "dev:backend": "Starts backend only with nodemon",
+    "dev:frontend": "Webpack dev server starts with only frontend code",
+    "clean": "removes directory 'build' and creates it again",
+    "backend": "runs backend server without watching",
+    "development": "starts both backend and frontend servers concurrently",
+    "deploy-ubuntu": "old script for deploy on ubuntu - OUTDATED",
+    "start": "starts both backend and frontend servers concurrently"
   },
   "repository": {
     "type": "git",
@@ -73,6 +83,7 @@
     "mocha": "^2.4.5",
     "node-sass": "^3.4.2",
     "nodemon": "^1.9.1",
+    "npm-scripts-info": "^0.3.6",
     "rimraf": "^2.5.2",
     "sass-loader": "^3.2.0",
     "serve-static": "^1.10.0",
