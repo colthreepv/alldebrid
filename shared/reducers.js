@@ -1,5 +1,4 @@
 import { combineReducers } from 'redux';
-import { routerReducer as routing } from 'react-router-redux';
 
 const initialTorrents = {
   list: [],
@@ -15,6 +14,5 @@ function loggedIn (state = false, action) {
 
 export default combineReducers({
   loggedIn,
-  torrents,
-  routing
+  torrents
 });
