@@ -20,5 +20,6 @@ function createDevStore (initialState) {
     const baseUrl = window.location.origin;
     window.CURRENT_STATE = `${baseUrl}/#state=${b64state}`;
   });
+  return store;
 }
 export default createDevStore;

@@ -1,21 +1,18 @@
 import React from 'react';
 import { render } from 'react-dom';
 import { Provider } from 'react-redux';
-import { Router, browserHistory } from 'react-router';
 
-import routes from '../shared/routes';
+import App from '../shared/apps/main';
 
-const store = process.env.NODE_ENV === 'development' ?
+const createStore = process.env.NODE_ENV === 'development' ?
   require('../shared/store.dev').default :
   require('../shared/store').default;
 
-store.subscribe(() => {
-  console.log(store.getState().routing);
-});
+const store = createStore(window.STATE_FROM_SERVER);
 
 render(
   <Provider store={store}>
-    <Router history={browserHistory} children={routes} />
+    <App/>
   </Provider>,
   document.getElementById('container')
 );

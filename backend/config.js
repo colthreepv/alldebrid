@@ -6,6 +6,11 @@ const privateConf = require('../config.json');
 const DEV_SERVER = '//localhost:8080/build';
 
 const config = {
+  // shared code paths
+  sharedCode: path.resolve(__dirname, '../shared/apps/main/'),
+  // sharedDir: path.dirname(path.resolve(__dirname, '../shared/apps/main/')),
+  nodeModules: path.resolve(__dirname, '..', 'node_modules'),
+
   buildDir: path.join(__dirname, '..', 'build'),
   bundles: null, // placeholder
   bundleFile: '.bundles.json',

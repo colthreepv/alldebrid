@@ -1,26 +1,21 @@
 'use strict';
 require('./_init'); // babel & css
-const path = require('path');
-const bundles = require('./config').bundles;
-const Promise = require('bluebird');
-const XError = require('x-error');
+const bundles = require('../config').bundles;
 
 // server deps
 const createState = require('../util/create-state');
+const loadApp = require('../util/load-app');
 
 // client deps
 const React = require('react');
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
-const APP_PATH = '../shared/apps/main/';
-const APP_DIR = path.dirname(path.resolve(__dirname, APP_PATH));
-let App = require(APP_PATH);
 
 // inspiration from bananaoomarang/isomorphic-redux
 function renderView (req) {
   const createStore = process.env.NODE_ENV === 'development' ?
-    require('../shared/store.dev').default :
-    require('../shared/store').default;
+    require('../../shared/store.dev').default :
+    require('../../shared/store').default;
 
   const initialState = createState(req.session);
   const store = createStore(initialState);
@@ -31,6 +26,7 @@ function renderView (req) {
 module.exports = renderView;
 
 function template (store) {
+  const App = loadApp();
   const initialState = store.getState();
   console.log('initialState', initialState);
 
@@ -59,17 +55,4 @@ function template (store) {
     <script src="${bundles.js}"></script>
   </body>
   </html>`;
-}
-
-const isProd = process.env.NODE_ENV === 'production';
-
-if (!isProd) {
-  const watch = require('node-watch');
-  watch(path.resolve(APP_DIR), updateApp);
-}
-
-function updateApp () {
-  delete require.cache[require.resolve(APP_PATH)];
-  App = require(APP_PATH).default;
-  console.log('--- homepage: updated Routes');
 }

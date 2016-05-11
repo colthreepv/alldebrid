@@ -1,9 +1,9 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import * as actions from './actions';
+import * as actions from '../../actions';
 
-import css from '../css/style.scss';
+import css from '../../../css/style.scss';
 
 class App extends Component {
   render () {

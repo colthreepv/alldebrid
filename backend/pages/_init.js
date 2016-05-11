@@ -1,7 +1,8 @@
 'use strict';
-const path = require('path');
 const hook = require('css-modules-require-hook');
 const sass = require('node-sass');
+
+const nodeModules = require('../config').nodeModules;
 require('babel-register')({
   babelrc: false,
   presets: ['es2015', 'react'],
@@ -12,6 +13,6 @@ hook({
   preprocessCss: (data, filename) => sass.renderSync({
     data,
     file: filename,
-    includePaths: [path.join(__dirname, '..', 'node_modules')]
+    includePaths: [nodeModules]
   }).css
 });

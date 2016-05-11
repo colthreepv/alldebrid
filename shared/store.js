@@ -9,8 +9,9 @@ function createStore (initialState) {
 
   store = create(
     reducers,
-    initialState || window.STATE_FROM_SERVER,
+    initialState,
     applyMiddleware(thunk)
   );
+  return store;
 }
 export default createStore;
