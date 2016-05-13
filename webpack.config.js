@@ -20,7 +20,7 @@ const pluginList = [
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
     minChunks: Infinity,
-    filename: isProd ? 'libs-[chunkhash].js' : 'libs.js'
+    filename: isProd ? '[name]-[chunkhash].js' : '[name].js'
   }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': `"${env}"`
@@ -62,12 +62,13 @@ const browserLibs = [
 module.exports = {
   devtool: '#module-inline-source-map',
   entry: {
-    js: path.join(__dirname, 'client', 'index.js'),
+    main: path.join(__dirname, 'client', 'main.js'),
+    login: path.join(__dirname, 'client', 'login.js'),
     vendor: browserLibs
   },
   output: {
     path: path.join(__dirname, 'build'),
-    filename: isProd ? 'bundle-[chunkhash].js' : 'bundle.js',
+    filename: isProd ? '[name]-[chunkhash].js' : '[name].js',
     publicPath: '/build/'
   },
   module: {

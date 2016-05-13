@@ -22,7 +22,7 @@ app.get('/api/torrent');
 app.put('/api/torrent'); // add
 app.post('/api/convert');
 
-// app.get('/login', promesso(pages.login));
+app.get('/login', promesso(pages.login));
 app.get('*', promesso(pages.main));
 
 app.use(function (err, req, res, next) {

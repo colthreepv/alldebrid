@@ -14,11 +14,11 @@ const config = {
   bundles: null, // placeholder
   bundleFile: '.bundles.json',
 
-  domain: null, // placeholder
+  domain: null, // from private config
 
   session: {
-    secret: null, // placeholder
-    name: null, // placeholder
+    secret: null, // from private config
+    name: null, // from private config
     resave: false,
     rolling: true,
     saveUninitialized: false
@@ -31,8 +31,9 @@ if (process.env.NODE_ENV === 'production') {
   config.bundles = require(path.join(config.buildDir, config.bundleFile));
 } else {
   config.bundles = {
-    vendor: `${DEV_SERVER}/libs.js`,
-    js: `${DEV_SERVER}/bundle.js`
+    vendor: `${DEV_SERVER}/vendor.js`,
+    main: `${DEV_SERVER}/main.js`,
+    login: `${DEV_SERVER}/login.js`
   };
 }
 

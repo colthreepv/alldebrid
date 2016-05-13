@@ -40,7 +40,7 @@ function template (store) {
     <div id="container">${html}</div>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
-    <script src="${bundles.js}"></script>
+    <script src="${bundles.main}"></script>
   </body>
   </html>`;
 }
