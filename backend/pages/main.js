@@ -3,30 +3,18 @@ require('./_init'); // babel & css
 const bundles = require('../config').bundles;
 
 // server deps
-const createState = require('../util/create-state');
-const loadApp = require('../util/load-app');
+const reqApp = require('../util/fresh-require').reqApp;
+const renderView = require('../util/render-view');
 
 // client deps
 const React = require('react');
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
 
-// inspiration from bananaoomarang/isomorphic-redux
-function renderView (req) {
-  const createStore = process.env.NODE_ENV === 'development' ?
-    require('../../shared/store.dev').default :
-    require('../../shared/store').default;
-
-  const initialState = createState(req.session);
-  const store = createStore(initialState);
-
-  return template(store);
-}
-
-module.exports = renderView;
+module.exports = renderView(template);
 
 function template (store) {
-  const App = loadApp();
+  const App = reqApp().default;
   const initialState = store.getState();
   console.log('initialState', initialState);
 

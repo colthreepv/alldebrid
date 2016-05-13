@@ -1,6 +1,8 @@
 import { base64, decode64 } from './modules/safe-base64';
 import createStore from './store';
 
+const location = window.location;
+
 const lochash = location.hash.substr(1);
 const hashState = lochash.substr(lochash.indexOf('state=')).split('&')[0].split('=')[1];
 
@@ -17,7 +19,7 @@ function createDevStore (initialState) {
   store.subscribe(() => {
     const state = store.getState();
     const b64state = base64(JSON.stringify(state));
-    const baseUrl = window.location.origin;
+    const baseUrl = location.origin;
     window.CURRENT_STATE = `${baseUrl}/#state=${b64state}`;
   });
   return store;
