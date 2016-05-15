@@ -5,8 +5,6 @@ const assert = require('assert');
 const config = require('../config');
 const isProd = process.env.NODE_ENV === 'production';
 
-const CODE_DIR = config.sharedCode;
-
 /**
  * Fresh Require lets you swap require() calls with freshreq()
  * It will watch for changes and reload files accordingly.
@@ -39,7 +37,8 @@ function createFreshRequire (file) {
 
 }
 
-// reqApp is a shorthand to fresh load the main application
-const reqApp = createFreshRequire(CODE_DIR);
+// shorthand to fresh load the known applications
+const mainApp = createFreshRequire(config.apps.main);
+const loginApp = createFreshRequire(config.apps.login);
 
-module.exports = { reqApp, createFreshRequire };
+module.exports = { mainApp, loginApp, createFreshRequire };

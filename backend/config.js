@@ -7,7 +7,10 @@ const DEV_SERVER = '//localhost:8080/build';
 
 const config = {
   // shared code paths
-  sharedCode: path.resolve(__dirname, '../shared/apps/main/'),
+  apps: {
+    main: path.resolve(__dirname, '../shared/apps/main/'),
+    login: path.resolve(__dirname, '../shared/apps/login/')
+  },
   nodeModules: path.resolve(__dirname, '..', 'node_modules'),
 
   buildDir: path.join(__dirname, '..', 'build'),

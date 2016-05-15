@@ -3,7 +3,7 @@ require('./_init'); // babel & css
 const bundles = require('../config').bundles;
 
 // server deps
-const reqApp = require('../util/fresh-require').reqApp;
+const mainApp = require('../util/fresh-require').mainApp;
 const renderView = require('../util/render-view');
 
 // client deps
@@ -11,10 +11,10 @@ const React = require('react');
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
 
-module.exports = renderView(template);
+module.exports = renderView(template, 'main');
 
 function template (store) {
-  const App = reqApp().default;
+  const App = mainApp().default;
   const initialState = store.getState();
   console.log('initialState', initialState);
 

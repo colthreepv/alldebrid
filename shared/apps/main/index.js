@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 // import { bindActionCreators } from 'redux';
-import * as actions from '../../actions';
+import * as actions from './actions';
 
 import css from '../../../css/style.scss';
 
@@ -27,6 +27,8 @@ function addTodo (evt, text) {
 }
 
 function mapStateToProps (state) {
+  console.log('there should be state.torrents here');
+  console.log(state);
   return { torrents: state.torrents.list };
 }
 

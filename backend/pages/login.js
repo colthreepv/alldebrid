@@ -3,19 +3,18 @@ require('./_init'); // babel & css
 const bundles = require('../config').bundles;
 
 // server deps
-const freshReq = require('../util/fresh-require').createFreshRequire;
+const loginApp = require('../util/fresh-require').loginApp;
 const renderView = require('../util/render-view');
-const reqApp = freshReq('../../shared/apps/login/');
 
 // client deps
 const React = require('react');
 const Provider = require('react-redux').Provider;
 const renderToString = require('react-dom/server').renderToString;
 
-module.exports = renderView(template);
+module.exports = renderView(template, 'login');
 
 function template (store) {
-  const Login = reqApp().default;
+  const Login = loginApp().default;
   const initialState = store.getState();
   console.log('initialState', initialState);
 
