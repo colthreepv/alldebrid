@@ -2,76 +2,28 @@ import css from '../../../css/style.scss';
 import React, { Component, PropTypes } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
+import pick from 'lodash/pick';
 
+import { ADLogo, Form, Errors, Register } from '../../modules/login/';
 import * as actions from './actions';
 
-class ADLogo extends Component {
-  render () {
-    return <img src="//cdn.alldebrid.com/lib/images/default/logo_alldebrid.png"/>;
-  }
-}
-class Form extends Component {
-  render () {
-    const { username, password } = this.props;
-    const { changeUsername, changePassword, submitHandler } = this.props;
-    return (
-      <div>
-        <form onSubmit={submitHandler}>
-          <p><input type="text" placeholder="username" onChange={changeUsername} value={username} /></p>
-          <p><input type="password" placeholder="password" onChange={changePassword} value={password} /></p>
-        </form>
-      </div>
-    );
-  }
-}
-Form.propTypes = {
-  username: PropTypes.string,
-  password: PropTypes.string,
-
-  changeUsername: PropTypes.func.isRequired,
-  changePassword: PropTypes.func.isRequired,
-  submitHandler: PropTypes.func.isRequired
-};
-
-class Errors extends Component {
-  render () {
-    const { errors } = this.props;
-    return (
-      <div>
-        {errors.map(err => <p key={err}>{err}</p>)}
-      </div>
-    );
-  }
-}
-Errors.propTypes = {
-  errors: PropTypes.arrayOf(PropTypes.string)
-};
-
-class Buttons extends Component {
-  render () {
-    return (
-      <div>
-        <button className="btn btn-lg btn-primary">Login</button>
-      </div>
-    );
-  }
-}
-class Register extends Component {
-  render () {
-    return <p>Register to AllDebrid <a href="//alldebrid.com/register/">here</a></p>;
-  }
-}
-
+// clever component, the rest are "stupid" ones
 class Login extends Component {
   render () {
-    const { username, password } = this.props;
+    const formProps = pick(this.props, [
+      'username',
+      'password',
+      'changeUsername',
+      'changePassword',
+      'tryLogin',
+      'formDisabled'
+    ]);
     const fakeErrors = ['weather changed', 'another error'];
     return (
       <div>
         <h1><ADLogo/> Login</h1>
-        <Form username={username} password={password} />
+        <Form {...formProps} />
         <Errors errors={fakeErrors} />
-        <Buttons/>
         <Register/>
       </div>
     );
@@ -79,7 +31,12 @@ class Login extends Component {
 }
 Login.propTypes = {
   username: PropTypes.string,
-  password: PropTypes.string
+  password: PropTypes.string,
+  changeUsername: PropTypes.func.isRequired,
+  changePassword: PropTypes.func.isRequired,
+  tryLogin: PropTypes.func.isRequired,
+
+  formDisabled: PropTypes.bool.isRequired
 };
 
 // from Handlers to ActionCreators
@@ -89,19 +46,25 @@ function changeUsername (evt) {
 function changePassword (evt) {
   return actions.changePassword(evt.target.value);
 }
+function tryLogin (evt) {
+  evt.preventDefault();
+  return actions.tryLogin();
+}
 
 function mapStateToProps (state) {
   return {
     errors: state.errors,
     username: state.username,
-    password: state.password
+    password: state.password,
+    formDisabled: state.formDisabled
   };
 }
 
 function mapDispatchToProps (dispatch) {
   return bindActionCreators({
     changeUsername,
-    changePassword
+    changePassword,
+    tryLogin
   }, dispatch);
 }
 
