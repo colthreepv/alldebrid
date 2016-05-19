@@ -47,9 +47,15 @@ Errors.propTypes = {
 export class Buttons extends Component {
   render () {
     const { isDisabled } = this.props;
+    const spinner = (
+      <button className="btn btn-lg btn-primary">
+        <span className="glyphicon glyphicon-refresh glyphicon-spin" />
+      </button>
+    );
     return (
       <div>
         <button className="btn btn-lg btn-primary" disabled={isDisabled}>Login</button>
+        {isDisabled ? spinner : null}
       </div>
     );
   }

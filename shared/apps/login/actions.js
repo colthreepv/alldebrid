@@ -2,6 +2,7 @@ import axios from 'axios';
 
 export const CHANGE_USERNAME = 'CHANGE_USERNAME';
 export const CHANGE_PASSWORD = 'CHANGE_PASSWORD';
+
 export const TRY_LOGIN = 'TRY_LOGIN';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
@@ -31,9 +32,11 @@ export function tryLogin () {
 
     return axios.post('/login', payload)
     .then(function (response) {
+      dispatch({ type: LOGIN_SUCCESS });
+      window.location.assign(response.data.redirect);
+    })
+    .catch(function (response) {
       switch (response.status) {
-      case 200:
-        return dispatch({ type: LOGIN_SUCCESS });
       case 401:
         return dispatch({ type: LOGIN_INVALID });
       case 403:

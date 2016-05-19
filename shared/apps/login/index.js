@@ -18,12 +18,12 @@ class Login extends Component {
       'tryLogin',
       'formDisabled'
     ]);
-    const fakeErrors = ['weather changed', 'another error'];
+    const { errors } = this.props;
     return (
       <div>
         <h1><ADLogo/> Login</h1>
         <Form {...formProps} />
-        <Errors errors={fakeErrors} />
+        <Errors errors={errors} />
         <Register/>
       </div>
     );
@@ -36,7 +36,8 @@ Login.propTypes = {
   changePassword: PropTypes.func.isRequired,
   tryLogin: PropTypes.func.isRequired,
 
-  formDisabled: PropTypes.bool.isRequired
+  formDisabled: PropTypes.bool.isRequired,
+  errors: PropTypes.arrayOf(PropTypes.string)
 };
 
 // from Handlers to ActionCreators
