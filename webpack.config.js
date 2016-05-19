@@ -51,6 +51,7 @@ if (isProd) { // add plugins in case we're in production
 }
 
 const browserLibs = [
+  'axios',
   'classnames',
   'react',
   'react-dom',

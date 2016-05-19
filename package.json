@@ -4,6 +4,7 @@
   "description": "alternative interface for AllDebrid",
   "dependencies": {
     "assign-deep": "^0.4.5",
+    "axios": "^0.11.1",
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.0",
     "bootstrap-sass": "^3.3.5",
