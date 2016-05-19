@@ -1,9 +1,10 @@
 'use strict';
 const path = require('path');
-const expect = require('chai').expect;
+const assert = require('chai').assert;
 
-const api = require('./api');
-const testAccount = require(path.join(__dirname, '..', 'test-account.json'));
+const lvl = require('../components/storage').lvl;
+const api = require('../api');
+const testAccount = require(path.join(__dirname, '../..', 'test-account.json'));
 
 describe('login API', function () {
   it('should not work with incorrect values', (done) => {
@@ -19,8 +20,12 @@ describe('login API', function () {
     .catch(response => {
       // console.log('Login Response');
       // console.dir(response);
-      expect(response).to.contain.keys(['logged', 'recaptcha']);
-      expect(response.logged).to.be.equal(false);
+      // expect(response).to.contain.keys(['logged', 'recaptcha']);
+      // expect(response.logged).to.be.equal(false);
+      assert.isObject(response);
+      assert.property(response, 'message');
+      assert.include(response.message, 'invalid username/password');
+      assert.propertyVal(response, 'message', 'invalid username/password');
     }).then(done);
   });
 
@@ -29,15 +34,22 @@ describe('login API', function () {
       body: {
         username: testAccount.username,
         password: testAccount.password
-      }
+      },
+      session: {} // mock express-session
     };
 
     return api.login(req).then(response => {
       // console.log('Login Response');
       // console.dir(response);
-      expect(response).to.have.lengthOf(2);
-      expect(response[0].method).to.be.equal('cookie');
-      expect(response[1].method).to.be.equal('redirect');
+      assert.isObject(response);
+      assert.property(response, 'redirect');
+      assert.propertyVal(response, 'status', 'ok');
     });
+  });
+
+  // correctly closes leveldb after every test run
+  // otherwise mocha --watch fails
+  after(function (done) {
+    lvl.close(done);
   });
 });

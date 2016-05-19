@@ -35,10 +35,7 @@ function login (req) {
   .then(login => {
     req.session.uid = login.uid;
 
-    return [{
-      method: 'redirect',
-      args: [ '/' ]
-    }];
+    return { status: 'ok', redirect: '/' };
   });
 }
 login['@validation'] = {
