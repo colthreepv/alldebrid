@@ -1,3 +1,4 @@
+import '../../../css/index.scss';
 import angular from 'angular';
 
 const app = angular.module('main', []);

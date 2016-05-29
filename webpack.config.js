@@ -2,7 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 const env = process.env.NODE_ENV || 'development';
 const isProd = env === 'production';
@@ -25,7 +25,8 @@ const pluginList = [
   }),
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': `"${env}"`
-  })
+  }),
+  new ExtractTextPlugin(isProd ? '[name]-[chunkhash].css' : '[name].css')
 ];
 
 if (isProd) { // add plugins in case we're in production
@@ -49,13 +50,6 @@ if (isProd) { // add plugins in case we're in production
     minimize: false,
     debug: true
   }));
-
-  // Copy assets from the public folder
-  // Reference: https://github.com/kevlened/copy-webpack-plugin
-  pluginList.push(new CopyWebpackPlugin([{
-    from: path.join(__dirname, 'public'),
-    to: path.join(__dirname, 'build')
-  }]));
 }
 
 const browserLibs = [
@@ -76,34 +70,8 @@ module.exports = {
   },
   module: {
     loaders: [
-      {
-        test: /.js$/,
-        loader: 'babel-loader',
-        exclude: /node_modules/
-      },
-      {
-        test: /\.css$/,
-        loaders: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            query: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]___[hash:base64:5]'
-            }
-          },
-          'postcss'
-        ]
-      },
-      {
-        test: /\.scss$/,
-        loaders: [
-          'style-loader',
-          'css-loader',
-          'sass-loader'
-        ]
-      }
+      { test: /.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') }
     ]
   },
   plugins: pluginList,

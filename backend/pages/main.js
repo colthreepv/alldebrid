@@ -17,7 +17,7 @@ function template (req) {
     <meta name="description" content="">
     <link rel="shortcut icon" type="image/x-icon" href="//cdn.alldebrid.com/lib/images/default/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- <link rel="stylesheet" href="/<< rev['style.css'] >>"> -->
+    <link rel="stylesheet" href="/build/main.css">
   </head>
   <body>
     <div id="container"></div>
