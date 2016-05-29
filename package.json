@@ -11,17 +11,13 @@
     "clean": "rimraf build && mkdirp build",
     "build": "cross-env NODE_ENV=production webpack",
     "backend": "node backend/",
-
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-      "dev:backend": "nodemon backend/ -w backend/ -V",
-      "dev:frontend": "webpack-dev-server --inline",
-
+    "dev:backend": "nodemon backend/ -w backend/ -V",
+    "dev:frontend": "webpack-dev-server --inline",
     "start": "npm run development",
     "install": "cd backend && npm install && cd ..",
-
     "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
     "info": "npm-scripts-info",
-
     "test": "mocha -R spec backend/test/",
     "test-dev": "mocha -w -R spec backend/test/"
   },
@@ -51,6 +47,7 @@
   "devDependencies": {
     "babel-loader": "^6.2.4",
     "babel-preset-es2015-native-modules": "^6.6.0",
+    "clean-webpack-plugin": "^0.1.9",
     "concurrently": "^2.1.0",
     "cross-env": "^1.0.7",
     "css-loader": "^0.23.1",

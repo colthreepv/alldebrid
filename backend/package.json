@@ -4,20 +4,11 @@
   "directories": {
     "test": "test"
   },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "devDependencies": {
-    "chai": "^3.5.0",
-    "debug": "^2.2.0",
-    "mocha": "^2.5.3"
-  },
   "dependencies": {
     "assign-deep": "^0.4.5",
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",
     "cheerio": "^0.20.0",
-    "cookie-parser": "^1.4.3",
     "express": "^4.13.4",
     "express-session": "^1.13.0",
     "express-session-level": "^1.0.0",
@@ -30,5 +21,13 @@
     "request-promise": "^3.0.0",
     "serve-static": "^1.10.2",
     "x-error": "0.0.10"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "debug": "^2.2.0",
+    "mocha": "^2.5.3"
   }
 }
