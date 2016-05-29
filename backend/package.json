@@ -10,10 +10,10 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "debug": "^2.2.0",
-    "mocha": "^2.5.3",
-    "nodemon": "^1.9.2"
+    "mocha": "^2.5.3"
   },
   "dependencies": {
+    "assign-deep": "^0.4.5",
     "bluebird": "^3.4.0",
     "body-parser": "^1.15.1",
     "cheerio": "^0.20.0",

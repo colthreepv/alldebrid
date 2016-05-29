@@ -2,6 +2,7 @@
 const path = require('path');
 const fs = require('fs');
 const webpack = require('webpack');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const env = process.env.NODE_ENV || 'development';
 const isProd = env === 'production';
@@ -40,7 +41,7 @@ if (isProd) { // add plugins in case we're in production
     output: {
       comments: false
     },
-    sourceMap: false
+    sourceMap: false // maybe put sourcemap also in production?
   }));
   pluginList.push(webpackHashInfo);
 } else {
@@ -48,23 +49,24 @@ if (isProd) { // add plugins in case we're in production
     minimize: false,
     debug: true
   }));
+
+  // Copy assets from the public folder
+  // Reference: https://github.com/kevlened/copy-webpack-plugin
+  pluginList.push(new CopyWebpackPlugin([{
+    from: path.join(__dirname, 'public'),
+    to: path.join(__dirname, 'build')
+  }]));
 }
 
 const browserLibs = [
-  'axios',
-  'classnames',
-  'react',
-  'react-dom',
-  'react-redux',
-  'redux',
-  'redux-thunk'
+  'angular'
 ];
 
 module.exports = {
   devtool: '#module-inline-source-map',
   entry: {
-    main: path.join(__dirname, 'client', 'main.js'),
-    login: path.join(__dirname, 'client', 'login.js'),
+    main: path.join(__dirname, 'client/apps/', 'main'),
+    login: path.join(__dirname, 'client/apps/', 'login'),
     vendor: browserLibs
   },
   output: {
@@ -75,7 +77,7 @@ module.exports = {
   module: {
     loaders: [
       {
-        test: /.jsx?$/,
+        test: /.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/
       },
@@ -90,7 +92,8 @@ module.exports = {
               importLoaders: 1,
               localIdentName: '[name]__[local]___[hash:base64:5]'
             }
-          }
+          },
+          'postcss'
         ]
       },
       {
@@ -106,5 +109,23 @@ module.exports = {
   plugins: pluginList,
   sassLoader: {
     includePaths: [path.join(__dirname, 'node_modules')]
+  },
+
+  /**
+   * Dev server configuration
+   * Reference: http://webpack.github.io/docs/configuration.html#devserver
+   * Reference: http://webpack.github.io/docs/webpack-dev-server.html
+   */
+  devServer: {
+    contentBase: './build',
+    stats: 'minimal',
+
+    // Open resources on the backend server while developing
+    // Reference: http://webpack.github.io/docs/webpack-dev-server.html#proxy
+    proxy: {
+      '/': {
+        target: 'http://localhost:3000'
+      }
+    }
   }
 };

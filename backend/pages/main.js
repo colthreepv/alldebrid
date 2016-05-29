@@ -1,32 +1,15 @@
 'use strict';
-require('./_init'); // babel & css
 const bundles = require('../config').bundles;
+const createState = require('../util/create-state');
 
-// server deps
-const mainApp = require('../util/fresh-require').mainApp;
-const renderView = require('../util/render-view');
+module.exports = template;
 
-// client deps
-const React = require('react');
-const Provider = require('react-redux').Provider;
-const renderToString = require('react-dom/server').renderToString;
-
-module.exports = renderView(template, 'main');
-
-function template (store) {
-  const App = mainApp().default;
-  const initialState = store.getState();
-  console.log('initialState', initialState);
-
-  const html = renderToString(
-    React.createElement(Provider, { store },
-      React.createElement(App)
-    )
-  );
+function template (req) {
+  const initialState = createState(req.session);
 
   return `
   <!doctype html>
-  <html lang="en">
+  <html ng-app="main" lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -37,7 +20,7 @@ function template (store) {
     <!-- <link rel="stylesheet" href="/<< rev['style.css'] >>"> -->
   </head>
   <body>
-    <div id="container">${html}</div>
+    <div id="container"></div>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
     <script src="${bundles.main}"></script>
