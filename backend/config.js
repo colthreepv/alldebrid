@@ -24,7 +24,13 @@ const config = {
 
 // bundles replace
 if (process.env.NODE_ENV === 'production') {
-  config.bundles = require(path.join(config.buildDir, config.bundleFile));
+  const assets = require(path.join(config.buildDir, config.bundleFile));
+  config.bundles = {
+    vendor: `${BASE_DIR}/${assets.vendor}`,
+    style: `${BASE_DIR}/${assets.style}`,
+    main: `${BASE_DIR}/${assets.main}`,
+    login: `${BASE_DIR}/${assets.login}`
+  };
 } else {
   config.bundles = {
     vendor: `${BASE_DIR}/vendor.js`,

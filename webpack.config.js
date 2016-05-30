@@ -11,10 +11,23 @@ const isProd = env === 'production';
 // webpack is silly and doesn't tell you what is the name of your hashed bundles
 function webpackHashInfo () {
   this.plugin('done', function (statsData) {
-    const stats = statsData.toJson();
+    const stats = statsData.toJson({
+      exclude: [/node_modules/]
+    });
     if (stats.errors.length) return;
 
-    fs.writeFileSync(path.join(__dirname, 'build', '.bundles.json'), JSON.stringify(stats.assetsByChunkName));
+    const assets = stats.assets.map(asset => asset.name)
+      .filter(entry => /\.js|\.css/.test(entry))
+      .reduce((prev, current) => { prev[current.split('-')[0]] = current; return prev; }, {});
+    /**
+     * produces:
+     * {
+     *   main: 'main-a2bd16cfe8109b14b9bd.js',
+     *   login: 'login-5265991d0f2abdccc1bd.js'
+     * }
+     */
+
+    fs.writeFileSync(path.join(__dirname, 'build', '.bundles.json'), JSON.stringify(assets));
   });
 }
 
@@ -22,15 +35,9 @@ const plugins = [
   // outputs a chunk for all the javascript libraries: angular & co
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
+    chunks: ['vendor', 'login', 'main'],
     minChunks: Infinity,
     filename: isProd ? '[name]-[chunkhash].js' : '[name].js'
-  }),
-  // outputs a chunk for common css: bootstrap, mostly
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'style',
-    chunks: ['style'],
-    minChunks: Infinity,
-    filename: isProd ? '[name]-[chunkhash].css' : '[name].css'
   }),
   // handy to enable/disable development features in the client-side code
   new webpack.DefinePlugin({
@@ -43,13 +50,13 @@ const plugins = [
    * - login.css: specific CSS used in login
    * - main.css:  specific CSS used in main
    */
-  new ExtractTextPlugin(isProd ? '[name]-[chunkhash].css' : '[name].css')
+  new ExtractTextPlugin(isProd ? 'style-[hash].css' : 'style.css', { allChunks: true })
 ];
 
 if (isProd) { // add plugins in case we're in production
   plugins.push(new webpack.LoaderOptionsPlugin({
     minimize: true,
-    debug: false
+    debug: true
   }));
 
   plugins.push(new webpack.optimize.UglifyJsPlugin({
@@ -59,7 +66,7 @@ if (isProd) { // add plugins in case we're in production
     output: {
       comments: false
     },
-    sourceMap: false // maybe put sourcemap also in production?
+    sourceMap: true // maybe put sourcemap also in production?
   }));
   plugins.push(webpackHashInfo);
   plugins.push(new CleanWebpackPlugin(['build']));
@@ -71,26 +78,28 @@ if (isProd) { // add plugins in case we're in production
 }
 
 const browserLibs = [
-  'angular'
+  'angular',
+  'angular-ui-router'
 ];
 
 module.exports = {
-  devtool: '#module-inline-source-map',
+  devtool: isProd ? '#source-map' : '#module-inline-source-map',
   entry: {
-    main: path.join(__dirname, 'client/apps/', 'main'),
-    login: path.join(__dirname, 'client/apps/', 'login'),
-    style: path.join(__dirname, 'css', 'index.scss'),
+    main: path.join(__dirname, 'client/apps/', 'main.js'),
+    login: path.join(__dirname, 'client/apps/', 'login.js'),
     vendor: browserLibs
   },
   output: {
     path: path.join(__dirname, 'build'),
     filename: isProd ? '[name]-[chunkhash].js' : '[name].js',
+    sourceMapFilename: isProd ? '[name]-[chunkhash].map' : '[name].map',
     publicPath: '/build/'
   },
   module: {
     loaders: [
       { test: /.js$/, loader: 'babel-loader', exclude: /node_modules/ },
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') }
+      { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') },
+      { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]' }
     ]
   },
   plugins,

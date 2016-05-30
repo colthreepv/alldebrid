@@ -11,25 +11,21 @@
   "scripts": {
     "clean": "rimraf build && mkdirp build",
     "build": "cross-env NODE_ENV=production webpack",
-    "backend": "node backend/",
+    "backend": "cross-env NODE_ENV=production node backend/",
+
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "nodemon backend/ -w backend/ -V",
-    "dev:frontend": "webpack-dev-server --inline",
+    "dev:frontend": "webpack-dev-server --inline --progress",
+    "production": "npm run build && npm run backend",
+
     "start": "npm run development",
     "install": "cd backend && npm install && cd ..",
+
     "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
     "info": "npm-scripts-info",
+
     "test": "cd backend && npm test && cd ..",
     "test-dev": "cd backend && npm run test-dev && cd .."
-  },
-  "scripts-info": {
-    "dev:backend": "Starts backend only with nodemon",
-    "dev:frontend": "Webpack dev server starts with only frontend code",
-    "clean": "removes directory 'build' and creates it again",
-    "backend": "runs backend server without watching",
-    "development": "starts both backend and frontend servers concurrently",
-    "deploy-ubuntu": "old script for deploy on ubuntu - OUTDATED",
-    "start": "starts both backend and frontend servers concurrently"
   },
   "repository": {
     "type": "git",
@@ -59,7 +55,9 @@
     "npm-scripts-info": "^0.3.6",
     "rimraf": "^2.5.2",
     "sass-loader": "^3.2.0",
+    "stats-webpack-plugin": "^0.3.1",
     "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
     "webpack": "^2.1.0-beta.7",
     "webpack-dev-server": "^2.1.0-beta.0"
   }

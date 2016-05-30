@@ -1,6 +1,6 @@
 'use strict';
 
 module.exports = {
-  // login: require('./login'),
+  login: require('./login'),
   main: require('./main')
 };
