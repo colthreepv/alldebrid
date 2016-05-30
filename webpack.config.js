@@ -110,7 +110,7 @@ module.exports = {
     // Reference: http://webpack.github.io/docs/webpack-dev-server.html#proxy
     proxy: {
       '/': {
-        target: 'http://localhost:3000'
+        target: 'http://localhost:8000'
       }
     }
   }

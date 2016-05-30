@@ -20,7 +20,7 @@ function template (req) {
     <link rel="stylesheet" href="${bundles.style}">
   </head>
   <body>
-    <div id="container"></div>
+    <div id="container" ui-view></div>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
     <script src="${bundles.main}"></script>

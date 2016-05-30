@@ -4,6 +4,7 @@
   "description": "alternative interface for AllDebrid",
   "dependencies": {
     "angular": "^1.5.6",
+    "angular-ui-router": "^1.0.0-alpha.5",
     "bootstrap-sass": "^3.3.5",
     "bootswatch-scss": "^3.2.0"
   },
@@ -18,8 +19,8 @@
     "install": "cd backend && npm install && cd ..",
     "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
     "info": "npm-scripts-info",
-    "test": "mocha -R spec backend/test/",
-    "test-dev": "mocha -w -R spec backend/test/"
+    "test": "cd backend && npm test && cd ..",
+    "test-dev": "cd backend && npm run test-dev && cd .."
   },
   "scripts-info": {
     "dev:backend": "Starts backend only with nodemon",

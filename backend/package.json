@@ -23,7 +23,8 @@
     "x-error": "0.0.10"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha -R spec test/",
+    "test-dev": "mocha -w -R spec test/"
   },
   "devDependencies": {
     "chai": "^3.5.0",

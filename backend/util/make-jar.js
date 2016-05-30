@@ -1,6 +1,6 @@
 'use strict';
 const request = require('request');
-const ad = require('./ad');
+const ad = require('../ad');
 
 // same as getCookies, but returns a request.jar
 function makeJar (cookies, uri) {
@@ -10,4 +10,4 @@ function makeJar (cookies, uri) {
   return j;
 }
 
-module.exports = { makeJar };
+module.exports = makeJar;

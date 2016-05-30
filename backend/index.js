@@ -8,6 +8,8 @@ const pages = require('./pages');
 const session = require('./components/session');
 const serveStatic = require('./components/serve-static');
 
+const listenPort = process.env.PORT || 8000;
+
 const app = express();
 
 app.use(jsonParser);
@@ -35,7 +37,7 @@ module.exports = app;
 
 function listenCallback () {
   const address = this.address();
-  console.log(`Server listening to http://${address.address}:${address.port}/`);
+  console.log(`Backend server started at http://${address.address}:${address.port}/`);
 }
 
-if (require.main === module) app.listen(3000, '127.0.0.1', listenCallback);
+if (require.main === module) app.listen(listenPort, '127.0.0.1', listenCallback);
