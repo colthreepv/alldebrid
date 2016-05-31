@@ -4,10 +4,10 @@ const createState = require('../util/create-state');
 
 module.exports = template;
 
-function template (req) {
+function template (req, res) {
   const initialState = createState(req.session);
 
-  return `
+  const page = `
   <!doctype html>
   <html ng-app="main" lang="en">
   <head>
@@ -26,4 +26,6 @@ function template (req) {
     <script src="${bundles.main}"></script>
   </body>
   </html>`;
+
+  res.send(page);
 }

@@ -25,8 +25,8 @@ app.get('/api/torrent');
 app.put('/api/torrent'); // add
 app.post('/api/convert');
 
-app.get('/login', promesso(pages.login));
-app.get('*', promesso(pages.main));
+app.get('/login', pages.login);
+app.get('*', pages.main);
 
 app.use(function (err, req, res, next) {
   if (err && err instanceof SyntaxError) console.log('SYNTAX ERROR!'); // very bad
