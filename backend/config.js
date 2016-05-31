@@ -7,6 +7,7 @@ const BASE_DIR = '/build';
 
 const config = {
   buildDir: path.join(__dirname, '..', 'build'),
+  publicDir: path.join(__dirname, '..', 'public'),
   bundles: null, // placeholder
   bundleFile: '.bundles.json',
 

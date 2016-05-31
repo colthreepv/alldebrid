@@ -5,7 +5,7 @@
  */
 
 // include bootstrap-sass entirely
-$icon-font-path: "/fonts/"; // override ugly bootstrap-sass font path
+$icon-font-path: "/public/fonts/"; // override ugly bootstrap-sass font path
 // Bootswatch theme
 @import "bootswatch-scss/darkly/variables";
 @import "bootstrap-sass/assets/stylesheets/bootstrap";

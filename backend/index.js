@@ -6,7 +6,7 @@ const promesso = require('promesso');
 const api = require('./api');
 const pages = require('./pages');
 const session = require('./components/session');
-const serveStatic = require('./components/serve-static');
+const serve = require('./components/serve');
 
 const listenPort = process.env.PORT || 8000;
 
@@ -15,7 +15,8 @@ const app = express();
 app.use(jsonParser);
 
 app.use(session);
-app.get('/build/*', serveStatic);
+app.get('/build/*', serve.assets);
+app.get('/public/*', serve.public);
 
 app.post('/login', promesso(api.login));
 app.post('/logout', promesso(api.logout));
