@@ -1,22 +1,21 @@
 // generic $http wrapper with automatic retry
-function http ($http, $q, $timeout) {
-  var retryForever = true;
-  var retryTimeout = 5000;
+// TODO? change this to provider so configuration can be overridden via .config
+function httpFactory ($http, $q, $timeout) {
+  const retryForever = true;
+  const retryTimeout = 5000;
 
-  var ajaxDelayNotify = 500; // ms
-
-  var ajaxStatus = false;
+  let ajaxStatus = false;
   /**
    * http is a function to substitute to normal $http call
    * @return {Promise} -> $http response
    */
   function http () {
-    var args = arguments;
-    var httpPromise = $http.apply(null, args);
-    sendAjax(true); // asd
+    const args = arguments;
+    const httpPromise = $http.apply(null, args);
+    notifyAjax(true); // asd
 
     return httpPromise.then(function (response) {
-      sendAjax(false);
+      notifyAjax(false);
       return response;
     // in case there is an error
     }).catch(function (error) {
@@ -28,45 +27,23 @@ function http ($http, $q, $timeout) {
       return $timeout.apply(null, [http, retryTimeout, false].concat(Array.prototype.slice.call(args)));
     });
   }
-
-  /**
-   * Suppose 350ms of ajaxDelayNotify
-   *
-   * Time 0: HTTP request starts
-   * Time 600: HTTP request completes
-   * Time 600: $timeout planned for Time 950 sends 'completed'
-   * Time 750: HTTP request starts - $timeout must be canceled
-   * Time 800: HTTP request completes, new $timeout planned for Time 1150, sends 'completed'
-   * Time 1150: finally frontend receives the 'complete' status
-   */
+  http.onAjax = onAjax;
 
   // pub/sub to broadcast AJAX events through all application
-  var ajaxListeners = [];
-  var ajaxTimeout, isCanceled;
-  function sendAjax (newValue) {
-    isCanceled = $timeout.cancel(ajaxTimeout); // cancel the scheduled $timeout
-    if (isCanceled === true) { // means the user was getting a notification after 350ms saying 'completed', but instead a new HTTP occurred
-      if (newValue === false) ajaxTimeout = $timeout(notifyAjax.bind(null, newValue), ajaxDelayNotify);
-      // if the new value is 'true', don't do anything, let the user wait for the 'false' notification
-    } else {
-      if (newValue === false) ajaxTimeout = $timeout(notifyAjax.bind(null, newValue), ajaxDelayNotify);
-      else notifyAjax(newValue);
-    }
-  }
+  const ajaxListeners = [];
+
   function notifyAjax (newValue) {
     ajaxStatus = newValue;
-    ajaxListeners.forEach(function (cb) {
-      cb(newValue);
-    });
+    ajaxListeners.forEach(cb => cb(newValue));
   }
 
-  http.onAjax = function (cb) {
+  function onAjax (cb) {
     ajaxListeners.push(cb); // add the listener to the queue
     cb(ajaxStatus); // propagate actual status;
-  };
+  }
 
   return http;
 }
-http.$inject = ['$http', '$q', '$timeout'];
+httpFactory.$inject = ['$http', '$q', '$timeout'];
 
-export default http;
+export default httpFactory;
