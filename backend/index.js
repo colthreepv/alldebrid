@@ -15,8 +15,7 @@ const app = express();
 app.use(jsonParser);
 
 app.use(session);
-app.get('/build/*', serve.assets);
-app.get('/public/*', serve.public);
+app.get(/(\/build\/|\/public\/).*/, serve);
 
 app.post('/login', promesso(api.login));
 app.post('/logout', promesso(api.logout));
