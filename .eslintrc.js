@@ -26,7 +26,7 @@ module.exports = {
     'no-unused-vars': [1, { vars: 'all', args: 'after-used' }],
     'no-var': 0,
     'object-curly-spacing': [2, 'always'],
-    'prefer-const': 2,
+    'prefer-const': 1,
     'space-before-blocks': 2,
     'space-before-function-paren': 2,
     'spaced-comment': [2, 'always', { exceptions: ['-'] }],
