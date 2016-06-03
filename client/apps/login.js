@@ -17,6 +17,11 @@ function run () {
   console.log('angular-login is running');
 }
 
+function performance ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}
+performance.$inject = ['$compileProvider'];
+
 function config ($stateProvider) {
   $stateProvider
     .state('home', home);
@@ -26,5 +31,6 @@ config.$inject = ['$stateProvider'];
 app
   .factory('http', http)
   .factory('api', api)
+  .config(performance)
   .config(config)
   .run(run);

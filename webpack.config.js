@@ -70,11 +70,6 @@ if (isProd) { // add plugins in case we're in production
   }));
   plugins.push(webpackHashInfo);
   plugins.push(new CleanWebpackPlugin(['build']));
-} else {
-  plugins.push(new webpack.LoaderOptionsPlugin({
-    minimize: false,
-    debug: true
-  }));
 }
 
 const browserLibs = [
@@ -83,7 +78,7 @@ const browserLibs = [
 ];
 
 module.exports = {
-  devtool: isProd ? '#source-map' : '#module-inline-source-map',
+  devtool: isProd ? 'source-map' : 'module-inline-source-map',
   entry: {
     main: path.join(__dirname, 'client/apps/', 'main.js'),
     login: path.join(__dirname, 'client/apps/', 'login.js'),
@@ -98,7 +93,7 @@ module.exports = {
   module: {
     loaders: [
       // es6 code
-      { test: /.js$/, loader: 'babel-loader', exclude: /node_modules/ },
+      { test: /.js$/, loader: 'babel-loader', exclude: /node_modules/, cacheable: true },
       // scss - and only scss
       { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') },
       // static assets

@@ -17,8 +17,8 @@ app.use(jsonParser);
 app.use(session);
 app.get(/(\/build\/|\/public\/).*/, serve);
 
-app.post('/login', promesso(api.login));
-app.post('/logout', promesso(api.logout));
+app.post('/api/login', promesso(api.login));
+app.post('/api/logout', promesso(api.logout));
 
 app.get('/api/torrent');
 app.put('/api/torrent'); // add

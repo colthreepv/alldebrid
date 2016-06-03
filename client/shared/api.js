@@ -16,5 +16,4 @@ function apiFactory (http) {
   return { login };
 }
 apiFactory.$inject = ['http'];
-
 export default apiFactory;

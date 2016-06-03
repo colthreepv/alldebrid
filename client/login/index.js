@@ -9,7 +9,7 @@ const template = `<div class="row login">
           <fieldset>
             <div class="row">
               <div class="center-block">
-                <img class="profile-img" src="/ad/lib/images/default/logo_alldebrid.png">
+                <img class="profile-img" src="//cdn.alldebrid.com/lib/images/default/logo_alldebrid.png">
               </div>
             </div>
             <div class="row">
@@ -30,6 +30,8 @@ const template = `<div class="row login">
                     <input class="form-control" placeholder="Password" name="password" type="password" ng-model="$ctrl.password" ng-change="$ctrl.loginFailed = false">
                   </div>
                 </div>
+                <div class="form-group">
+                </div>
                 <div class="alert alert-danger" ng-show="$ctrl.loginFailed">
                   <strong>Error!</strong> Change username/password and try submitting again.
                 </div>
@@ -49,7 +51,7 @@ const template = `<div class="row login">
   </div>
 </div>`;
 
-function Controller (api, $location) {
+function Controller (api, $location, $document) {
   var $ctrl = this;
 
   // login functions
@@ -62,7 +64,7 @@ function Controller (api, $location) {
   this.loading = false;
   this.loginFailed = false;
 
-  this.do = tryLogin;
+  this.tryLogin = tryLogin;
 
   function tryLogin () {
     $ctrl.loading = true;
@@ -71,14 +73,23 @@ function Controller (api, $location) {
     // FIXME parameters
     // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
     .then(() => $location.path('/'))
+    .catch(err => err.status === 403 && putCaptcha())
     .catch(() => this.loginFailed = true)
     .finally(() => this.loading = false);
   }
+
+  function putCaptcha () {
+    const doc = $document[0];
+    const scriptEl = doc.createElement('script');
+    scriptEl.src = '//www.google.com/recaptcha/api/challenge?k=6LefUggAAAAAAOHuFwFo8P3jVsPiVLF5IkSP9pCN';
+    doc.head.appendChild(scriptEl);
+  }
 }
-Controller.$inject = ['api', '$location'];
+Controller.$inject = ['api', '$location', '$document'];
 
 export default {
   url: '',
   template,
-  controller: Controller
+  controller: Controller,
+  controllerAs: '$ctrl'
 };

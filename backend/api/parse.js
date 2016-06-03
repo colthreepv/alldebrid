@@ -14,9 +14,12 @@ function parseLogin (pageBody) {
   fs.writeFileSync('page.html', pageBody);
   const $ = cheerio.load(pageBody);
   const recaptcha = $('.login textarea[name="recaptcha_challenge_field"]');
+  console.log('recaptcha', recaptcha.length);
   if (recaptcha.length) {
+    const recaptchaImg = $('img', recaptcha).attr('src');
+    const recaptchaId = $('input', recaptcha).val();
     // A wild recaptcha appears
-    return Promise.reject({ logged: false, recaptcha: true });
+    return Promise.reject({ logged: false, recaptcha: true, recaptchaImg, recaptchaId });
   }
   const welcomeBar = $('#toolbar span a.toolbar_welcome');
   if (welcomeBar.length) {
