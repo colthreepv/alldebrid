@@ -28,9 +28,11 @@ function config ($stateProvider) {
 }
 config.$inject = ['$stateProvider'];
 
+
 app
   .factory('http', http)
   .factory('api', api)
-  .config(performance)
   .config(config)
   .run(run);
+
+if (process.env.NODE_ENV === 'production') app.config(performance);
