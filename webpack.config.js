@@ -94,6 +94,7 @@ module.exports = {
     loaders: [
       // es6 code
       { test: /.js$/, loader: 'babel-loader', exclude: /node_modules/, cacheable: true },
+      { test: /.html$/, loader: 'html-loader', cacheable: true },
       // scss - and only scss
       { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') },
       // static assets
