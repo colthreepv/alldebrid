@@ -20,7 +20,13 @@ function redirectToLogin (req, res, next) {
 }
 redirectToLogin['@raw'] = true;
 
+function redirectToHome (req, res, next) {
+  if (auth.isValid(req.session)) return res.redirect('/');
+  return next();
+}
+redirectToHome['@raw'] = true;
+
 module.exports = {
-  login: promesso([html5fallback, pages.login]),
+  login: promesso([html5fallback, redirectToHome, pages.login]),
   main: promesso([html5fallback, redirectToLogin, pages.main])
 };

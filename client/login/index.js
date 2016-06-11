@@ -101,7 +101,7 @@ function Controller (api, $location) {
     .finally(() => this.loading = false);
   }
 
-  function redirect (response) { $location.path('/'); }
+  function redirect (response) { location.assign(response.data.redirect); }
   function recaptchaAppeared () { $ctrl.loginRecaptcha = true; }
 
   function unlockToken (response) {
