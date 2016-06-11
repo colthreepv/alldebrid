@@ -20,6 +20,7 @@ function template (req) {
     <link rel="shortcut icon" type="image/x-icon" href="//cdn.alldebrid.com/lib/images/default/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="${bundles.style}">
+    <base href="/">
   </head>
   <body>
     <div id="container" ui-view></div>
