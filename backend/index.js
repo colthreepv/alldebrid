@@ -1,4 +1,7 @@
 'use strict';
+const isProd = process.env.NODE_ENV === 'production';
+if (!isProd) Error.stackTraceLimit = Infinity;
+
 const express = require('express');
 const jsonParser = require('body-parser').json();
 
@@ -18,6 +21,7 @@ app.use(session);
 app.get(/(\/build\/|\/public\/).*/, serve);
 
 app.post('/api/login', promesso(api.login));
+app.post('/api/unlock', promesso(api.unlock));
 app.post('/api/logout', promesso(api.logout));
 
 app.get('/api/torrent');

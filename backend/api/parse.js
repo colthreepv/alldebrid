@@ -13,10 +13,20 @@ const lvl = storage.lvl;
 function parseLogin (pageBody) {
   fs.writeFileSync('page.html', pageBody);
   const $ = cheerio.load(pageBody);
+
   const recaptcha = $('.login textarea[name="recaptcha_challenge_field"]');
   if (recaptcha.length) {
     // A wild recaptcha appears
     return Promise.reject({ logged: false, recaptcha: true });
+  }
+  const unlockEl = $('input[name="unlock_token"]');
+  if (unlockEl.length) {
+    const unlockData = {
+      pepper: $('input[name="pepper"]').val(),
+      geo_unlock: $('input[name="geo_unlock"]').val(),
+      salt: $('input[name="salt"]').val()
+    };
+    return Promise.reject({ logged: false, unlockToken: true, unlockData });
   }
   const welcomeBar = $('#toolbar span a.toolbar_welcome');
   if (welcomeBar.length) {

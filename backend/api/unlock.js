@@ -8,26 +8,28 @@ const parse = require('./parse');
 const storage = require('../components/storage');
 const lvl = storage.lvl;
 
-// sets a cookie - via express-session
-function login (req) {
+function unlock (req) {
   const username = req.body.username;
-  const password = req.body.password;
+  const unlock_token = req.body.unlock_token;
+  const pepper = req.body.pepper;
+  const geo_unlock = req.body.geo_unlock;
+  const salt = req.body.salt;
   const jar = rp.jar();
+
   return rp({
     url: ad.register,
     qs: {
-      action: 'login',
-      'login_login': username,
-      'login_password': password
+      action: 'unlock',
+      unlock_token, pepper, geo_unlock, salt
     },
     jar
   })
   .then(parse.login)
   .catch(login => {
-    if (login.recaptcha) throw new XError(1002).hr('recaptcha appeared').hc(403);
-    if (login.unlockToken) throw new XError(1004).hr(login.unlockData).hc(202);
-    if (login.error) throw new XError(1003).hr(login.error).hc(412);
-    throw new XError(1000).hr('invalid username/password').hc(401);
+    if (login.recaptcha) throw new XError(1100).hr('recaptcha appeared').hc(403);
+    if (login.unlockToken) throw new XError(1101).hr(login.unlockData).hc(202);
+    if (login.error) throw new XError(1102).hr(login.error).hc(412);
+    throw new XError(1103).hr('invalid username/password').hc(401);
   })
   .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
   .then(login => lvl.putAsync(`user:${login.uid}:uid`, login.username).return(login))
@@ -37,11 +39,13 @@ function login (req) {
     return { status: 'ok', redirect: '/' };
   });
 }
-login['@validation'] = {
+unlock['@validation'] = {
   body: {
     username: Joi.string().required(),
-    password: Joi.string().required()
+    unlock_token: Joi.string().required(),
+    pepper: Joi.string().required(),
+    geo_unlock: Joi.string().required(),
+    salt: Joi.string().required()
   }
 };
-
-module.exports = login;
+module.exports = unlock;

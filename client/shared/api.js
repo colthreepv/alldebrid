@@ -1,6 +1,7 @@
 'use strict';
 const api = {
-  login: '/api/login/'
+  login: '/api/login/',
+  unlock: '/api/unlock'
 };
 
 function apiFactory (http) {
@@ -13,7 +14,15 @@ function apiFactory (http) {
     });
   }
 
-  return { login };
+  function unlock (data) {
+    return http({
+      method: 'POST',
+      url: api.unlock,
+      data
+    });
+  }
+
+  return { login, unlock };
 }
 apiFactory.$inject = ['http'];
 export default apiFactory;
