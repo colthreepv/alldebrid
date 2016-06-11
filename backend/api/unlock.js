@@ -47,7 +47,7 @@ function unlock (req) {
     .then(login => {
       req.session.uid = login.uid;
 
-      return { status: 'ok', redirect: '/' };
+      return { status: 'ok', redirect: `${req.protocol}://${req.headers.host}/` };
     });
 
   }

@@ -17,7 +17,7 @@
     "backend": "cross-env NODE_ENV=production node backend/",
 
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "nodemon backend/ -w backend/ -V",
+    "dev:backend": "nodemon --debug backend/ -w backend/ -V",
     "dev:frontend": "webpack-dev-server --inline --progress",
     "production": "npm run build && npm run backend",
 
@@ -57,6 +57,7 @@
     "git-rev": "^0.2.1",
     "html-loader": "^0.4.3",
     "ncp": "^2.0.0",
+    "ng-annotate-loader": "^0.1.0",
     "node-sass": "^3.4.2",
     "nodemon": "^1.9.2",
     "npm-scripts-info": "^0.3.6",

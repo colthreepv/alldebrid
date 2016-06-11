@@ -2,7 +2,8 @@
 
 function createState (reqSession) {
   // :: magic here ::
-  return {};
+  console.log('uid', reqSession.uid);
+  return { uid: reqSession.uid };
 }
 
 module.exports = createState;

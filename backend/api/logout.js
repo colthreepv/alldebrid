@@ -1,17 +1,16 @@
 'use strict';
-const XError = require('x-error');
+const errorCodes = require('../components/error-codes');
+const auth = require('../util/auth');
 
-function authValidator (req) {
-  const sess = req.session;
-  if (!sess || !sess.uid) throw new XError(1001).m('this endpoint requires Login').hc(401);
-}
+const err = {
+  notLogged: errorCodes.add(1001, 'this endpoint requires Login')
+};
 
 // clears the cookie
 function logout (req) {
-  const sess = req.session;
-  sess.destroy();
+  if (!auth.isValid(req.session)) throw err.notLogged().hc(401);
+  req.session.destroy();
   return { status: 'OK' };
 }
-logout['@before'] = [authValidator];
 
-module.exports = logout;
+module.exports = [auth.isValid, logout];

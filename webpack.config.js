@@ -93,12 +93,12 @@ module.exports = {
   module: {
     loaders: [
       // es6 code
-      { test: /.js$/, loader: 'babel-loader', exclude: /node_modules/, cacheable: true },
-      { test: /.html$/, loader: 'html-loader', cacheable: true },
+      { test: /.js$/, loaders: ['babel', 'ng-annotate'], exclude: /node_modules/, cacheable: true },
+      { test: /.html$/, loader: 'html', cacheable: true },
       // scss - and only scss
       { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') },
       // static assets
-      { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, loader: 'url-loader?limit=30000&name=[name]-[hash].[ext]' }
+      { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, loader: 'url?limit=30000&name=[name]-[hash].[ext]' }
     ]
   },
   plugins,
