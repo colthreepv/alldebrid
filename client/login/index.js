@@ -13,11 +13,46 @@ function Controller (api, $location) {
   this.loginRecaptcha = false;
 
   this.tryLogin = tryLogin;
-  this.invalidForm = invalidForm;
 
-  function tryLogin () {
+  this.loginData = {
+    username: null,
+    password: null
+  };
+
+  this.fields = [
+    {
+      key: 'username',
+      type: 'input',
+      wrapper: 'errors',
+      templateOptions: {
+        placeholder: 'Username',
+        required: true,
+        minlength: 3,
+        addonLeft: {
+          class: 'glyphicon glyphicon-user'
+        }
+      }
+    },
+    {
+      key: 'password',
+      type: 'input',
+      wrapper: 'errors',
+      templateOptions: {
+        type: 'password',
+        placeholder: 'password',
+        required: true,
+        minlength: 3,
+        addonLeft: {
+          class: 'glyphicon glyphicon-lock'
+        }
+      }
+    }
+  ];
+
+  function tryLogin (form) {
+    if (!form.$valid) return;
     $ctrl.loading = true;
-    return api.login($ctrl.username, $ctrl.password)
+    return api.login($ctrl.loginData.username, $ctrl.loginData.password)
     // in case login has been invoked with a return url, it gets triggered now!
     // FIXME parameters
     // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
@@ -25,11 +60,6 @@ function Controller (api, $location) {
     .catch(err => err.status === 403 && recaptchaAppeared())
     .catch(() => this.loginFailed = true)
     .finally(() => this.loading = false);
-  }
-
-  function invalidForm (form) {
-    return form.$pristine ||
-      (form.$pristine && !form.$valid);
   }
 
   function recaptchaAppeared () {

@@ -5,7 +5,7 @@
         <strong>Alldebrid Login</strong>
       </div>
       <div class="panel-body">
-        <form role="form" name="$ctrl.form" ng-submit="$ctrl.tryLogin()">
+        <form role="form" name="$ctrl.form" ng-submit="$ctrl.tryLogin($ctrl.form)" novalidate>
           <fieldset>
             <div class="row">
               <div class="center-block">
@@ -14,35 +14,12 @@
             </div>
             <div class="row">
               <div class="col-sm-12 col-md-10  col-md-offset-1">
-                <div class="form-group" ng-class="{ 'has-error': $ctrl.form.loginname.$invalid }">
-                  <div class="input-group">
-                    <span class="input-group-addon">
-                      <i class="glyphicon glyphicon-user"></i>
-                    </span>
-                    <input class="form-control" placeholder="Username" name="loginname" type="text" autofocus
-                      ng-model="$ctrl.username" ng-change="$ctrl.loginFailed = false" ng-minlength="3">
-                  </div>
-                </div>
-                <div class="form-group" ng-class="{ 'has-error': $ctrl.form.password.$invalid }">
-                  <div class="input-group">
-                    <span class="input-group-addon">
-                      <i class="glyphicon glyphicon-lock"></i>
-                    </span>
-                    <input class="form-control" placeholder="Password" name="password" type="password"
-                      ng-model="$ctrl.password" ng-change="$ctrl.loginFailed = false" ng-minlength="3">
-                  </div>
-                </div>
-                <div class="alert alert-warning" ng-show="$ctrl.loginFailed">
-                  <strong>Error!</strong> Change username/password and try submitting again.
-                </div>
-                <div class="alert alert-danger" ng-show="$ctrl.loginRecaptcha">
-                  <strong>Error!</strong> Recaptcha appeared in the <a href="alldebrid.com">alldebrid.com</a> login screen, is impossible to complete authentication for the time being.
-                </div>
-                <div class="form-group">
-                  <button type="submit" class="btn btn-lg btn-primary"
-                    ng-disabled="$ctrl.invalidForm($ctrl.form) || $ctrl.loading || $ctrl.loginFailed">Log In</button>
-                  <button class="btn btn-lg btn-primary" ng-show="$ctrl.loading"><span class="glyphicon glyphicon-refresh glyphicon-spin"></span></button>
-                </div>
+                <formly-form model="$ctrl.loginData" fields="$ctrl.fields" form="$ctrl.form">
+                  <button type="submit" class="btn btn-lg btn-primary" ng-disabled="$ctrl.loading">Log In</button>
+                  <button class="btn btn-lg btn-primary" ng-show="$ctrl.loading">
+                    <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+                  </button>
+                </formly-form>
               </div>
             </div>
           </fieldset>
