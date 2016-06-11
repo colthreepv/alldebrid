@@ -1,17 +1,20 @@
-alldebrid~~-chrome~~
+alldebrid
 ================
+Web application that uses [alldebrid.com][ad] as engine to provide data shown.
+This branch is _heavily_ **Work In Progress**.
 
-~~Alternative interface for [AllDebrid][ad] as a Chrome App.~~
-I am moving away from Chrome App and creating a webapp that is self-hostable.
-Requests to alldebrid gets done via a simple NGINX proxy ([configuration](config.nginx)).
+For a stable release check the [`legacy`][legacy] branch.
+
+![GIF Demo](https://cloud.githubusercontent.com/assets/2657230/13898314/94325992-edcd-11e5-8c89-ec3b88a94ed4.gif)
 
 ### Known Issues
 
-  * [AllDebrid][ad] in case of many failed logins shows a reCaptcha, and the Chrome App does not handle it currently, it only suggest to wait _several minutes_ before trying to log again.
-  * It's not yet possible to upload `.torrent` files as on the standard website, not planned for now (as magnets are.. better?)
+  * [AllDebrid][ad] in case of many failed logins shows a reCaptcha, and this corner case is not covered yet.
+  * It's not yet possible to upload `.torrent` files as on the standard website, **planned**.
 
 ### Aim of the project
-Create an user-made frontend interface to a proprietary service, so you can add functionalities without the need of altering the original website.  
+ - Made torrents a joke to use.
+ - Is not required to install any torrent application on your device.
 
 # Start It Up
 This should resemble a step-by-step guide to get this project up and running.
@@ -20,12 +23,14 @@ This should resemble a step-by-step guide to get this project up and running.
  * npm install
 
 **development**:
- * run `gulp`
- * open your browser to the default `http://localhost:3000/`
+ * run `npm start`
+ * open your browser to the default `http://localhost:8080/`
 
 **deploy**
  * copy `nginx-vars.sample.js` to `nginx-vars.js` and customize your hostname.
  * run `npm run deploy-ubuntu` or create another script for your current distro [and make a PR](https://github.com/colthreepv/alldebrid/pulls)
+
+**TODO**: complete revamp with Docker
 
 ### Configuration files
 
@@ -48,15 +53,5 @@ Example:
 }
 ```
 
-## Promesso documentation
-
-Promesso is a middleware adapter that converts a promise-based middleware to a standard Express middleware.
-
-It supports annotations in the form of `@validation` or `@before`.
-
-The promesso middleware can reply with:
-*  a payload that gets sent to `res.send`
-*  an Object like `{ method: 'redirect', args: ['/'] }` for custom `res[method]` calls
-*  an Array for a sequence of `res[method]` calls
-
 [ad]: http://www.alldebrid.com/
+[legacy]: https://github.com/colthreepv/alldebrid/tree/legacy
