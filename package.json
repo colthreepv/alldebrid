@@ -1,68 +1,71 @@
 {
   "name": "alldebrid",
-  "version": "1.1.8",
-  "description": "\"alternative interface for AllDebrid",
-  "main": "main.js",
-  "devDependencies": {
-    "browserify": "^13.0.0",
-    "browserify-shim": "^3.8.10",
-    "bulk-require": "^0.2.1",
-    "bulkify": "^1.1.1",
-    "debug": "^2.2.0",
-    "del": "^2.2.0",
-    "envify": "^3.4.0",
-    "express": "^4.13.1",
-    "git-rev": "^0.2.1",
-    "gulp": "gulpjs/gulp#4.0",
-    "gulp-angular-templatecache": "^1.7.0",
-    "gulp-buffer": "0.0.2",
-    "gulp-if": "^2.0.0",
-    "gulp-less": "^3.0.3",
-    "gulp-nunjucks-render": "^1.0.0",
-    "gulp-rename": "^1.2.2",
-    "gulp-rev": "^6.0.1",
-    "gulp-sass": "^2.0.4",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-uglify": "^1.4.1",
-    "gulp-util": "^3.0.6",
-    "http-proxy": "^1.11.1",
-    "pretty-error": "^2.0.0",
-    "serve-static": "^1.10.0",
-    "vinyl-source-stream": "^1.1.0"
-  },
-  "scripts": {
-    "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
-    "start": "gulp",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:mrgamer/alldebrid-chrome.git"
-  },
-  "keywords": [
-    "alldebrid",
-    "chrome",
-    "app",
-    "angular"
-  ],
-  "author": "mrgamer",
-  "license": "Apache-2.0",
-  "bugs": {
-    "url": "https://github.com/mrgamer/alldebrid-chrome/issues"
-  },
-  "homepage": "https://github.com/mrgamer/alldebrid-chrome",
+  "version": "2.0.0-alpha1",
+  "description": "alternative interface for AllDebrid",
   "dependencies": {
-    "angular": "^1.4.3",
-    "angular-ui-router": "^0.2.15",
+    "angular": "^1.5.6",
+    "angular-formly": "^8.2.1",
+    "angular-formly-templates-bootstrap": "^6.4.0",
+    "angular-ui-router": "^1.0.0-alpha.5",
+    "api-check": "^7.5.5",
     "bootstrap-sass": "^3.3.5",
     "bootswatch-scss": "^3.2.0"
   },
-  "production-deps": {
-    "angular": "//cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js",
-    "angular-hotkeys": "//cdnjs.cloudflare.com/ajax/libs/angular-hotkeys/1.6.0/hotkeys.min.js",
-    "angular-ui-router": "//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"
+  "scripts": {
+    "clean": "rimraf build && mkdirp build",
+    "build": "cross-env NODE_ENV=production webpack",
+    "backend": "cross-env NODE_ENV=production node backend/",
+
+    "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "nodemon backend/ -w backend/ -V",
+    "dev:frontend": "webpack-dev-server --inline --progress",
+    "production": "npm run build && npm run backend",
+
+    "start": "npm run development",
+    "install": "cd backend && npm install && cd ..",
+    "postinstall": "ncp node_modules/bootstrap-sass/assets/fonts/bootstrap/ public/fonts/",
+
+    "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
+    "info": "npm-scripts-info",
+
+    "test": "cd backend && npm test && cd ..",
+    "test-dev": "cd backend && npm run test-dev && cd .."
   },
-  "browserify-shim": {
-    "angular": "global:angular"
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:colthreepv/alldebrid.git"
+  },
+  "keywords": [
+    "alldebrid",
+    "app"
+  ],
+  "author": "colthreepv",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/colthreepv/alldebrid/issues"
+  },
+  "homepage": "https://github.com/colthreepv/alldebrid",
+  "devDependencies": {
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015-native-modules": "^6.6.0",
+    "clean-webpack-plugin": "^0.1.9",
+    "concurrently": "^2.1.0",
+    "cross-env": "^1.0.7",
+    "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "git-rev": "^0.2.1",
+    "html-loader": "^0.4.3",
+    "ncp": "^2.0.0",
+    "node-sass": "^3.4.2",
+    "nodemon": "^1.9.2",
+    "npm-scripts-info": "^0.3.6",
+    "rimraf": "^2.5.2",
+    "sass-loader": "^3.2.0",
+    "stats-webpack-plugin": "^0.3.1",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^2.1.0-beta.7",
+    "webpack-dev-server": "^2.1.0-beta.0"
   }
 }

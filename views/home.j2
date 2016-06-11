@@ -1,5 +1,5 @@
 <!doctype html>
-<html class="no-js" lang="en" ng-app="ad">
+<html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,7 +8,7 @@
   <link rel="shortcut icon" type="image/x-icon" href="//cdn.alldebrid.com/lib/images/default/favicon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="/<< rev['style.css'] >>">
+  {# <link rel="stylesheet" href="/<< rev['style.css'] >>"> #}
 </head>
 <body>
   <div ui-view="navbar"></div>
@@ -28,15 +28,19 @@
   <div ui-view="footer"></div>
   {# js #}
   {% if build == 'development' -%}
+  {#
   <script src="/libs/<< rev['angular.js'] >>"></script>
   <script src="/libs/<< rev['angular-ui-router.js'] >>"></script>
   <script src="<< rev['bundle.js'] >>"></script>
   <script src="<< rev['templates.js'] >>"></script>
+  #}
   {% else -%}
+  {#
   <script defer src="<< libs['angular'] >>"></script>
   <script defer src="<< libs['angular-ui-router'] >>"></script>
   <script defer src="<< rev['bundle.js'] >>"></script>
   <script defer src="<< rev['templates.js'] >>"></script>
+  #}
   {% endif -%}
 </body>
 </html>

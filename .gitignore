@@ -1,6 +1,3 @@
-# bower
-libs/
-
 # node
 node_modules/
 npm-debug.log
@@ -10,3 +7,12 @@ npm-debug.log
 build/
 nginx/
 nginx-vars.js
+js/
+
+# database
+level.db
+session.db
+
+# private data
+test-account.json
+config.json
