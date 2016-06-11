@@ -1,7 +1,7 @@
 // generic $http wrapper with automatic retry
 // TODO? change this to provider so configuration can be overridden via .config
 function httpFactory ($http, $q, $timeout) {
-  const retryForever = true;
+  const retryForever = false;
   const retryTimeout = 5000;
 
   let ajaxStatus = false;

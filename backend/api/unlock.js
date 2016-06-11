@@ -8,30 +8,30 @@ const parse = require('./parse');
 const storage = require('../components/storage');
 const lvl = storage.lvl;
 
+const fs = require('fs');
+
 function unlock (req) {
   const username = req.body.username;
   const unlock_token = req.body.unlock_token;
   const pepper = req.body.pepper;
   const geo_unlock = req.body.geo_unlock;
   const salt = req.body.salt;
-  const jar = rp.jar();
 
-  return rp({
+  return storage.getCookies(username)
+  .then(jar => rp({
     url: ad.register,
     qs: {
-      action: 'unlock',
-      unlock_token, pepper, geo_unlock, salt
+      action: 'unlock'
     },
+    form: { unlock_token, pepper, geo_unlock, salt },
     jar
-  })
+  }))
+  .tap(page => fs.writeFileSync('unlock.html', page))
   .then(parse.login)
-  .catch(login => {
-    if (login.recaptcha) throw new XError(1100).hr('recaptcha appeared').hc(403);
-    if (login.unlockToken) throw new XError(1101).hr(login.unlockData).hc(202);
-    if (login.error) throw new XError(1102).hr(login.error).hc(412);
-    throw new XError(1103).hr('invalid username/password').hc(401);
+  .then(parse.userData)
+  .catch(err => {
+    throw new XError(1100).hr('unexpected error').hc(500).debug(err);
   })
-  .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
   .then(login => lvl.putAsync(`user:${login.uid}:uid`, login.username).return(login))
   .then(login => {
     req.session.uid = login.uid;
