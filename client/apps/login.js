@@ -13,23 +13,7 @@ import http from '../shared/http';
 import api from '../shared/api';
 
 if (process.env.NODE_ENV === 'development') Error.stackTraceLimit = Infinity;
-
 const app = angular.module('login', ['ui.router', 'formly', 'formlyBootstrap']);
-
-function run () {
-  console.log('angular-login is running');
-}
-
-function performance ($compileProvider) {
-  $compileProvider.debugInfoEnabled(false);
-}
-performance.$inject = ['$compileProvider'];
-
-function config ($stateProvider) {
-  $stateProvider
-    .state('home', home);
-}
-config.$inject = ['$stateProvider'];
 
 app
   .factory('http', http)
@@ -39,13 +23,29 @@ app
   .run(formlyRun)
   .run(run);
 
-function formlyConfig (formly) {
+if (process.env.NODE_ENV === 'production') app.config(performance);
+
+function run () {
+  console.log('angular-login is running');
+}
+
+function performance ($compileProvider) {
+  $compileProvider.debugInfoEnabled(false);
+}
+
+function config ($stateProvider, $locationProvider, $urlMatcherFactoryProvider) {
+  $locationProvider.html5Mode(true);
+  $urlMatcherFactoryProvider.strictMode(false);
+  $stateProvider.state(home);
+}
+
+function formlyConfig (formlyConfigProvider) {
   function showErrors ($viewValue, $modelValue, scope) {
     return (scope.fc.$invalid && scope.form.$submitted);
   }
-  formly.extras.errorExistsAndShouldBeVisibleExpression = showErrors;
+  formlyConfigProvider.extras.errorExistsAndShouldBeVisibleExpression = showErrors;
 
-  formly.setWrapper({
+  formlyConfigProvider.setWrapper({
     name: 'errors',
     template: `
       <div>
@@ -59,14 +59,10 @@ function formlyConfig (formly) {
     `
   });
 }
-formlyConfig.$inject = ['formlyConfigProvider'];
 
-function formlyRun (messages) {
-  const addTemplate = messages.addTemplateOptionValueMessage;
-  const addString = messages.addStringMessage;
+function formlyRun (formlyValidationMessages) {
+  const addTemplate = formlyValidationMessages.addTemplateOptionValueMessage;
+  const addString = formlyValidationMessages.addStringMessage;
   addTemplate('minlength', 'minlength', 'The minimum length for this field is ', '', 'Too short');
   addString('required', 'This field is required');
 }
-formlyRun.$inject = ['formlyValidationMessages'];
-
-if (process.env.NODE_ENV === 'production') app.config(performance);

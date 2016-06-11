@@ -101,7 +101,7 @@ function Controller (api, $location) {
     .finally(() => this.loading = false);
   }
 
-  function redirect (response) { $location.path(response.data.redirect); }
+  function redirect (response) { $location.path('/'); }
   function recaptchaAppeared () { $ctrl.loginRecaptcha = true; }
 
   function unlockToken (response) {
@@ -114,10 +114,10 @@ function Controller (api, $location) {
     };
   }
 }
-Controller.$inject = ['api', '$location'];
 
 export default {
-  url: '',
+  name: 'home',
+  url: '/login',
   template: require('./index.html'),
   controller: Controller,
   controllerAs: '$ctrl'
