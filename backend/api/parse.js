@@ -10,8 +10,12 @@ const ad = require('../ad');
 const storage = require('../components/storage');
 const lvl = storage.lvl;
 
+/**
+ * parseLogin parse alldebrid.com main page, to understand if a Login succeded
+ * @param  {string} pageBody [description]
+ * @return {object}          cheerio.js instance of the page
+ */
 function parseLogin (pageBody) {
-  fs.writeFileSync('page.html', pageBody);
   const $ = cheerio.load(pageBody);
 
   const recaptcha = $('.login textarea[name="recaptcha_challenge_field"]');
@@ -26,7 +30,7 @@ function parseLogin (pageBody) {
       geo_unlock: $('input[name="geo_unlock"]').val(),
       salt: $('input[name="salt"]').val()
     };
-    return Promise.reject({ logged: false, unlockToken: true, unlockData });
+    return Promise.resolve({ logged: false, unlockToken: true, unlockData });
   }
   const welcomeBar = $('#toolbar span a.toolbar_welcome');
   if (welcomeBar.length) {
@@ -35,12 +39,22 @@ function parseLogin (pageBody) {
   const toolbar = $('.toolbar_welcome strong a');
   if (!toolbar.length) return Promise.reject({ logged: false, recaptcha: false, error: 'page changed?' });
 
+  return Promise.resolve($);
+}
+
+/**
+ * parseUserData parses main page, once a Login succeded, to parse user informations
+ * @param  {object} $ cheerio.js instance of main page
+ * @return {object}   hash describing user informations
+ */
+function parseUserData ($) {
   const days = $('.toolbar_welcome').text().match(/in (\d*) days/);
   const username = $('.toolbar_welcome strong a').text();
   const logoutKey = $('.toolbar_disconnect').attr('href').split('key=')[1];
 
   // retrieve user UID and give back to user
-  return retrieveUid(username, logoutKey).then(uid => {
+  return retrieveUid(username, logoutKey)
+  .then(uid => {
     return {
       uid,
       logged: true,
@@ -55,9 +69,9 @@ function parseLogin (pageBody) {
 // this function helps in that
 function retrieveUid (username, logoutKey) {
   return lvl.getAsync(`user:uid:${logoutKey}`)
-    .catch(storage.NotFoundError, () => {
-      return fetchUid(username, logoutKey);
-    });
+  .catch(storage.NotFoundError, () => {
+    return fetchUid(username, logoutKey);
+  });
 }
 
 // fetchUid from AD
@@ -78,3 +92,4 @@ function fetchUid (username, logoutKey) {
 }
 
 exports.login = parseLogin;
+exports.userData = parseUserData;
