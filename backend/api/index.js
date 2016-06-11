@@ -1,7 +1,10 @@
 'use strict';
+const ioc = require('../ioc');
+
+
 
 module.exports = {
-  login: require('./login'),
-  unlock: require('./unlock'),
-  logout: require('./logout')
+  login: ioc.create('api/login'),
+  // unlock: require('./unlock'),
+  // logout: require('./logout')
 };

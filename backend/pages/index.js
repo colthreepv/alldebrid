@@ -1,32 +1,32 @@
 'use strict';
-const promesso = require('promesso');
-const errorCodes = require('../components/error-codes');
+const ioc = require('../ioc');
 
-const auth = require('../util/auth');
+exports = module.exports = function (errorCodes, auth) {
+  const err = {
+    html: errorCodes.add(2000, 'requested an non-HTML page on a /pages/ endpoint')
+  };
 
-const err = {
-  html: errorCodes.add(2000, 'requested an non-HTML page on a /pages/ endpoint')
+  const pages = {
+    login: ioc.create('pages/login'),
+    main: ioc.create('pages/main')
+  };
+
+  function html5fallback (req) { if (!req.accepts('html')) throw err.html().hc(404); }
+  function redirectToLogin (req, res, next) {
+    if (!auth.isValid(req.session)) return res.redirect('/login');
+    return next();
+  }
+  redirectToLogin['@raw'] = true;
+
+  function redirectToHome (req, res, next) {
+    if (auth.isValid(req.session)) return res.redirect('/');
+    return next();
+  }
+  redirectToHome['@raw'] = true;
+
+  return {
+    login: [html5fallback, redirectToHome, pages.login],
+    main: [html5fallback, redirectToLogin, pages.main]
+  };
 };
-
-const pages = {
-  login: require('./login'),
-  main: require('./main')
-};
-
-function html5fallback (req) { if (!req.accepts('html')) throw err.html().hc(404); }
-function redirectToLogin (req, res, next) {
-  if (!auth.isValid(req.session)) return res.redirect('/login');
-  return next();
-}
-redirectToLogin['@raw'] = true;
-
-function redirectToHome (req, res, next) {
-  if (auth.isValid(req.session)) return res.redirect('/');
-  return next();
-}
-redirectToHome['@raw'] = true;
-
-module.exports = {
-  login: promesso([html5fallback, redirectToHome, pages.login]),
-  main: promesso([html5fallback, redirectToLogin, pages.main])
-};
+exports['@require'] = ['components/error-codes', 'util/auth'];

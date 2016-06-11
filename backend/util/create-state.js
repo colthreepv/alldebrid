@@ -6,4 +6,5 @@ function createState (reqSession) {
   return { uid: reqSession.uid };
 }
 
-module.exports = createState;
+exports = module.exports = createState;
+exports['@literal'] = true;

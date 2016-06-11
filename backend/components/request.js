@@ -2,4 +2,6 @@
 const Promise = require('bluebird');
 const request = require('request');
 
-module.exports = Promise.promisify(request);
+exports = module.exports = function () {
+  return Promise.promisify(request);
+};
