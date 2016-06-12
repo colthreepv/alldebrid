@@ -1,28 +1,22 @@
 'use strict';
-const fs = require('fs');
-
-const cheerio = require('cheerio');
-const Promise = require('bluebird');
-const rp = require('request-promise');
-
 const makeJar = require('../util/make-jar');
 const ad = require('../ad');
 const storage = require('../components/storage');
 const lvl = storage.lvl;
 
 /**
- * parseLogin parse alldebrid.com main page, to understand if a Login succeded
+ * FIXME
+ * loginError parse alldebrid.com main page, to understand if a Login succeded
  * @param  {string} pageBody [description]
  * @return {object}          cheerio.js instance of the page
  */
-function parseLogin (pageBody) {
-  const $ = cheerio.load(pageBody);
-
+function loginError ($) {
   const recaptcha = $('.login textarea[name="recaptcha_challenge_field"]');
   if (recaptcha.length) {
     // A wild recaptcha appears
-    return Promise.reject({ logged: false, recaptcha: true });
+    return { logged: false, recaptcha: true };
   }
+
   const unlockEl = $('input[name="unlock_token"]');
   if (unlockEl.length) {
     const unlockData = {
@@ -30,16 +24,15 @@ function parseLogin (pageBody) {
       geo_unlock: $('input[name="geo_unlock"]').val(),
       salt: $('input[name="salt"]').val()
     };
-    return Promise.resolve({ logged: false, unlockToken: true, unlockData });
+    return { logged: false, unlockToken: true, unlockData };
   }
+
   const welcomeBar = $('#toolbar span a.toolbar_welcome');
   if (welcomeBar.length) {
-    return Promise.reject({ logged: false, recaptcha: false });
+    return { logged: false, recaptcha: false };
   }
-  const toolbar = $('.toolbar_welcome strong a');
-  if (!toolbar.length) return Promise.reject({ logged: false, recaptcha: false, error: 'page changed?' });
 
-  return Promise.resolve($);
+  return { logged: false, recaptcha: false, error: 'page changed?' };
 }
 
 /**
@@ -47,23 +40,32 @@ function parseLogin (pageBody) {
  * @param  {object} $ cheerio.js instance of main page
  * @return {object}   hash describing user informations
  */
-function parseUserData ($) {
+function parseUserData ($, uid) {
   const days = $('.toolbar_welcome').text().match(/in (\d*) days/);
   const username = $('.toolbar_welcome strong a').text();
   const logoutKey = $('.toolbar_disconnect').attr('href').split('key=')[1];
 
   // retrieve user UID and give back to user
-  return retrieveUid(username, logoutKey)
-  .then(uid => {
-    return {
-      uid,
-      logged: true,
-      username,
-      remainingDays: days ? parseInt(days[1], 10) : 0,
-      logoutKey
-    };
-  });
+  return {
+    uid,
+    logged: true,
+    username,
+    remainingDays: days ? parseInt(days[1], 10) : 0,
+    logoutKey
+  };
 }
+
+// in case alldebrid answers with an header containing the user uid
+// it means the user is logged in successfully
+function detectLogin (headers) {
+  if (headers != null) return false; // headers['set-cookie'] can be undefined
+
+  const uidHeader = headers.filter(header => header.startsWith('uid='));
+  if (uidHeader.length) return uidHeader[0].match(/uid=(.*?);/)[1];
+  return false;
+}
+
+// Those might be useful in future
 
 // when retrieving details of an user, it misses an unique uid necessary for logout
 // this function helps in that
@@ -91,5 +93,6 @@ function fetchUid (username, logoutKey) {
     });
 }
 
-exports.login = parseLogin;
+exports.loginError = loginError;
 exports.userData = parseUserData;
+exports.detectLogin = detectLogin;
