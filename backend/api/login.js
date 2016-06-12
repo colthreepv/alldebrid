@@ -1,14 +1,13 @@
 'use strict';
 const Joi = require('joi');
 const XError = require('x-error');
-const rp = require('request-promise');
+const cheerio = require('cheerio');
 
 const ad = require('../ad');
 const parse = require('./parse');
 const storage = require('../components/storage');
-const lvl = storage.lvl;
+const rp = require('../components/request');
 
-const fs = require('fs');
 // sets a cookie - via express-session
 function login (req) {
   const username = req.body.username;
@@ -24,21 +23,24 @@ function login (req) {
     },
     jar
   })
-  .promise().tap(page => fs.writeFileSync('login.html', page))
-  .then(parse.login)
-  .catch(login => {
+  .tap(response => console.log(response.headers['set-cookie']))
+  .then(response => {
+    const uid = parse.detectLogin(response.headers['set-cookie']);
+    if (uid) return completeLogin(response, uid);
+    // try to understand which error happened
+    return parse.loginError(cheerio.load(response.body));
+  })
+  .then(login => {
+    if (login.unlockToken) return unlockRequest(login);
     if (login.recaptcha) throw new XError(1002).hr('recaptcha appeared').hc(403);
-
     if (login.error) throw new XError(1003).hr(login.error).hc(412);
     throw new XError(1000).hr('invalid username/password').hc(401).debug(login);
-  })
-  .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
-  .then(login => login.unlockToken ? unlockRequest(login) : completeLogin(login));
+  });
 
   // promise.chain terminator in case Login is succesful
-  function completeLogin (cheerioPage) {
-    return parse.userData(cheerioPage)
-    .then(login => lvl.putAsync(`user:${login.uid}:uid`, login.username).return(login))
+  function completeLogin (response, uid) {
+    return parse.userData(response.body, uid)
+    .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
     .then(login => {
       req.session.uid = login.uid;
 
