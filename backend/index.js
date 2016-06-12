@@ -1,43 +1,8 @@
 'use strict';
-const isProd = process.env.NODE_ENV === 'production';
-if (!isProd) Error.stackTraceLimit = Infinity;
-
-const express = require('express');
-const jsonParser = require('body-parser').json();
-
-const promesso = require('promesso');
-const api = require('./api');
-const pages = require('./pages');
-const session = require('./components/session');
-const serve = require('./components/serve');
+const ioc = require('./ioc');
+const app = ioc.create('app');
 
 const listenPort = process.env.PORT || 8000;
-
-const app = express();
-
-app.use(jsonParser);
-
-app.use(session);
-app.get(/(\/build\/|\/public\/).*/, serve);
-
-app.post('/api/login', promesso(api.login));
-app.post('/api/unlock', promesso(api.unlock));
-app.post('/api/logout', promesso(api.logout));
-
-app.get('/api/torrent');
-app.put('/api/torrent'); // add
-app.post('/api/convert');
-
-app.get('/login', pages.login);
-app.get('*', pages.main);
-
-app.use(function (err, req, res, next) {
-  if (err && err instanceof SyntaxError) console.log('SYNTAX ERROR!'); // very bad
-  console.dir(err.stack);
-  return res.sendStatus(500);
-});
-
-module.exports = app;
 
 function listenCallback () {
   const address = this.address();
