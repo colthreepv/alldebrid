@@ -2,14 +2,16 @@
 const bundles = require('../config').bundles;
 const createState = require('../util/create-state');
 
+const APP_NAME = 'main';
+
 module.exports = template;
 
-function template (req, res) {
+function template (req) {
   const initialState = createState(req.session);
 
   const page = `
   <!doctype html>
-  <html ng-app="main" lang="en">
+  <html ng-app="${APP_NAME}" lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -23,9 +25,9 @@ function template (req, res) {
     <div id="container" ui-view></div>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
-    <script src="${bundles.main}"></script>
+    <script src="${bundles[APP_NAME]}"></script>
   </body>
   </html>`;
 
-  res.send(page);
+  return page;
 }
