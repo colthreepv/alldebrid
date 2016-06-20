@@ -8,6 +8,8 @@ const parse = require('./parse');
 const storage = require('../components/storage');
 const rp = require('../components/request');
 
+const fs = require('fs');
+
 // sets a cookie - via express-session
 function login (req) {
   const username = req.body.username;
@@ -24,6 +26,7 @@ function login (req) {
     jar
   })
   .tap(response => console.log(response.headers['set-cookie']))
+  .tap(response => fs.writeFileSync('login.html', response.body))
   .then(response => {
     const uid = parse.detectLogin(response.headers['set-cookie']);
     if (uid) return completeLogin(response, uid);
