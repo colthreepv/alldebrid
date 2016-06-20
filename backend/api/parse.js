@@ -1,8 +1,4 @@
 'use strict';
-const makeJar = require('../util/make-jar');
-const ad = require('../ad');
-const storage = require('../components/storage');
-const lvl = storage.lvl;
 
 /**
  * FIXME
@@ -57,40 +53,13 @@ function parseUserData ($, uid) {
 
 // in case alldebrid answers with an header containing the user uid
 // it means the user is logged in successfully
+// uid format: a3fa24190140ec2291817c22
 function detectLogin (headers) {
-  if (headers != null) return false; // headers['set-cookie'] can be undefined
+  if (headers == null) return false; // headers['set-cookie'] can be undefined
 
   const uidHeader = headers.filter(header => header.startsWith('uid='));
   if (uidHeader.length) return uidHeader[0].match(/uid=(.*?);/)[1];
   return false;
-}
-
-// Those might be useful in future
-
-// when retrieving details of an user, it misses an unique uid necessary for logout
-// this function helps in that
-function retrieveUid (username, logoutKey) {
-  return lvl.getAsync(`user:uid:${logoutKey}`)
-  .catch(storage.NotFoundError, () => {
-    return fetchUid(username, logoutKey);
-  });
-}
-
-// fetchUid from AD
-function fetchUid (username, logoutKey) {
-  return storage
-    .getCookies(username)
-    .then(makeJar)
-    .then(jar => {
-      return rp({
-        url: ad.torrent,
-        jar: jar
-      });
-    })
-    .then(pageBody => {
-      const uid = pageBody.match(/name="uid" value="(.*)"/)[1];
-      return lvl.putAsync(`user:uid:${logoutKey}`, uid).return(uid); // write uid back
-    });
 }
 
 exports.loginError = loginError;

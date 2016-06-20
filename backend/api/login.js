@@ -8,7 +8,11 @@ const parse = require('./parse');
 const storage = require('../components/storage');
 const rp = require('../components/request');
 
-const fs = require('fs');
+// debug-only
+function dumpLogin (response) {
+  const fs = require('fs');
+  fs.writeFileSync('login.html', response.body);
+}
 
 // sets a cookie - via express-session
 function login (req) {
@@ -23,26 +27,22 @@ function login (req) {
       'login_login': username,
       'login_password': password
     },
+    followRedirect: false,
     jar
   })
-  .tap(response => console.log(response.headers['set-cookie']))
-  .tap(response => fs.writeFileSync('login.html', response.body))
   .then(response => {
     const uid = parse.detectLogin(response.headers['set-cookie']);
-    if (uid) return completeLogin(response, uid);
+    if (uid) return completeLogin(response.headers.location, uid);
     // try to understand which error happened
-    return parse.loginError(cheerio.load(response.body));
-  })
-  .then(login => {
-    if (login.unlockToken) return unlockRequest(login);
-    if (login.recaptcha) throw new XError(1002).hr('recaptcha appeared').hc(403);
-    if (login.error) throw new XError(1003).hr(login.error).hc(412);
-    throw new XError(1000).hr('invalid username/password').hc(401).debug(login);
+    return detectError(response);
   });
 
+
   // promise.chain terminator in case Login is succesful
-  function completeLogin (response, uid) {
-    return parse.userData(response.body, uid)
+  function completeLogin (url, uid) {
+    return rp({ url, jar })
+    .then(response => cheerio.load(response.body))
+    .then($ => parse.userData($, uid))
     .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
     .then(login => {
       req.session.uid = login.uid;
@@ -58,6 +58,14 @@ function login (req) {
       { method: 'status', args: [202] },
       { method: 'send', args: [response] }
     ];
+  }
+
+  function detectError (response) {
+    const login = parse.loginError(cheerio.load(response.body));
+    if (login.unlockToken) return unlockRequest(login);
+    if (login.recaptcha) throw new XError(1002).hr('recaptcha appeared').hc(403);
+    if (login.error) throw new XError(1003).hr(login.error).hc(412);
+    throw new XError(1000).hr('invalid username/password').hc(401).debug(login);
   }
 }
 login['@validation'] = {

@@ -1,6 +1,6 @@
 'use strict';
 const url = require('url');
-const PREFIX = 'https://www.alldebrid.com';
+const PREFIX = 'https://alldebrid.com';
 
 module.exports = {
   base: PREFIX,
