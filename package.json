@@ -17,7 +17,7 @@
     "backend": "cross-env NODE_ENV=production node backend/",
 
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
-    "dev:backend": "nodemon backend/ -w backend/ -V",
+    "dev:backend": "nodemon --debug backend/ -w backend/ -V",
     "dev:frontend": "webpack-dev-server --inline --progress",
     "production": "npm run build && npm run backend",
 
