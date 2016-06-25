@@ -11,7 +11,8 @@ exports = module.exports = function (fetchTorrents) {
     .then(torrents => {
       return assign({}, { torrents }, {
         uid: reqSession.uid,
-        username: reqSession.username
+        username: reqSession.username,
+        user: reqSession.user
       });
     });
   }

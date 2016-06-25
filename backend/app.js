@@ -14,8 +14,8 @@ exports = module.exports = function (session, serve, pages, api) {
   app.get(/(\/build\/|\/public\/).*/, serve);
 
   app.post('/api/login', promesso(api.login));
-  // app.post('/api/unlock', promesso(api.unlock));
-  // app.post('/api/logout', promesso(api.logout));
+  app.post('/api/unlock', promesso(api.unlock));
+  app.post('/api/logout', promesso(api.logout));
 
   app.get('/api/torrent');
   app.put('/api/torrent'); // add

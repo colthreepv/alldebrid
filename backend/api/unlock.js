@@ -1,6 +1,7 @@
 'use strict';
 const Joi = require('joi');
 const cheerio = require('cheerio');
+const replyUser = require('./common-login').replyUser;
 
 exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
   const err = {
@@ -44,13 +45,7 @@ exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
       .catch(err => {
         throw err.parseError().hr('unexpected error').hc(500).debug(err);
       })
-      .then(login => {
-        req.session.uid = login.uid;
-        req.session.username = login.username;
-
-        return { status: 'ok', redirect: `${req.protocol}://${req.headers.host}/` };
-      });
-
+      .then(replyUser.bind(null, req));
     }
 
   }

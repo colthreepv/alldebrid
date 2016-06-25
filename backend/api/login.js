@@ -1,6 +1,7 @@
 'use strict';
 const Joi = require('joi');
 const cheerio = require('cheerio');
+const replyUser = require('./common-login').replyUser;
 
 // debug-only
 function dumpLogin (response) {
@@ -45,12 +46,7 @@ exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
       .then(response => cheerio.load(response.body))
       .then($ => parse.userData($, uid))
       .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
-      .then(login => {
-        req.session.uid = login.uid;
-        req.session.username = login.username;
-
-        return { status: 'ok', redirect: `${req.protocol}://${req.headers.host}/` };
-      });
+      .then(replyUser.bind(null, req));
     }
 
     // promise-chain terminator in case of alldebrid requests for user intervention to unlock
