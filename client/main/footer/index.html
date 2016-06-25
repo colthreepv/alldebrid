@@ -1,0 +1,14 @@
+<footer class="footer">
+  <div class="container">
+    <p ng-show="$ctrl.blobSupport && $ctrl.win10 && !$ctrl.win10Hide">
+      <b>Want to handle magnet URI?</b> Use
+      <a ng-href="{{ $ctrl.regeditURL }}" target="_blank" download="magnet.reg">this reg file</a>
+      on Windows 10
+      <button class="btn btn-sm btn-default" ng-click="$ctrl.win10Done()">Done</button>
+    </p>
+    <p class="text-muted">
+      version:
+      <a ng-href="https://github.com/colthreepv/alldebrid/commit/{{ $ctrl.version }}">{{ $ctrl.version }}</a>
+    </p>
+  </div>
+</footer>

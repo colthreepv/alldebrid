@@ -1,2 +1,4 @@
 import user from './user';
-export default { user };
+import magnet from './magnet';
+import storage from './storage';
+export default { user, magnet, storage };

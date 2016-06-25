@@ -1,30 +1,28 @@
 function Controller (user, api, http) {
-  var $ctrl = this;
   this.collapsed = true; // navbar starts collapsed
   this.showMagnet = false;
   this.user = user;
 
-  $ctrl.loggingOut = false;
+  this.loggingOut = false;
 
   this.ajax = false;
-  http.onAjax(function (newStatus) {
-    $ctrl.ajax = newStatus;
-  });
+  http.onAjax(newStatus => this.ajax = newStatus);
 
   this.newMagnet = '';
-  this.addMagnet = function () {
-    torrent.add($ctrl.newMagnet).then(function () {
-      $ctrl.newMagnet = '';
-      $ctrl.showMagnet = false;
+  this.addMagnet = addMagnet.bind(this);
+  function addMagnet () {
+    torrent.add(this.newMagnet).then(function () {
+      this.newMagnet = '';
+      this.showMagnet = false;
     });
-  };
+  }
 
-  this.logout = logout;
+  this.logout = logout.bind(this);
   function logout () {
-    $ctrl.loggingOut = true;
+    this.loggingOut = true;
     api.logout()
     .then(() => location.assign('/login'))
-    .finally(() => $ctrl.loggingOut = false);
+    .finally(() => this.loggingOut = false);
   }
 }
 export default {
