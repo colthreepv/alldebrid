@@ -1,6 +1,7 @@
 'use strict';
 const path = require('path');
 const fs = require('fs');
+const git = require('git-rev-sync');
 const webpack = require('webpack');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -41,7 +42,8 @@ const plugins = [
   }),
   // handy to enable/disable development features in the client-side code
   new webpack.DefinePlugin({
-    'process.env.NODE_ENV': `"${env}"`
+    'process.env.NODE_ENV': `"${env}"`,
+    'process.env.GIT_REV': `"${git.short()}"`
   }),
   /**
    * extracts all the css code and puts it in the respective file
