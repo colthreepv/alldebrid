@@ -4,8 +4,7 @@ import uiRouter from 'angular-ui-router';
 
 import filters from '../main/filters';
 import factories from '../main/factories';
-
-import states from '../main/index';
+import states from '../main/states';
 
 import http from '../shared/http';
 import api from '../shared/api';
