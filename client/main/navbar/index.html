@@ -1,0 +1,51 @@
+<div class="navbar navbar-default" ng-class="$ctrl.ajax && 'psycload'" role="navigation">
+  <div class="navbar-header">
+    <button type="button" class="navbar-toggle btn btn-default" ng-click="$ctrl.logout()">
+      Logout
+      <span class="glyphicon glyphicon-log-out" ng-if="!$ctrl.loggingOut"></span>
+      <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-if="$ctrl.loggingOut"></span>
+    </button>
+    <button type="button" class="navbar-toggle collapsed" ng-click="$ctrl.collapsed = !$ctrl.collapsed">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a class="navbar-brand" href="#" ui-sref="home.torrents" ng-show="!$ctrl.ajax">AllDebrid</a>
+    <a class="navbar-brand" href="#" ui-sref="home.torrents" ng-show="$ctrl.ajax">Loading</a>
+  </div>
+  <form name="addMagnet" ng-submit="$ctrl.addMagnet()">
+    <div class="collapse navbar-collapse" ng-class="!$ctrl.collapsed && 'in'">
+      <div class="pull-right">
+        <button type="button" class="btn btn-default navbar-btn"
+          ng-click="$ctrl.showMagnet = !$ctrl.showMagnet"
+          ng-show="$ctrl.newMagnet.length === 0">New</button>
+        <button type="button" class="btn btn-default navbar-btn"
+          ng-click="$ctrl.showMagnet = !$ctrl.showMagnet"
+          ng-show="$ctrl.showMagnet && $ctrl.newMagnet.length === 0">Close</button>
+        <button type="submit" class="btn btn-warning navbar-btn"
+          ng-show="$ctrl.newMagnet.length > 0">Add</button>
+
+        <span class="navbar-brand">
+          <span class="glyphicon glyphicon-user"></span>
+          <span class="right-spacer">{{ $ctrl.user.username }}</span>
+        </span>
+        <span class="navbar-brand">
+          <span ng-show="$ctrl.user.remainingDays">days left: {{ $ctrl.user.remainingDays }}</span>
+          <span ng-show="!$ctrl.user.remainingDays">no days left</span>
+          <a href="http://www.alldebrid.com/offer/" target="_blank" ng-show="!$ctrl.user.remainingDays">renew</a>
+        </span>
+        <button type="button" class="btn btn-default navbar-btn pull-right hidden-xs"
+        ng-click="$ctrl.logout()" ng-disabled="$ctrl.loggingOut">
+          Logout
+          <span class="glyphicon glyphicon-log-out" ng-if="!$ctrl.loggingOut"></span>
+          <span class="glyphicon glyphicon-refresh glyphicon-spin" ng-if="$ctrl.loggingOut"></span>
+        </button>
+      </div>
+    </div>
+    <div class="add-magnet" ng-show="$ctrl.showMagnet">
+      <input type="text" class="form-control long-text" name="magnet" placeholder="new magnet" autofocus ng-model="$ctrl.newMagnet">
+    </div>
+  </form>
+</div>

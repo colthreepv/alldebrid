@@ -2,7 +2,10 @@ import '../../css/index.scss';
 import angular from 'angular';
 import uiRouter from 'angular-ui-router';
 
-import home from '../login/index';
+import filters from '../main/filters';
+import factories from '../main/factories';
+
+import states from '../main/index';
 
 import http from '../shared/http';
 import api from '../shared/api';
@@ -16,9 +19,17 @@ app
   .config(config)
   .run(run);
 
+angular.forEach(filters, (filter, name) => app.filter(name, filter));
+angular.forEach(factories, (factory, name) => app.factory(name, factory));
+
 if (process.env.NODE_ENV === 'production') app.config(performance);
 
-function run () {
+function run ($rootScope) {
+  ['$stateChangeSuccess', '$stateChangeStart', '$stateChangeError', '$stateNotFound'].forEach(event => {
+    $rootScope.$on(event, function () {
+      console.log(event);
+    });
+  });
   console.log('angular-main is running');
 }
 
@@ -29,5 +40,5 @@ function performance ($compileProvider) {
 function config ($stateProvider, $locationProvider, $urlMatcherFactoryProvider) {
   $locationProvider.html5Mode(true);
   $urlMatcherFactoryProvider.strictMode(false);
-  $stateProvider.state(home);
+  states.forEach(state => $stateProvider.state(state));
 }
