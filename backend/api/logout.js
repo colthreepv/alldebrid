@@ -13,6 +13,7 @@ exports = module.exports = function (errorCodes, auth) {
 
   return [auth.isValid, logout];
 };
+exports['@singleton'] = true;
 exports['@require'] = [
   'components/error-codes',
   'util/auth'

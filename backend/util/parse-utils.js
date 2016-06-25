@@ -50,7 +50,7 @@ function parseSize (sizeStr) {
 
 function parseSpeed (speedStr) {
   // when in queue, ad gives 0 as Number, not string.
-  if (angular.isNumber(speedStr) || speedStr === '??') {
+  if (Number.isInteger(speedStr) || speedStr === '??') {
     return 0;
   }
 

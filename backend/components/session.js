@@ -11,4 +11,5 @@ exports = module.exports = function (config) {
 
   return session(sessionConf);
 };
+exports['@singleton'] = true;
 exports['@require'] = ['config'];

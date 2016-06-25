@@ -29,4 +29,5 @@ exports = module.exports = function (errorCodes, auth) {
     main: [html5fallback, redirectToLogin, pages.main]
   };
 };
+exports['@singleton'] = true;
 exports['@require'] = ['components/error-codes', 'util/auth'];

@@ -1,10 +1,24 @@
 'use strict';
 
-function createState (reqSession) {
-  // :: magic here ::
-  console.log('uid', reqSession.uid);
-  return { uid: reqSession.uid };
-}
+const assign = require('assign-deep');
 
-exports = module.exports = createState;
-exports['@literal'] = true;
+exports = module.exports = function (fetchTorrents) {
+
+  function createState (reqSession) {
+
+    console.log('session', { uid: reqSession.uid, username: reqSession.username });
+    return fetchTorrents(reqSession.username)
+    .then(torrents => {
+      return assign({}, { torrents }, {
+        uid: reqSession.uid,
+        username: reqSession.username
+      });
+    });
+  }
+
+  return createState;
+};
+exports['@singleton'] = true;
+exports['@require'] = [
+  'util/parse-torrents'
+];

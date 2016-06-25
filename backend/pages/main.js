@@ -5,9 +5,11 @@ exports = module.exports = function (config, createState) {
   const bundles = config.bundles;
 
   return function template (req) {
-    const initialState = createState(req.session);
+    return createState(req.session).then(page);
+  };
 
-    const page = `
+  function page (initialState) {
+    return `
     <!doctype html>
     <html ng-app="${APP_NAME}" lang="en">
     <head>
@@ -27,8 +29,8 @@ exports = module.exports = function (config, createState) {
       <script src="${bundles[APP_NAME]}"></script>
     </body>
     </html>`;
+  }
 
-    return page;
-  };
 };
+exports['@singleton'] = true;
 exports['@require'] = ['config', 'util/create-state'];

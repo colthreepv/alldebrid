@@ -10,4 +10,5 @@ function makeJar (cookies, uri) {
   return j;
 }
 
-module.exports = makeJar;
+exports = module.exports = makeJar;
+exports['@literal'] = true;

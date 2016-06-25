@@ -5,7 +5,7 @@ exports = module.exports = function (config, createState) {
   const bundles = config.bundles;
 
   return function template (req) {
-    const initialState = createState(req.session);
+    const initialState = {};
 
     const page = `
     <!doctype html>
@@ -31,4 +31,5 @@ exports = module.exports = function (config, createState) {
     return page;
   };
 };
+exports['@singleton'] = true;
 exports['@require'] = ['config', 'util/create-state'];

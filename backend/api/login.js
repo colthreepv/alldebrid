@@ -47,6 +47,7 @@ exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
       .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
       .then(login => {
         req.session.uid = login.uid;
+        req.session.username = login.username;
 
         return { status: 'ok', redirect: `${req.protocol}://${req.headers.host}/` };
       });
@@ -78,6 +79,7 @@ exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
 
   return login;
 };
+exports['@singleton'] = true;
 exports['@require'] = [
   'components/error-codes',
   'ad',
