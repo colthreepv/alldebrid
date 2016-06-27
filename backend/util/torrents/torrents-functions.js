@@ -5,7 +5,22 @@ exports = module.exports = function (errorCodes, ad, rp, storage, makeJar, parse
     noCookies: errorCodes.add(1010, 'cookies not found for such user')
   };
 
+  // returns cached torrents or fetches them
+  function getTorrents (username) {
+    return storage.getTorrents(username)
+    .catch(storage.NotFoundError, () => fetchTorrents(username))
+    .tap(torrents => storage.setTorrents(username, torrents));
+  }
+
+  return {
+    get: getTorrents,
+    fetch: fetchTorrents,
+    hasActive: hasActiveTorrents
+  };
+
+  // always fetches torrents
   function fetchTorrents (username) {
+    console.log('requesting torrents list');
     return storage.getCookies(username)
     .catch(storage.NotFoundError, () => { throw err.noCookies().hc(500).debug(username); })
     .then(makeJar)
@@ -22,11 +37,9 @@ exports = module.exports = function (errorCodes, ad, rp, storage, makeJar, parse
     .then(response => parseTorrents(response.body));
   }
 
-  return fetchTorrents;
-
   function parseTorrents (torrentJson) {
     // in case API responds with non-valid Array means we logged off or something bad happened, stopping forever loop
-    if (!Array.isArray(torrentJson)) throw new Error('torrents API responded with a non-valid Array structure');
+    if (!Array.isArray(torrentJson)) return [];
     return torrentJson.map(function (torrent) {
       const torrentID = parseInt(torrent[1], 10);
 
@@ -47,6 +60,10 @@ exports = module.exports = function (errorCodes, ad, rp, storage, makeJar, parse
       return newTorrent;
     });
   }
+
+  function hasActiveTorrents (torrents) {
+    return torrents.some(torrent => torrent.status === 'downloading' || torrent.status === 'uploading');
+  }
 };
 
 exports['@singleton'] = true;
@@ -56,5 +73,5 @@ exports['@require'] = [
   'components/request',
   'components/storage',
   'util/make-jar',
-  'util/parse-utils'
+  'util/torrents/parse-utils'
 ];

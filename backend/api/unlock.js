@@ -45,7 +45,7 @@ exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
       .catch(err => {
         throw err.parseError().hr('unexpected error').hc(500).debug(err);
       })
-      .then(replyUser.bind(null, req));
+      .then(login => replyUser(req, login));
     }
 
   }

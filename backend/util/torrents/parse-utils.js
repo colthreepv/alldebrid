@@ -1,12 +1,9 @@
 'use strict';
 function parseStatus (statusStr) {
-  if (typeof sizeStr !== 'string') return statusStr;
-  var s = statusStr.split(' ');
-  if (s[1] === 'Downloading' || s[1] === 'Uploading') {
-    return s[0];
-  }
-  if (statusStr === 'In Queue') {
-    return 'queue';
+  if (typeof statusStr !== 'string') return statusStr;
+  const s = statusStr.toLowerCase().split(' ');
+  if (s[1] === 'downloading' || s[1] === 'uploading' || s[1] === 'queue') {
+    return s[1];
   }
   return statusStr;
 }

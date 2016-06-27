@@ -17,7 +17,7 @@ exports = module.exports = function (session, serve, pages, api) {
   app.post('/api/unlock', promesso(api.unlock));
   app.post('/api/logout', promesso(api.logout));
 
-  app.get('/api/torrent');
+  app.get('/api/torrents', promesso(api.torrents));
   app.put('/api/torrent'); // add
   app.post('/api/convert');
 

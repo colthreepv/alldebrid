@@ -46,7 +46,7 @@ exports = module.exports = function (errorCodes, ad, parse, storage, rp) {
       .then(response => cheerio.load(response.body))
       .then($ => parse.userData($, uid))
       .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
-      .then(replyUser.bind(null, req));
+      .then(login => replyUser(req, login));
     }
 
     // promise-chain terminator in case of alldebrid requests for user intervention to unlock
