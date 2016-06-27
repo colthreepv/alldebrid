@@ -9,7 +9,8 @@
     "angular-ui-router": "^1.0.0-alpha.5",
     "api-check": "^7.5.5",
     "bootstrap-sass": "^3.3.5",
-    "bootswatch-scss": "^3.2.0"
+    "bootswatch-scss": "^3.2.0",
+    "jsonpipe": "^2.0.0"
   },
   "scripts": {
     "clean": "rimraf build && mkdirp build",

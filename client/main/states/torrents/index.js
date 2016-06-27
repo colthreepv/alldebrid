@@ -1,3 +1,5 @@
+import jsonpipe, { flow } from 'jsonpipe';
+
 function Controller ($state, $filter, torrentList) {
   // initial values
   this.db = torrentList;
@@ -68,6 +70,17 @@ function Controller ($state, $filter, torrentList) {
     this.deselect();
     $state.go('home.unrestrict', { links: links });
   }
+
+  this.stream = stream.bind(this);
+  function stream () {
+    jsonpipe.flow('/api/torrents', {
+      delimiter: '\n\n',
+      success: data => console.log(data),
+      error: errorMessage => console.log('error in flow', errorMessage),
+      complete: statusText => console.log('flow complete', statusText)
+    });
+  }
+
 }
 export default {
   template: require('./index.html'),
