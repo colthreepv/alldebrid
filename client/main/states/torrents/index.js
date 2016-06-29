@@ -2,7 +2,6 @@ function Controller ($state, $filter, torrentList) {
   // initial values
   this.db = torrentList.first();
   torrentList.on('update', torrents => this.db = torrents);
-  this.selectAll = false;
   this.checked = [];
   this.removing = false;
 
@@ -10,30 +9,18 @@ function Controller ($state, $filter, torrentList) {
   this.orderReversed = false;
 
   // functions
-  this.select = select.bind(this);
-  function select () {
-    this.selectAll = !this.selectAll;
-    for (var i = 0; i < this.db.length; i++) {
-      this.db[i].checked = this.selectAll;
-      this.checked.push(this.db[i]);
-    }
-  }
-
-  this.deselect = deselect.bind(this);
-  function deselect () {
+  this.deselect = () => {
     this.selectAll = false;
     for (var i = 0; i < this.db.length; i++) {
       this.db[i].checked = false;
     }
     this.checked.splice(0, Number.MAX_VALUE);
-  }
+  };
 
-
-  this.orderBy = orderBy.bind(this);
-  function orderBy (column) {
+  this.orderBy = (column) => {
     if (this.orderByField === column) this.orderReversed = !this.orderReversed;
     this.orderByField = column;
-  }
+  };
 
   this.removeChecked = removeChecked.bind(this);
   function removeChecked () {
