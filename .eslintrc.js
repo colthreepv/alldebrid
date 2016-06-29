@@ -11,7 +11,7 @@ module.exports = {
     'brace-style': [2, '1tbs', { allowSingleLine: true }],
     'comma-style': [2, 'last'],
     'default-case': 2,
-    'func-style': [2, 'declaration'],
+    'func-style': [2, 'declaration', { allowArrowFunctions: true }],
     'guard-for-in': 0,
     'keyword-spacing': 2,
     'new-cap': 0,
