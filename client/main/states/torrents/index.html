@@ -1,9 +1,5 @@
 <div>
   <div class="row">
-    <button type="button" class="btn btn-md btn-default"
-    ng-click="$ctrl.stream()">Stream Torrents</button>
-  </div>
-  <div class="row">
     <div class="col-xs-12">
       <form class="form-inline">
         <div class="row">
@@ -99,8 +95,9 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="pointer" ng-repeat="t in $ctrl.db | orderBy:$ctrl.orderByField:$ctrl.orderReversed" ng-class="{ 'warning': t.checked }" ng-click="$ctrl.check(t)">
-          <td class="select"><input type="checkbox" ng-model="t.checked"></td>
+        <tr class="pointer" ng-repeat="t in $ctrl.db | orderBy:$ctrl.orderByField:$ctrl.orderReversed track by t.id"
+        ng-class="{ 'warning': $ctrl.isChecked(t.id) }" ng-click="$ctrl.check(t.id)">
+          <td class="select"><input type="checkbox" ng-checked="$ctrl.isChecked(t.id)"></td>
           <td class="id">{{ t.id }}</td>
           <td class="server">{{ t.server }}</td>
           <td class="name">{{ t.name }}</td>

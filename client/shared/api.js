@@ -1,8 +1,11 @@
 'use strict';
+import { flow } from 'jsonpipe';
+
 const api = {
   login: '/api/login/',
   logout: '/api/logout/',
-  unlock: '/api/unlock'
+  unlock: '/api/unlock',
+  torrents: '/api/torrents'
 };
 
 function apiFactory (http) {
@@ -30,7 +33,11 @@ function apiFactory (http) {
     });
   }
 
-  return { login, unlock, logout };
+  function torrents (success, error, complete) {
+    flow('/api/torrents', { delimiter: '\n\n', success, error, complete });
+  }
+
+  return { login, unlock, logout, torrents };
 }
 apiFactory.$inject = ['http'];
 export default apiFactory;

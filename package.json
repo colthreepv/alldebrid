@@ -10,25 +10,22 @@
     "api-check": "^7.5.5",
     "bootstrap-sass": "^3.3.5",
     "bootswatch-scss": "^3.2.0",
+    "eventemitter3": "^1.2.0",
     "jsonpipe": "^2.0.0"
   },
   "scripts": {
     "clean": "rimraf build && mkdirp build",
     "build": "cross-env NODE_ENV=production webpack",
     "backend": "cross-env NODE_ENV=production node backend/",
-
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
     "dev:backend": "nodemon --debug backend/ -w backend/ -V",
     "dev:frontend": "webpack-dev-server --inline --progress",
     "production": "npm run build && npm run backend",
-
     "start": "npm run development",
     "install": "cd backend && npm install && cd ..",
     "postinstall": "ncp node_modules/bootstrap-sass/assets/fonts/bootstrap/ public/fonts/",
-
     "deploy-ubuntu": "gulp build-dist && gulp nginx && sudo cp nginx/* /etc/nginx/sites-available/ && sudo nginx -t && sudo service nginx restart",
     "info": "npm-scripts-info",
-
     "test": "cd backend && npm test && cd ..",
     "test-dev": "cd backend && npm run test-dev && cd .."
   },
