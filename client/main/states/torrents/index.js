@@ -15,13 +15,12 @@ function Controller ($state, $filter, torrentList, api) {
     this.orderByField = column;
   };
 
-  this.removeChecked = removeChecked.bind(this);
-  function removeChecked () {
+  this.removeChecked = () => {
     this.removing = true;
-    api.removeTorrents(this.checked).then(function () {
-      this.removing = false;
-    });
-  }
+    api.removeTorrents(this.checked)
+    .then(() => this.checked.splice(0, this.checked.length))
+    .finally(() => this.removing = false);
+  };
 
   this.generateLinks = generateLinks.bind(this);
   function generateLinks () {

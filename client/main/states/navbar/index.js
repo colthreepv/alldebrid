@@ -9,13 +9,12 @@ function Controller ($window, user, api, http) {
   http.onAjax(newStatus => this.ajax = newStatus);
 
   this.newMagnet = '';
-  this.addMagnet = addMagnet.bind(this);
-  function addMagnet () {
-    api.addTorrents([this.newMagnet]).then(function () {
+  this.addMagnet = () => {
+    api.addTorrents([this.newMagnet]).then(() => {
       this.newMagnet = '';
       this.showMagnet = false;
     });
-  }
+  };
 
   this.logout = logout.bind(this);
   function logout () {

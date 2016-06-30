@@ -11,7 +11,7 @@ function removeTorrent (req) {
   const torrents = req.body.torrents;
 
   return getJar(username)
-  .then(jar => Promise.all(remove(jar, torrents)));
+  .then(jar => Promise.all(remove(jar, torrents)).return({ status: 'ok' }));
 }
 removeTorrent['@validation'] = {
   body: {

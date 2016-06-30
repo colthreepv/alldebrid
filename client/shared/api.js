@@ -6,7 +6,8 @@ const api = {
   logout: '/api/logout/',
   unlock: '/api/unlock',
   unrestrict: '/api/unrestrict',
-  torrents: '/api/torrents'
+  torrents: '/api/torrents',
+  removeTorrents: '/api/torrents/remove'
 };
 
 function apiFactory (http) {
@@ -57,8 +58,8 @@ function apiFactory (http) {
 
   function removeTorrents (torrents) {
     return http({
-      method: 'DELETE',
-      url: api.torrents,
+      method: 'POST',
+      url: api.removeTorrents,
       data: { torrents }
     });
   }

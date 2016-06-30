@@ -13,7 +13,7 @@ function addTorrent (req) {
   const links = req.body.links;
 
   return getJar(username)
-  .then(jar => Promise.all(add(jar, uid, links)));
+  .then(jar => Promise.all(add(jar, uid, links)).return({ status: 'ok' }));
 }
 addTorrent['@validation'] = {
   body: {
@@ -25,10 +25,12 @@ function add (jar, uid, links) {
   return links.map(link => {
     return rp({
       url: ad.postTorrent,
+      method: 'POST',
       form: {
-        domain: 'http://www.alldebrid.com/torrent/',
+        domain: ad.torrent,
         uid,
-        magnet: link
+        magnet: link,
+        quick: '1'
       },
       jar
     });
