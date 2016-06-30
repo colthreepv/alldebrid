@@ -5,3 +5,4 @@ if (!isProd) Error.stackTraceLimit = Infinity;
 global.isProd = isProd;
 global.Promise = require('bluebird');
 global.XError = require('x-error');
+global.rootRequire = path => require.main.require(path);

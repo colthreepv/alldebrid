@@ -1,9 +1,8 @@
 'use strict';
-const ioc = require('../ioc');
 
 module.exports = {
-  login: ioc.create('api/login'),
-  unlock: ioc.create('api/unlock'),
-  logout: ioc.create('api/logout'),
-  torrents: ioc.create('api/torrents')
+  login: require('./login'),
+  unlock: require('./unlock'),
+  logout: require('./logout'),
+  torrents: require('./torrents')
 };

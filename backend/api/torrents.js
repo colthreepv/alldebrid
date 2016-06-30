@@ -1,27 +1,21 @@
 'use strict';
 
-exports = module.exports = function (TorrentsUpdater, auth) {
+const auth = rootRequire('./util/auth');
+const TorrentsUpdater = rootRequire('./util/torrents/torrent-updater');
 
-  function streamingTorrents (req, res) {
-    const username = req.session.username;
+function streamingTorrents (req, res) {
+  const username = req.session.username;
 
-    res.set('Transfer-Encoding', 'chunked');
-    res.type('json');
+  res.set('Transfer-Encoding', 'chunked');
+  res.type('json');
 
-    const updater = new TorrentsUpdater(username, send);
+  const updater = new TorrentsUpdater(username, send);
 
-    res.on('close', () => updater.stop());
-    function send (json) {
-      res.write(JSON.stringify(json) + '\n\n');
-    }
+  res.on('close', () => updater.stop());
+  function send (json) {
+    res.write(JSON.stringify(json) + '\n\n');
   }
-  streamingTorrents['@raw'] = true;
+}
+streamingTorrents['@raw'] = true;
 
-  return [auth.api, streamingTorrents];
-
-};
-exports['@singleton'] = true;
-exports['@require'] = [
-  'util/torrents/torrent-updater',
-  'util/auth'
-];
+module.exports = [auth.api, streamingTorrents];

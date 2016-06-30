@@ -1,15 +1,12 @@
 'use strict';
+const config = rootRequire('./config');
 
-exports = module.exports = function (config) {
-  const session = require('express-session');
-  const LevelStore = require('express-session-level')(session);
-  const sessionStorage = require('levelup')(config.sessionStorage);
+const session = require('express-session');
+const LevelStore = require('express-session-level')(session);
+const sessionStorage = require('levelup')(config.sessionStorage);
 
-  const sessionConf = Object.assign({}, config.session, {
-    store: new LevelStore(sessionStorage)
-  });
+const sessionConf = Object.assign({}, config.session, {
+  store: new LevelStore(sessionStorage)
+});
 
-  return session(sessionConf);
-};
-exports['@singleton'] = true;
-exports['@require'] = ['config'];
+module.exports = session(sessionConf);

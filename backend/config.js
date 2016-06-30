@@ -12,6 +12,8 @@ const config = {
 
   domain: null, // from private config
 
+  dbStorage: path.join(__dirname, '..', 'level.db'),
+
   session: {
     secret: null, // from private config
     name: null, // from private config

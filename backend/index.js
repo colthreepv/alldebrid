@@ -1,6 +1,5 @@
 'use strict';
-const ioc = require('./ioc');
-const app = ioc.create('app');
+const app = require('./app');
 
 const listenPort = process.env.PORT || 8000;
 

@@ -1,8 +1,5 @@
 'use strict';
 const serveStatic = require('serve-static');
+const config = rootRequire('./config');
 
-exports = module.exports = function (config) {
-  return serveStatic(config.rootDir);
-};
-exports['@singleton'] = true;
-exports['@require'] = ['config'];
+module.exports = serveStatic(config.rootDir);

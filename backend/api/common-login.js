@@ -11,4 +11,4 @@ function replyUser (req, login) {
   return { status: 'ok', redirect: `${req.protocol}://${req.headers.host}/` };
 }
 
-exports.replyUser = replyUser;
+module.exports = { replyUser };

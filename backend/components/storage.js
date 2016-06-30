@@ -1,10 +1,11 @@
 'use strict';
-const path = require('path');
-
 const Promise = require('bluebird');
 const levelup = require('levelup');
 const ttl = require('level-ttl');
-const lvlVanilla = levelup(path.join(__dirname, '..', '..', 'level.db'));
+
+const dbStorage = rootRequire('./config').dbStorage;
+
+const lvlVanilla = levelup(dbStorage);
 const lvl = ttl(lvlVanilla);
 
 Promise.promisifyAll(lvl);
