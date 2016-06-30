@@ -1,4 +1,4 @@
-function Controller (user, api, http) {
+function Controller ($window, user, api, http) {
   this.collapsed = true; // navbar starts collapsed
   this.showMagnet = false;
   this.user = user;
@@ -11,7 +11,7 @@ function Controller (user, api, http) {
   this.newMagnet = '';
   this.addMagnet = addMagnet.bind(this);
   function addMagnet () {
-    torrent.add(this.newMagnet).then(function () {
+    api.addTorrents([this.newMagnet]).then(function () {
       this.newMagnet = '';
       this.showMagnet = false;
     });
@@ -21,7 +21,7 @@ function Controller (user, api, http) {
   function logout () {
     this.loggingOut = true;
     api.logout()
-    .then(() => location.assign('/login'))
+    .then(() => $window.location.assign('/login'))
     .finally(() => this.loggingOut = false);
   }
 }

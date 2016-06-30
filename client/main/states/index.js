@@ -1,6 +1,7 @@
 import navbar from './navbar';
 import footer from './footer';
 import torrents from './torrents';
+import unrestrict from './unrestrict';
 
 const states = [
   {
@@ -10,6 +11,18 @@ const states = [
       navbar,
       footer,
       '': torrents
+    }
+  },
+  {
+    name: 'home.unrestrict',
+    url: '/links',
+    views: {
+      navbar,
+      footer,
+      '': unrestrict
+    },
+    params: {
+      links: undefined
     }
   },
   {

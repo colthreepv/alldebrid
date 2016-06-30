@@ -5,6 +5,7 @@ const api = {
   login: '/api/login/',
   logout: '/api/logout/',
   unlock: '/api/unlock',
+  unrestrict: '/api/unrestrict',
   torrents: '/api/torrents'
 };
 
@@ -26,6 +27,7 @@ function apiFactory (http) {
     });
   }
 
+
   function logout () {
     return http({
       method: 'POST',
@@ -37,7 +39,39 @@ function apiFactory (http) {
     flow('/api/torrents', { delimiter: '\n\n', success, error, complete });
   }
 
-  return { login, unlock, logout, torrents };
+  function addTorrents (links) {
+    return http({
+      method: 'POST',
+      url: api.torrents,
+      data: { links }
+    });
+  }
+
+  function unrestrict (links) {
+    return http({
+      method: 'POST',
+      url: api.unrestrict,
+      data: { links }
+    });
+  }
+
+  function removeTorrents (torrents) {
+    return http({
+      method: 'DELETE',
+      url: api.torrents,
+      data: { torrents }
+    });
+  }
+
+  return {
+    login,
+    unlock,
+    logout,
+    addTorrents,
+    removeTorrents,
+    torrents,
+    unrestrict
+  };
 }
-apiFactory.$inject = ['http'];
+
 export default apiFactory;

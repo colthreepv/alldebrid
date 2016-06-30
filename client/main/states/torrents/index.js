@@ -1,4 +1,4 @@
-function Controller ($state, $filter, torrentList) {
+function Controller ($state, $filter, torrentList, api) {
   // initial values
   this.db = torrentList.first();
   torrentList.on('update', torrents => this.db = torrents);
@@ -9,14 +9,7 @@ function Controller ($state, $filter, torrentList) {
   this.orderReversed = false;
 
   // functions
-  this.deselect = () => {
-    this.selectAll = false;
-    for (var i = 0; i < this.db.length; i++) {
-      this.db[i].checked = false;
-    }
-    this.checked.splice(0, Number.MAX_VALUE);
-  };
-
+  this.deselect = () => this.checked.splice(0, this.checked.length);
   this.orderBy = (column) => {
     if (this.orderByField === column) this.orderReversed = !this.orderReversed;
     this.orderByField = column;
@@ -25,7 +18,7 @@ function Controller ($state, $filter, torrentList) {
   this.removeChecked = removeChecked.bind(this);
   function removeChecked () {
     this.removing = true;
-    torrent.remove(this.checked).then(function () {
+    api.removeTorrents(this.checked).then(function () {
       this.removing = false;
     });
   }
@@ -38,9 +31,9 @@ function Controller ($state, $filter, torrentList) {
     //   'another-torrent-name': ['link1']
     // }
 
-    var links = this.checked.reduce(function (arr, torrent) {
-      return arr.concat(torrent.links);
-    }, []);
+    const links = this.db.filter(torrent => this.checked.indexOf(torrent.id) !== -1)
+    .map(torrent => torrent.links)
+    .reduce((arr, links) => arr.concat(links), []);
 
     this.deselect();
     $state.go('home.unrestrict', { links: links });

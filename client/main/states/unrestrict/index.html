@@ -1,0 +1,41 @@
+<div class="row">
+  <div>
+    <!-- REMINDER: unrestrict links on demand, not only from torrents! -->
+    <!-- <form role="form"></form> -->
+      <!-- <div class="form-group">
+        <label>Links to request</label>
+        <span>use one link per line, newline is <b>required</b> between them</span>
+        <textarea class="form-control long-text" placeholder="place links here" autofocus ng-model="requestedLinks"></textarea>
+      </div>
+      <div class="form-group" ng-show="$ctrl.textMode">
+        <label>Unrestricted links</label>
+        <textarea class="form-control long-text" placeholder="requested links will get converted and put here..." autofocus ng-model="$ctrl.unrestrictedText"></textarea>
+      </div> -->
+
+
+    <div class="text-center">
+      <div class="checkbox">
+        <label>
+          <input type="checkbox" ng-model="$ctrl.textMode" ng-model-options="{ getterSetter: true }"> Text mode
+        </label>
+      </div>
+      <div ng-show="!$ctrl.textMode()">
+        <ul class="list-group">
+          <li class="list-group-item" ng-class="{ 'list-group-item-danger': file.error }" ng-repeat="file in $ctrl.unrestricted">
+            <span class="badge" title="{{ file.error }}" ng-if="file.error">{{ file.error }}</span>
+            <a href="{{ file.link }}" target="_blank" ng-if="file.filename">{{ file.filename }}</a>
+            <a href="{{ file.link }}" target="_blank" ng-if="!file.filename">{{ file.link }}</a>
+            <!-- does it ever happen anymore to get 'streaming'? -->
+            <a href="{{ file.streaming }}" target="_blank" ng-if="!!file.streaming.length">{{ file.streaming }}</a>
+          </li>
+        </ul>
+      </div>
+      <div ng-show="$ctrl.textMode()">
+        <textarea class="form-control long-text" placeholder="unrestricted links" rows="{{ $ctrl.unrestricted.length + 2 }}" autofocus ng-model="$ctrl.unrestrictedText"></textarea>
+      </div>
+      <button class="btn btn-lg btn-danger" ng-click="$ctrl.done()" ng-disabled="$ctrl.working">
+        Done <span class="glyphicon glyphicon-ok"></span>
+      </button>
+    </div>
+  </div>
+</div>
