@@ -1,15 +1,10 @@
 'use strict';
 
-const errorCodes = rootRequire('./components/error-codes');
 const ad = rootRequire('./ad');
+const getJar = rootRequire('./util/jar').getJar;
+const parse = rootRequire('./util/torrents/parse-utils');
 const rp = rootRequire('./components/request');
 const storage = rootRequire('./components/storage');
-const makeJar = rootRequire('./util/make-jar');
-const parse = rootRequire('./util/torrents/parse-utils');
-
-const err = {
-  noCookies: errorCodes.add(1010, 'cookies not found for such user')
-};
 
 // returns cached torrents or fetches them
 function getTorrents (username) {
@@ -21,9 +16,7 @@ function getTorrents (username) {
 // always fetches torrents
 function fetchTorrents (username) {
   console.log('requesting torrents list');
-  return storage.getCookies(username)
-  .catch(storage.NotFoundError, () => { throw err.noCookies().hc(500).debug(username); })
-  .then(makeJar)
+  return getJar(username)
   .then(jar => {
     return rp({
       url: ad.torrentAjax,

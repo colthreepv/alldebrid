@@ -22,8 +22,8 @@ app.post('/api/unlock', promesso(api.unlock));
 app.post('/api/logout', promesso(api.logout));
 
 app.get('/api/torrents', promesso(api.torrents));
-app.put('/api/torrent'); // add
-app.post('/api/convert');
+app.delete('/api/torrents', promesso(api.removeTorrents));
+app.post('/api/unrestrict', promesso(api.unrestrict));
 
 app.get('/login', promesso(pages.login));
 app.get('*', promesso(pages.main));
