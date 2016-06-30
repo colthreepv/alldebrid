@@ -22,6 +22,7 @@ app.post('/api/unlock', promesso(api.unlock));
 app.post('/api/logout', promesso(api.logout));
 
 app.get('/api/torrents', promesso(api.torrents));
+app.post('/api/torrents', promesso(api.addTorrents));
 app.delete('/api/torrents', promesso(api.removeTorrents));
 app.post('/api/unrestrict', promesso(api.unrestrict));
 

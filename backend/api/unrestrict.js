@@ -30,8 +30,17 @@ function unrestrict (jar, links) {
       },
       jar,
       json: true
-    });
+    }).then(filter);
   });
+}
+
+function filter (response) {
+  const body = response.body;
+  return {
+    filename: body.filename,
+    size: parseInt(body.filesize, 10),
+    link: body.link
+  };
 }
 
 module.exports = [auth.api, unrestrictTorrent];
