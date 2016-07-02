@@ -1,6 +1,6 @@
 import angular from 'angular';
-
-function Controller (api, $location) {
+/* @ngInject */
+function Controller ($window, api) {
   var $ctrl = this;
 
   // login functions
@@ -101,7 +101,7 @@ function Controller (api, $location) {
     .finally(() => this.loading = false);
   }
 
-  function redirect (response) { location.assign(response.data.redirect); }
+  function redirect (response) { $window.location.assign(response.data.redirect); }
   function recaptchaAppeared () { $ctrl.loginRecaptcha = true; }
 
   function unlockToken (response) {

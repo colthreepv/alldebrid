@@ -9,7 +9,7 @@ const api = {
   torrents: '/api/torrents',
   removeTorrents: '/api/torrents/remove'
 };
-
+/* @ngInject */
 function apiFactory (http) {
 
   function login (username, password) {

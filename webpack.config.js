@@ -95,7 +95,7 @@ module.exports = {
   module: {
     loaders: [
       // es6 code
-      { test: /.js$/, loaders: ['babel', 'ng-annotate'], exclude: /node_modules/, cacheable: true },
+      { test: /.js$/, loaders: ['babel'], exclude: /node_modules/, cacheable: true },
       { test: /.html$/, loader: 'html', cacheable: true },
       // scss - and only scss
       { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') },

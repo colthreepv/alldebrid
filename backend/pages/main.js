@@ -11,7 +11,7 @@ function template (req) {
 function page (initialState) {
   return `
   <!doctype html>
-  <html ng-app="${APP_NAME}" lang="en">
+  <html ng-app="${APP_NAME}" ng-strict-di lang="en">
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
