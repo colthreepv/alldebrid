@@ -1,3 +1,4 @@
+/* @ngInject */
 function Controller ($state, $filter, torrentList, api) {
   // initial values
   this.db = torrentList.first();

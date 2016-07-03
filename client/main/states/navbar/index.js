@@ -1,3 +1,4 @@
+/* @ngInject */
 function Controller ($window, user, api, http) {
   this.collapsed = true; // navbar starts collapsed
   this.showMagnet = false;

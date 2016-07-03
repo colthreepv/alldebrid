@@ -1,3 +1,4 @@
+/* @ngInject */
 function user ($window) {
   if (
     $window.STATE_FROM_SERVER == null ||

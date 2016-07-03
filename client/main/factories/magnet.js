@@ -1,3 +1,4 @@
+/* @ngInject */
 function magnet ($window, $location, storage) {
   var navigator = $window.navigator;
   var port = $location.port() === 80 ? '' : ':' + $location.port();

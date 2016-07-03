@@ -1,3 +1,4 @@
+/* @ngInject */
 function Controller ($window, storage, magnet) {
   this.version = process.env.GIT_REV;
 

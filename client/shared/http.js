@@ -1,5 +1,6 @@
 // generic $http wrapper with automatic retry
 // TODO? change this to provider so configuration can be overridden via .config
+/* @ngInject */
 function httpFactory ($http, $q, $timeout) {
   const retryForever = false;
   const retryTimeout = 5000;
@@ -44,6 +45,5 @@ function httpFactory ($http, $q, $timeout) {
 
   return http;
 }
-httpFactory.$inject = ['$http', '$q', '$timeout'];
 
 export default httpFactory;

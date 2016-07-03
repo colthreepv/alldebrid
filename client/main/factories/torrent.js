@@ -2,6 +2,7 @@ import EventEmitter from 'eventemitter3';
 
 const REBOOT_COOLDOWN = 2000;
 
+/* @ngInject */
 function torrentList ($window, $rootScope, api) {
   if (
     $window.STATE_FROM_SERVER == null ||

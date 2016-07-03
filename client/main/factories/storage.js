@@ -1,5 +1,6 @@
 import angular from 'angular';
 
+/* @ngInject */
 function storage () {
   return {
     set: function (name, value) {

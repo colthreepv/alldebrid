@@ -1,3 +1,4 @@
+/* @ngInject */
 function Controller ($stateParams, $q, $window, api, storage) {
   this.working = false;
   this.linksDisplay = storage.get('links-display') === 'text' ? true : false;
