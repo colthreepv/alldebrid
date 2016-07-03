@@ -16,7 +16,7 @@
   "scripts": {
     "clean": "rimraf build && mkdirp build",
 
-    "build": "cross-env NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack --progress -p",
     "backend": "cross-env NODE_ENV=production node backend/",
 
     "development": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",

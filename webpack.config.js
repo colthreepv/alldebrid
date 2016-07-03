@@ -18,7 +18,7 @@ function webpackHashInfo () {
     if (stats.errors.length) return;
 
     const assets = stats.assets.map(asset => asset.name)
-      .filter(entry => /\.js|\.css/.test(entry))
+      .filter(entry => /(\.js|\.css)$/.test(entry))
       .reduce((prev, current) => { prev[current.split('-')[0]] = current; return prev; }, {});
     /**
      * produces:
@@ -32,7 +32,17 @@ function webpackHashInfo () {
   });
 }
 
+const extractSASS = new ExtractTextPlugin(isProd ? 'style-[hash].css' : 'style.css', { allChunks: true });
+
 const plugins = [
+  /**
+   * extracts all the css code and puts it in the respective file
+   * this produces:
+   * - style.css: generic CSS used across all applications
+   * - login.css: specific CSS used in login
+   * - main.css:  specific CSS used in main
+   */
+  extractSASS,
   // outputs a chunk for all the javascript libraries: angular & co
   new webpack.optimize.CommonsChunkPlugin({
     name: 'vendor',
@@ -44,32 +54,10 @@ const plugins = [
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': `"${env}"`,
     'process.env.GIT_REV': `"${git.short()}"`
-  }),
-  /**
-   * extracts all the css code and puts it in the respective file
-   * this produces:
-   * - style.css: generic CSS used across all applications
-   * - login.css: specific CSS used in login
-   * - main.css:  specific CSS used in main
-   */
-  new ExtractTextPlugin(isProd ? 'style-[hash].css' : 'style.css', { allChunks: true })
+  })
 ];
 
 if (isProd) { // add plugins in case we're in production
-  plugins.push(new webpack.LoaderOptionsPlugin({
-    minimize: true,
-    debug: true
-  }));
-
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      warnings: false
-    },
-    output: {
-      comments: false
-    },
-    sourceMap: true // maybe put sourcemap also in production?
-  }));
   plugins.push(webpackHashInfo);
   plugins.push(new CleanWebpackPlugin(['build']));
 }
@@ -89,16 +77,16 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: isProd ? '[name]-[chunkhash].js' : '[name].js',
-    sourceMapFilename: isProd ? '[name]-[chunkhash].map' : '[name].map',
     publicPath: '/build/'
   },
   module: {
     loaders: [
       // es6 code
-      { test: /.js$/, loaders: ['babel'], exclude: /node_modules/, cacheable: true },
+      { test: /.js$/, loader: ['babel?cacheDirectory'], exclude: /node_modules/, cacheable: true },
+      // html included from angular
       { test: /.html$/, loader: 'html', cacheable: true },
       // scss - and only scss
-      { test: /\.scss$/, loader: ExtractTextPlugin.extract('style', isProd ? 'css!sass' : 'css?sourceMap!sass?sourceMap') },
+      { test: /\.scss$/, loader: extractSASS.extract(['css?sourceMap', 'sass?sourceMap']) },
       // static assets
       { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, loader: 'url?limit=30000&name=[name]-[hash].[ext]' }
     ]
