@@ -1,19 +1,14 @@
 FROM node:argon
+ENV PORT=8100
 
-# Create app directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
-
-# Bundle app source
-COPY . /usr/src/app
-# RUN npm install -g npm@next --prefix=/usr/local
-# RUN ln -s -f /usr/local/bin/npm /usr/bin/npm
 RUN npm install -g npm@next
-
+# Create app directory
+RUN mkdir -p /code
+WORKDIR /code
+COPY . /code
 RUN npm install
-WORKDIR /usr/src/app/backend
-RUN npm install
-WORKDIR /usr/src/app
+RUN npm run install:backend
+RUN npm run install:fonts
 
-EXPOSE 8080
-CMD [ "npm", "start" ]
+EXPOSE 8100
+CMD [ "npm", "run", "production" ]
