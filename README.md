@@ -49,7 +49,12 @@ Example:
 Example:
 ```json
 {
-  "domain": "yourhost.com"
+  "domain": "yourhost.com",
+
+  "session": {
+    "secret": "passwordForCookies",
+    "name": "cookies.name"
+  }
 }
 ```
 

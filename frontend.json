@@ -1,8 +1,0 @@
-{
-  "overrides": {
-    "angular": "node_modules/angular/angular.js",
-    "bootstrap-sass": false,
-    "bootswatch-scss": false
-  },
-  "additional": {}
-}

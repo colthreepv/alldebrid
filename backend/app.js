@@ -12,6 +12,7 @@ const api = rootRequire('./api');
 
 const app = express();
 
+if (process.env.NODE_ENV === 'production') app.set('trust proxy', true);
 app.use(jsonParser);
 
 app.use(session);

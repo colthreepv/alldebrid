@@ -2,12 +2,17 @@ FROM node:argon
 ENV PORT=8100
 
 RUN npm install -g npm@next
-# Create app directory
+
 RUN mkdir -p /code
 WORKDIR /code
-COPY . /code
+# Install app dependencies - with cache
+COPY package.json /code/
 RUN npm install
+COPY backend/package.json /code/backend/
 RUN npm run install:backend
+
+# Code-specific
+COPY . /code
 RUN npm run install:fonts
 
 EXPOSE 8100

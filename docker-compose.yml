@@ -1,0 +1,12 @@
+version: '2'
+services:
+  web:
+    build: .
+    ports:
+      - '8100:8100'
+    volumes:
+      - alldebrid:/code/session.db
+      - alldebrid:/code/level.db
+    restart: always
+volumes:
+  alldebrid: {}
