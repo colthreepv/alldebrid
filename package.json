@@ -31,14 +31,7 @@
     "install:fonts": "ncp node_modules/bootstrap-sass/assets/fonts/bootstrap/ public/fonts/",
 
     "test": "cd backend && npm test && cd ..",
-    "test-dev": "cd backend && npm run test-dev && cd ..",
-
-    "docker:build": "docker build -t colthreepv/alldebrid:2.0.0-alpha1 .",
-    "docker:volume": "docker volume create --name alldebrid-db",
-    "docker:spawn": "docker run -d -p 8100:8100 -v alldebrid-db:/code/level.db -v alldebrid-db:/code/session.db --name alldebrid colthreepv/alldebrid:2.0.0-alpha1",
-    "docker:clean": "docker ps -a --filter=\"name=alldebrid\" -q | xargs docker rm -f",
-    "docker:run": "docker rm -f alldebrid-test && docker run --rm -p 8100:8100 -v alldebrid-db:/code/level.db -v alldebrid-db:/code/session.db --name alldebrid-test colthreepv/alldebrid:2.0.0-alpha1 && docker-machine ip",
-    "docker:testimage": ""
+    "test-dev": "cd backend && npm run test-dev && cd .."
   },
   "repository": {
     "type": "git",
