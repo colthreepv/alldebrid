@@ -4,22 +4,13 @@ backend/node_modules/
 npm-debug.log
 
 # built packages
-*.zip
-build/
-nginx/
-nginx-vars.js
-js/
+build
+public/fonts/*
 
 # database
 level.db
 session.db
 
-# private data
-test-account.json
-
 # old code
-old/
-
-# github stuff
-README.md
-gulpfile.js
+old
+views
