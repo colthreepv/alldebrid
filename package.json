@@ -14,8 +14,6 @@
     "jsonpipe": "^2.0.0"
   },
   "scripts": {
-    "clean": "rimraf build && mkdirp build",
-
     "build": "cross-env NODE_ENV=production webpack --progress -p",
     "backend": "cross-env NODE_ENV=production node backend/",
 
@@ -51,9 +49,9 @@
     "babel-loader": "^6.2.4",
     "babel-plugin-angularjs-annotate": "^0.2.0",
     "babel-preset-es2015-webpack": "^6.4.1",
-    "clean-webpack-plugin": "^0.1.9",
+    "clean-webpack-plugin": "^0.1.10",
     "concurrently": "^2.1.0",
-    "cross-env": "^1.0.7",
+    "cross-env": "^2.0.0",
     "css-loader": "^0.23.1",
     "extract-text-webpack-plugin": "^2.0.0-beta.1",
     "file-loader": "^0.9.0",
@@ -62,9 +60,8 @@
     "ncp": "^2.0.0",
     "node-sass": "^3.8.0",
     "nodemon": "^1.9.2",
-    "rimraf": "^2.5.2",
     "sass-loader": "^4.0.0",
-    "stats-webpack-plugin": "^0.3.1",
+    "stats-webpack-plugin": "^0.4.0",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "webpack": "^2.1.0-beta.7",

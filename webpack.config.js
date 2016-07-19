@@ -32,7 +32,7 @@ function webpackHashInfo () {
   });
 }
 
-const extractSASS = new ExtractTextPlugin(isProd ? 'style-[hash].css' : 'style.css', { allChunks: true });
+const extractSASS = new ExtractTextPlugin({ filename: isProd ? 'style-[hash].css' : 'style.css', allChunks: true });
 
 const plugins = [
   /**
