@@ -21,6 +21,7 @@ function template (req) {
   </head>
   <body>
     <div id="container" ui-view></div>
+    <script src="https://www.google.com/recaptcha/api/challenge?k=6LefUggAAAAAAOHuFwFo8P3jVsPiVLF5IkSP9pCN"></script>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
     <script src="${bundles[APP_NAME]}"></script>

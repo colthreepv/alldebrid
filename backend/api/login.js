@@ -37,6 +37,7 @@ function login (req) {
     followRedirect: false,
     jar
   })
+  .tap(dumpLogin)
   .then(response => {
     const uid = parse.detectLogin(response.headers['set-cookie']);
     if (uid) return completeLogin(response.headers.location, uid);

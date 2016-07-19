@@ -1,5 +1,14 @@
 'use strict';
 
+function loginResponse (extend) {
+  return Object.assign({}, {
+    logged: false,
+    recaptcha: false,
+    unlockToken: false,
+    wrongPassword
+  }, extend || {});
+}
+
 /**
  * FIXME
  * loginError parse alldebrid.com main page, to understand if a Login succeded
@@ -7,6 +16,18 @@
  * @return {object}          cheerio.js instance of the page
  */
 function loginError ($) {
+
+  const invalidPassword = $('.login_form span.error');
+  if (invalidPassword.length) {
+    const isInvalid = invalidPassword.toArray().some(el => {
+      return $(el).text() === 'Invalid password';
+    });
+    if (isInvalid) return 'WRONGPASSWORD';
+  }
+
+  const recaptcha2 = $('#messagespecial');
+  if (recaptcha2.length) return 'RECAPTCHA';
+
   const recaptcha = $('.login textarea[name="recaptcha_challenge_field"]');
   if (recaptcha.length) {
     // A wild recaptcha appears
