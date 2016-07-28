@@ -11,6 +11,8 @@ import home from '../login/index';
 
 import http from '../shared/http';
 import api from '../shared/api';
+import initialState from '../shared/initial-state';
+
 
 if (process.env.NODE_ENV === 'development') Error.stackTraceLimit = Infinity;
 const app = angular.module('login', ['ui.router', 'formly', 'formlyBootstrap']);
@@ -18,6 +20,7 @@ const app = angular.module('login', ['ui.router', 'formly', 'formlyBootstrap']);
 app
   .factory('http', http)
   .factory('api', api)
+  .directive('recaptchaCatcher', recaptchaCatcher)
   .config(formlyConfig)
   .config(config)
   .run(formlyRun)

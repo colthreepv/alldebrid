@@ -16,6 +16,9 @@
 
             <div class="row">
               <div class="col-sm-12 col-md-10  col-md-offset-1">
+                <recaptcha-catcher></recaptcha-catcher>
+              </div>
+              <div class="col-sm-12 col-md-10  col-md-offset-1">
                 <formly-form model="$ctrl.loginData" fields="$ctrl.loginFields" form="$ctrl.form">
                   <button type="submit" class="btn btn-lg btn-primary" ng-disabled="$ctrl.loading">Log In</button>
                   <button class="btn btn-lg btn-primary" ng-show="$ctrl.loading">
