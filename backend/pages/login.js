@@ -2,11 +2,17 @@
 const APP_NAME = 'login';
 
 const bundles = rootRequire('./config').bundles;
+const recaptchaDetect = rootRequire('./util/recaptcha-detect');
 
-function template (req) {
-  const initialState = {};
+function login (req) {
 
-  const page = `
+  return recaptchaDetect()
+  .then(recaptcha => ({ recaptcha }))
+  .then(page);
+}
+
+function page (initialState) {
+  return `
   <!doctype html>
   <html ng-app="${APP_NAME}" ng-strict-di lang="en">
   <head>
@@ -21,14 +27,13 @@ function template (req) {
   </head>
   <body>
     <div id="container" ui-view></div>
-    <script src="https://www.google.com/recaptcha/api/challenge?k=6LefUggAAAAAAOHuFwFo8P3jVsPiVLF5IkSP9pCN"></script>
+    <script src="${initialState.recaptcha}"></script>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
     <script src="${bundles[APP_NAME]}"></script>
   </body>
   </html>`;
 
-  return page;
 }
 
-module.exports = template;
+module.exports = login;
