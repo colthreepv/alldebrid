@@ -1,84 +1,30 @@
 import angular from 'angular';
 /* @ngInject */
 function Controller ($window, api) {
-  var $ctrl = this;
-
-  // login functions
-  this.login = {};
-
-  this.loading = false;
-
-  this.username = null;
-  this.password = null;
-  this.loading = false;
   this.loginFailed = false;
   this.loginRecaptcha = false;
   this.unlockToken = false;
 
-  this.tryLogin = tryLogin;
   this.tryUnlock = tryUnlock;
 
-  this.loginData = {
+  this.lgn = {
     username: null,
     password: null
   };
-
-  this.loginFields = [
-    {
-      key: 'username',
-      type: 'input',
-      wrapper: 'errors',
-      templateOptions: {
-        placeholder: 'Username',
-        required: true,
-        minlength: 3,
-        addonLeft: {
-          class: 'glyphicon glyphicon-user'
-        }
-      }
-    },
-    {
-      key: 'password',
-      type: 'input',
-      wrapper: 'errors',
-      templateOptions: {
-        type: 'password',
-        placeholder: 'password',
-        required: true,
-        minlength: 3,
-        addonLeft: {
-          class: 'glyphicon glyphicon-lock'
-        }
-      }
-    }
-  ];
+  this.lgnMore = {
+    loading: false
+  };
+  this.loginP = null; // login Promise to handle errors
 
   this.unlockBaseInfo = null;
   this.unlockData = {
     unlock_token: null
   };
 
-  this.unlockFields = [
-    {
-      key: 'unlock_token',
-      type: 'input',
-      wrapper: 'errors',
-      templateOptions: {
-        placeholder: 'Unlock Token',
-        required: true,
-        minlength: 6,
-        maxlength: 8,
-        addonLeft: {
-          class: 'glyphicon glyphicon-lock'
-        }
-      }
-    }
-  ];
-
-  function tryLogin (form) {
+  this.tryLogin = (form) => {
     if (!form.$valid) return;
-    $ctrl.loading = true;
-    return api.login($ctrl.loginData.username, $ctrl.loginData.password)
+    this.lgnMore.loading = true;
+    return api.login(this.lgn.username, this.lgn.password)
     // in case login has been invoked with a return url, it gets triggered now!
     // FIXME parameters
     // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
@@ -89,7 +35,7 @@ function Controller ($window, api) {
     .catch(err => err.status === 403 && recaptchaAppeared())
     .catch(() => this.loginFailed = true)
     .finally(() => this.loading = false);
-  }
+  };
 
   function tryUnlock (form) {
     if (!form.$valid) return;

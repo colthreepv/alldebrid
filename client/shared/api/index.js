@@ -18,6 +18,7 @@ function apiFactory (http) {
       url: api.login,
       data: { username, password }
     });
+    // FIXME: handle login errors
   }
 
   function unlock (data) {
