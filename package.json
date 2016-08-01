@@ -4,8 +4,7 @@
   "description": "alternative interface for AllDebrid",
   "dependencies": {
     "angular": "^1.5.7",
-    "angular-formly": "^8.2.1",
-    "angular-formly-templates-bootstrap": "^6.4.0",
+    "angular-messages": "^1.5.8",
     "angular-ui-router": "^1.0.0-beta.1",
     "api-check": "^7.5.5",
     "bootstrap-sass": "^3.3.5",

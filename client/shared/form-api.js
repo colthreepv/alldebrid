@@ -1,28 +1,25 @@
 // FIXME: refactor this
 // credits: Szymon Kosno
 // URL: https://medium.com/@skosno/server-error-handing-in-angularjs-forms-c5fd38ccf0fc#.7l6vo58h7
+import angular from 'angular';
 
-// questa IIFE - Immediate Invoked Function Expression
-// mi serve per mantenere un solo oggetto manipulatedForms
-// attraverso piu direttive form-api
-var manipulatedForms = [
+const manipulatedForms = [
     // {
     //     form: formCtrl,
-    //     field: 'nomefield',
+    //     field: 'fieldname',
     //     code: 'taxCode'
     // }
 ];
 
-// Questa direttiva controlla un valore nello
-function FormApiLink ($window, scope, elm, attrs, ctrl) {
-  var formCtrl = ctrl[0];
-  var offsetFromTop = elm[0].offsetTop;
+function formApiLink ($window, scope, elm, attrs, ctrl) {
+  const formCtrl = ctrl[0];
+  const offsetFromTop = elm[0].offsetTop;
     // unless proven wrong by API, the form is valid
   resetForm(formCtrl);
 
   scope.$watch(attrs.formApi, attachCatch);
-    // on formModelController $destroy we remove any tracks
-    // from the static manipulatedForms array (it might cause memory leaks!)
+  // on formModelController $destroy we remove any tracks
+  // from the static manipulatedForms array (it might cause memory leaks!)
   scope.$on('$destroy', cleanFormErrors);
 
   function attachCatch (newValue, oldValue) {
@@ -33,24 +30,24 @@ function FormApiLink ($window, scope, elm, attrs, ctrl) {
 
   function promiseCatcher (err) {
     if (!angular.isObject(err) && !angular.isArray(err)) throw new Error('service errors should be Object or Array to be handled by form-api');
-    var errorObj = (err.constructor == Object ? [err] : err);
+    const errorObj = (err.constructor == Object ? [err] : err);
     resetForm(formCtrl, true); // calls reset but we ALREADY know that the form is invalid, since the promise failed.
       // for each API error
       // - it memorizes what it's invalidating
       // - invalidates specific ngModelController
     errorObj.forEach(function (formErr) {
-        if (!formErr.code) throw new Error('form error needs to have a field called \'code\'');
-        var newFormErr = {
-            form: formCtrl,
-            error: formErr.code
-          };
-        if (formErr.field) newFormErr.field = formErr.field;
-        manipulatedForms.push(newFormErr);
+      if (!formErr.code) throw new Error('form error needs to have a field called \'code\'');
+      const newFormErr = {
+        form: formCtrl,
+        error: formErr.code
+      };
+      if (formErr.field) newFormErr.field = formErr.field;
+      manipulatedForms.push(newFormErr);
 
-          // if an error is not field-specific, it gets attached to form.$api.$error[name]
-        if (formCtrl[formErr.field] == null) return formCtrl.$api.$error[formErr.code] = true;
-        formCtrl[formErr.field].$setValidity(formErr.code, false);
-      });
+      // if an error is not field-specific, it gets attached to form.$api.$error[name]
+      if (formCtrl[formErr.field] == null) return formCtrl.$api.$error[formErr.code] = true;
+      formCtrl[formErr.field].$setValidity(formErr.code, false);
+    });
     $window.scrollTo(0, offsetFromTop);
   }
 
@@ -69,9 +66,9 @@ function resetForm (form, invalid) {
   };
 }
 
-function ApiValidationLink (scope, elm, attrs, ctrl) {
-  var modelCtrl = ctrl[0];
-  var formCtrl = modelCtrl.$$parentForm;
+function apiValidationLink (scope, elm, attrs, ctrl) {
+  const modelCtrl = ctrl[0];
+  const formCtrl = modelCtrl.$$parentForm;
 
   modelCtrl.$validators.apiValidate = apiValidator;
 
@@ -95,20 +92,23 @@ function ApiValidationLink (scope, elm, attrs, ctrl) {
   }
 }
 
-app.directive('formApi', function ($window) {
+/* @ngInject */
+function formApi ($window) {
   return {
     restrict: 'A',
     scope: false,
     require: ['form'],
-    link: FormApiLink.bind(null, $window)
+    link: formApiLink.bind(null, $window)
   };
-});
+}
 
-app.directive('apiValidation', function () {
+function apiValidation () {
   return {
     restrict: 'A',
     scope: false,
     require: ['^ngModel'],
-    link: ApiValidationLink
+    link: apiValidationLink
   };
-});
+}
+
+export { apiValidation, formApi };

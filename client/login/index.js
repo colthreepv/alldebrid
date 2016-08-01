@@ -3,19 +3,18 @@ import angular from 'angular';
 function Controller ($window, api) {
   this.loginFailed = false;
   this.loginRecaptcha = false;
-  this.unlockToken = false;
-
-  this.tryUnlock = tryUnlock;
 
   this.lgn = {
     username: null,
     password: null
   };
   this.lgnMore = {
-    loading: false
+    loading: false,
+    promise: null // login Promise to handle errors
   };
-  this.loginP = null; // login Promise to handle errors
 
+  // unlock data
+  this.unlockToken = false;
   this.unlockBaseInfo = null;
   this.unlockData = {
     unlock_token: null
@@ -24,41 +23,41 @@ function Controller ($window, api) {
   this.tryLogin = (form) => {
     if (!form.$valid) return;
     this.lgnMore.loading = true;
-    return api.login(this.lgn.username, this.lgn.password)
+
+    const login = this.lgnMore.promise = api.login(this.lgn.username, this.lgn.password);
     // in case login has been invoked with a return url, it gets triggered now!
     // FIXME parameters
     // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
-    .then(response => {
+    return login.then(response => {
       if (response.status === 202) return unlockToken(response.data);
       return redirect(response);
     })
-    .catch(err => err.status === 403 && recaptchaAppeared())
-    .catch(() => this.loginFailed = true)
-    .finally(() => this.loading = false);
+    .catch(err => { err.status === 403 && recaptchaAppeared(); })
+    .catch(() => { this.loginFailed = true; })
+    .finally(() => this.lgnMore.loading = false);
   };
 
-  function tryUnlock (form) {
+  this.tryUnlock = (form) => {
     if (!form.$valid) return;
-    const payload = angular.extend($ctrl.unlockBaseInfo, { unlock_token: $ctrl.unlockData.unlock_token });
-    $ctrl.loading = true;
+    const payload = angular.extend(this.unlockBaseInfo, { unlock_token: this.unlockData.unlock_token });
+    this.lgnMore.loading = true;
     return api.unlock(payload)
     .then(redirect)
     .catch(() => this.loginFailed = true)
-    .finally(() => this.loading = false);
-  }
+    .finally(() => this.lgnMore.loading = false);
+  };
 
-  function redirect (response) { $window.location.assign(response.data.redirect); }
-  function recaptchaAppeared () { $ctrl.loginRecaptcha = true; }
-
-  function unlockToken (response) {
-    $ctrl.unlockToken = true;
-    $ctrl.unlockBaseInfo = {
-      username: $ctrl.loginData.username,
+  const redirect = (response) => { $window.location.assign(response.data.redirect); };
+  const recaptchaAppeared = () => this.loginRecaptcha = true;
+  const unlockToken = (response) => {
+    this.unlockToken = true;
+    this.unlockBaseInfo = {
+      username: this.loginData.username,
       pepper: response.pepper,
       geo_unlock: response.geo_unlock,
       salt: response.salt
     };
-  }
+  };
 }
 
 export default {
