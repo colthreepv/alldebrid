@@ -5,59 +5,61 @@ function Controller ($window, api) {
   this.loginRecaptcha = false;
 
   this.lgn = {
-    username: null,
+    username: 'mrgamer',
     password: null
   };
   this.lgnMore = {
     loading: false,
-    promise: null // login Promise to handle errors
-  };
+    promise: null, // login Promise to handle errors
 
-  // unlock data
-  this.unlockToken = false;
-  this.unlockBaseInfo = null;
-  this.unlockData = {
-    unlock_token: null
+    unlock: false, // boolean to activate unlock input
+    unlockCode: null,
+    unlockBaseInfo: null
   };
 
   this.tryLogin = (form) => {
     if (!form.$valid) return;
-    this.lgnMore.loading = true;
+    toggleLoading();
+
+    // FIXME: do this better
+    if (this.lgnMore.unlock) return tryUnlock(form);
 
     const login = this.lgnMore.promise = api.login(this.lgn.username, this.lgn.password);
     // in case login has been invoked with a return url, it gets triggered now!
     // FIXME parameters
     // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
+
     return login.then(response => {
       if (response.status === 202) return unlockToken(response.data);
-      return redirect(response);
+      return redirect(response.data.redirect);
     })
     .catch(err => { err.status === 403 && recaptchaAppeared(); })
-    .catch(() => { this.loginFailed = true; })
-    .finally(() => this.lgnMore.loading = false);
+    .finally(toggleLoading);
   };
 
-  this.tryUnlock = (form) => {
+  const tryUnlock = (form) => {
     if (!form.$valid) return;
-    const payload = angular.extend(this.unlockBaseInfo, { unlock_token: this.unlockData.unlock_token });
-    this.lgnMore.loading = true;
-    return api.unlock(payload)
-    .then(redirect)
-    .catch(() => this.loginFailed = true)
-    .finally(() => this.lgnMore.loading = false);
+    toggleLoading();
+
+    const payload = angular.extend(this.lgnMore.unlockBaseInfo, { unlock_token: this.lgnMore.unlockCode });
+    const unlock = this.lgnMore.promise = api.unlock(payload);
+    return unlock.then(response => redirect(response.data.redirect))
+    .finally(toggleLoading);
   };
 
-  const redirect = (response) => { $window.location.assign(response.data.redirect); };
-  const recaptchaAppeared = () => this.loginRecaptcha = true;
-  const unlockToken = (response) => {
-    this.unlockToken = true;
-    this.unlockBaseInfo = {
-      username: this.loginData.username,
-      pepper: response.pepper,
-      geo_unlock: response.geo_unlock,
-      salt: response.salt
+  const redirect = (url) => $window.location.assign(url);
+  const recaptchaAppeared = () => { this.loginRecaptcha = true; };
+  const unlockToken = (data) => {
+    this.lgnMore.unlock = true;
+    this.lgnMore.unlockBaseInfo = {
+      username: this.lgn.username,
+      pepper: data.pepper,
+      geo_unlock: data.geo_unlock,
+      salt: data.salt
     };
   };
+
+  const toggleLoading = () => this.lgnMore.loading = !this.lgnMore.loading;
 }
 
 export default {
