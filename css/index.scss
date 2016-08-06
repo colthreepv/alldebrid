@@ -12,3 +12,11 @@
 body { overflow-x: hidden; }
 .long-text { white-space: nowrap; }
 .pointer { cursor: pointer; }
+
+
+.flex { display: flex; }
+.flexall * { display: flex; }
+
+.flex, .flexall {
+  &, &.center { justify-content: center; }
+}
