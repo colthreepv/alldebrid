@@ -1,118 +1,65 @@
 import angular from 'angular';
 /* @ngInject */
 function Controller ($window, api) {
-  var $ctrl = this;
-
-  // login functions
-  this.login = {};
-
-  this.loading = false;
-
-  this.username = null;
-  this.password = null;
-  this.loading = false;
   this.loginFailed = false;
   this.loginRecaptcha = false;
-  this.unlockToken = false;
 
-  this.tryLogin = tryLogin;
-  this.tryUnlock = tryUnlock;
-
-  this.loginData = {
-    username: null,
+  this.lgn = {
+    username: 'mrgamer',
     password: null
   };
+  this.lgnMore = {
+    loading: false,
+    promise: null, // login Promise to handle errors
 
-  this.loginFields = [
-    {
-      key: 'username',
-      type: 'input',
-      wrapper: 'errors',
-      templateOptions: {
-        placeholder: 'Username',
-        required: true,
-        minlength: 3,
-        addonLeft: {
-          class: 'glyphicon glyphicon-user'
-        }
-      }
-    },
-    {
-      key: 'password',
-      type: 'input',
-      wrapper: 'errors',
-      templateOptions: {
-        type: 'password',
-        placeholder: 'password',
-        required: true,
-        minlength: 3,
-        addonLeft: {
-          class: 'glyphicon glyphicon-lock'
-        }
-      }
-    }
-  ];
-
-  this.unlockBaseInfo = null;
-  this.unlockData = {
-    unlock_token: null
+    unlock: false, // boolean to activate unlock input
+    unlockCode: null,
+    unlockBaseInfo: null
   };
 
-  this.unlockFields = [
-    {
-      key: 'unlock_token',
-      type: 'input',
-      wrapper: 'errors',
-      templateOptions: {
-        placeholder: 'Unlock Token',
-        required: true,
-        minlength: 6,
-        maxlength: 8,
-        addonLeft: {
-          class: 'glyphicon glyphicon-lock'
-        }
-      }
-    }
-  ];
-
-  function tryLogin (form) {
+  this.tryLogin = (form) => {
     if (!form.$valid) return;
-    $ctrl.loading = true;
-    return api.login($ctrl.loginData.username, $ctrl.loginData.password)
+    toggleLoading();
+
+    // FIXME: do this better
+    if (this.lgnMore.unlock) return tryUnlock(form);
+
+    const login = this.lgnMore.promise = api.login(this.lgn.username, this.lgn.password);
     // in case login has been invoked with a return url, it gets triggered now!
     // FIXME parameters
     // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
-    .then(response => {
+
+    return login.then(response => {
       if (response.status === 202) return unlockToken(response.data);
-      return redirect(response);
+      return redirect(response.data.redirect);
     })
-    .catch(err => err.status === 403 && recaptchaAppeared())
-    .catch(() => this.loginFailed = true)
-    .finally(() => this.loading = false);
-  }
+    .catch(err => { err.status === 403 && recaptchaAppeared(); })
+    .finally(toggleLoading);
+  };
 
-  function tryUnlock (form) {
+  const tryUnlock = (form) => {
     if (!form.$valid) return;
-    const payload = angular.extend($ctrl.unlockBaseInfo, { unlock_token: $ctrl.unlockData.unlock_token });
-    $ctrl.loading = true;
-    return api.unlock(payload)
-    .then(redirect)
-    .catch(() => this.loginFailed = true)
-    .finally(() => this.loading = false);
-  }
+    toggleLoading();
 
-  function redirect (response) { $window.location.assign(response.data.redirect); }
-  function recaptchaAppeared () { $ctrl.loginRecaptcha = true; }
+    const payload = angular.extend(this.lgnMore.unlockBaseInfo, { unlock_token: this.lgnMore.unlockCode });
+    const unlock = this.lgnMore.promise = api.unlock(payload);
+    return unlock.then(response => redirect(response.data.redirect))
+    .finally(toggleLoading);
+  };
 
-  function unlockToken (response) {
-    $ctrl.unlockToken = true;
-    $ctrl.unlockBaseInfo = {
-      username: $ctrl.loginData.username,
-      pepper: response.pepper,
-      geo_unlock: response.geo_unlock,
-      salt: response.salt
+  const redirect = (url) => $window.location.assign(url);
+  const recaptchaAppeared = () => { this.loginRecaptcha = true; };
+  const unlockToken = (data) => {
+    this.lgnMore.unlock = true;
+    this.lgnMore.unlockBaseInfo = {
+      username: this.lgn.username,
+      pepper: data.pepper,
+      geo_unlock: data.geo_unlock,
+      salt: data.salt
     };
-  }
+  };
+
+  const toggleLoading = () => this.lgnMore.loading = !this.lgnMore.loading;
 }
 
 export default {

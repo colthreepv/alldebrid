@@ -10,14 +10,23 @@ const api = {
   removeTorrents: '/api/torrents/remove'
 };
 /* @ngInject */
-function apiFactory (http) {
+function apiFactory ($q, http) {
 
   function login (username, password) {
+    const apiErrors = response => {
+      let error;
+      switch (response.data.code) {
+      case 1000: error = { code: 'invalidPassword' }; break;
+      default: error = { code: 'unexpectedError' };
+      }
+      return $q.reject(error);
+    };
+
     return http({
       method: 'POST',
       url: api.login,
       data: { username, password }
-    });
+    }).catch(apiErrors);
   }
 
   function unlock (data) {
