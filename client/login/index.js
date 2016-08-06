@@ -1,6 +1,6 @@
 import angular from 'angular';
 /* @ngInject */
-function Controller ($window, api) {
+function Controller ($window, api, initialState) {
   this.loginFailed = false;
   this.loginRecaptcha = false;
 
@@ -12,17 +12,29 @@ function Controller ($window, api) {
     loading: false,
     promise: null, // login Promise to handle errors
 
+    recaptcha: !!initialState.recaptcha,
+    recaptchaChallenge: null,
+    recaptchaValue: null,
+
     unlock: false, // boolean to activate unlock input
     unlockCode: null,
     unlockBaseInfo: null
+  };
+
+  // event fired when recaptcha is detected on page
+  this.onRecaptcha = (challenge) => {
+    this.lgnMore.recaptcha = true;
+    this.lgnMore.recaptchaChallenge = challenge;
   };
 
   this.tryLogin = (form) => {
     if (!form.$valid) return;
     toggleLoading();
 
+    if (this.lgnMore.recaptcha) return tryRecaptcha();
+
     // FIXME: do this better
-    if (this.lgnMore.unlock) return tryUnlock(form);
+    if (this.lgnMore.unlock) return tryUnlock();
 
     const login = this.lgnMore.promise = api.login(this.lgn.username, this.lgn.password);
     // in case login has been invoked with a return url, it gets triggered now!
@@ -33,13 +45,20 @@ function Controller ($window, api) {
       if (response.status === 202) return unlockToken(response.data);
       return redirect(response.data.redirect);
     })
+    // FIXME: review this
     .catch(err => { err.status === 403 && recaptchaAppeared(); })
     .finally(toggleLoading);
   };
 
-  const tryUnlock = (form) => {
-    if (!form.$valid) return;
-    toggleLoading();
+  const tryRecaptcha = () => {
+    return this.lgnMore.promise = api.loginRecaptcha(
+      this.lgn.username,
+      this.lgn.password,
+      this.lgnMore.recaptchaChallenge,
+      this.lgnMore.recaptchaValue).finally(toggleLoading);
+  };
+
+  const tryUnlock = () => {
 
     const payload = angular.extend(this.lgnMore.unlockBaseInfo, { unlock_token: this.lgnMore.unlockCode });
     const unlock = this.lgnMore.promise = api.unlock(payload);

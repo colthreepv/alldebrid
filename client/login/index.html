@@ -18,6 +18,7 @@
             <div class="row">
               <div class="col-sm-12 col-md-10  col-md-offset-1">
 
+
                 <div class="form-input input-group">
                   <span class="input-group-addon">
                     <span class="glyphicon glyphicon-user"></span>
@@ -33,6 +34,11 @@
                   </span>
                   <input type="password" name="password" class="form-control" placeholder="password"
                     ng-model="$ctrl.lgn.password" required>
+                </div>
+
+                <br>
+                <div class="flex center" ng-if="$ctrl.lgnMore.recaptcha"
+                  recaptcha-catcher ng-model="$ctrl.lgnMore.recaptchaValue" on-challenge="$ctrl.onRecaptcha">
                 </div>
 
                 <div ng-if="$ctrl.lgnMore.unlock">

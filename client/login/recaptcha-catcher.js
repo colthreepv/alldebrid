@@ -1,43 +1,36 @@
 import { element as $ } from 'angular';
 
 function linkFn (scope, element, attrs, ctrls) {
-  console.log(this);
+  const ngModel = ctrls;
+
   const recaptchaDiv = document.getElementById('recaptcha_widget_div');
   element.append($(recaptchaDiv));
 
+  // recaptcha gets loaded asynchronously, so this interval helps to detect it
   const interval = setInterval(() => {
     const challengeField = document.getElementById('recaptcha_challenge_field');
     if (!challengeField) return;
 
     clearInterval(interval);
 
-    console.log('found da recaptcha!', challengeField.value);
+    const responseField = document.getElementById('recaptcha_response_field');
+
+    // attache event listener on response field
+    $(responseField).on('change input', (evt) => ngModel.$setViewValue(evt.target.value));
+
+    scope.onChallenge(challengeField.value);
   }, 500);
 
-  // function to be called when challenge is detected
-  // onChallenge
-
-  // recaptcha value goes into an ng-model
 }
 
-export default function () {
+function directive () {
   return {
-    restrict: 'E',
+    require: '^ngModel',
+    scope: {
+      onChallenge: '<'
+    },
     link: linkFn
   };
 }
 
-//     restrict: 'E',
-//     scope: {},
-//     bindToController: {
-//         allowedTypes: '<allowedTypes', // an array of allowed extensions, ex: ['text/plain', 'image/png', 'image/jpg']
-//         onFileChange: '&onFileChange', // fired when the user selects a file
-//         onNotAllowed: '&onNotAllowed', // fired when the user inputs a non-allowed file
-//         onFileUploaded: '&onFileUploaded' // fired when the file is uploaded to S3
-//     },
-//     require: ['^ngModel', 'uploadFile'],
-//     link: UploadFileLink,
-//     controller: UploadFileController,
-//     controllerAs: '$ctrl',
-//     templateUrl: '/views/partials/upload.html'
-// };
+export default directive;
