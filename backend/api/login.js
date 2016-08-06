@@ -27,13 +27,22 @@ function login (req) {
   const password = req.body.password;
   const jar = rp.jar();
 
+  const recaptcha = req.body.recaptcha;
+
+  const qs = {
+    action: 'login',
+    login_login: username,
+    login_password: password
+  };
+
+  if (recaptcha) {
+    qs.recaptcha_challenge_field = recaptcha.challenge;
+    qs.recaptcha_response_field = recaptcha.response;
+  }
+
   return rp({
     url: ad.register,
-    qs: {
-      action: 'login',
-      'login_login': username,
-      'login_password': password
-    },
+    qs,
     followRedirect: false,
     jar
   })
@@ -58,6 +67,7 @@ function login (req) {
   // promise-chain terminator in case of alldebrid requests for user intervention to unlock
   function unlockRequest (loginObject) {
     const response = loginObject.unlockData;
+    // FIXME: old promesso format!!!
     return [
       { method: 'status', args: [202] },
       { method: 'send', args: [response] }
@@ -75,7 +85,13 @@ function login (req) {
 login['@validation'] = {
   body: {
     username: Joi.string().required(),
-    password: Joi.string().required()
+    password: Joi.string().required(),
+
+    // in case there is recaptcha informations
+    recaptcha: Joi.object().keys({
+      challenge: Joi.string().required(),
+      response: Joi.string().required()
+    })
   }
 };
 

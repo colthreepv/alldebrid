@@ -10,7 +10,7 @@ function login (req) {
 
 function page (initialState) {
   const recaptchaScript = initialState.recaptcha ?
-    `<script src="${initialState.recaptcha}"></script>` : null;
+    `<script src="${initialState.recaptcha}"></script>` : '';
 
   return `
   <!doctype html>
