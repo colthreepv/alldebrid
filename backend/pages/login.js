@@ -2,16 +2,16 @@
 const APP_NAME = 'login';
 
 const bundles = rootRequire('./config').bundles;
-const recaptchaDetect = rootRequire('./util/recaptcha-detect');
+const analyze = rootRequire('./util/analyze-login');
 
 function login (req) {
-
-  return recaptchaDetect()
-  .then(recaptcha => ({ recaptcha }))
-  .then(page);
+  return analyze().then(page);
 }
 
 function page (initialState) {
+  const recaptchaScript = initialState.recaptcha ?
+    `<script src="${initialState.recaptcha}"></script>` : null;
+
   return `
   <!doctype html>
   <html ng-app="${APP_NAME}" ng-strict-di lang="en">
@@ -27,10 +27,10 @@ function page (initialState) {
   </head>
   <body>
     <div id="container" ui-view></div>
-    <script src="${initialState.recaptcha}"></script>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
     <script src="${bundles.vendor}"></script>
     <script src="${bundles[APP_NAME]}"></script>
+    ${recaptchaScript}
   </body>
   </html>`;
 

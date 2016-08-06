@@ -10,19 +10,35 @@ function dumpLogin (response) {
   fs.writeFileSync('login-get.html', response.body);
 }
 
-function requestLogin () {
+function analyzeLogin () {
   return rp({
     url: ad.register
   })
   .tap(dumpLogin)
   .then(response => cheerio.load(response.body))
-  .then(detectRecaptcha);
+  .then(detect);
+}
+
+function detect ($) {
+  const recaptcha = detectRecaptcha($);
+  if (recaptcha != null) return recaptcha;
+
+  const vpn = detectVPN($);
+  if (vpn) return vpn;
+  return null;
 }
 
 function detectRecaptcha ($) {
   const scripts = $('.login center script');
   if (!scripts.length) return null;
-  return scripts.attr('src');
+  return { recaptcha: scripts.attr('src') };
 }
 
-module.exports = requestLogin;
+function detectVPN ($) {
+  const arianeEl = $('#ariane');
+  if (!arianeEl.length) return null;
+
+  return { message: arianeEl.text() };
+}
+
+module.exports = analyzeLogin;
