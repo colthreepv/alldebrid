@@ -10,9 +10,10 @@ import home from '../login/index';
 import { apiValidation, formApi } from '../shared/form-api';
 import http from '../shared/http';
 import api from '../shared/api';
+import initialState from '../shared/initial-state';
 import recaptchaCatcher from '../login/recaptcha-catcher';
 const directives = { apiValidation, formApi, recaptchaCatcher };
-const factories = { http, api };
+const factories = { http, api, initialState };
 
 if (process.env.NODE_ENV === 'development') Error.stackTraceLimit = Infinity;
 
