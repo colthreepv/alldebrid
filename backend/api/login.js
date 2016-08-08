@@ -1,7 +1,5 @@
 'use strict';
-const Joi = require('joi');
 const cheerio = require('cheerio');
-const replyUser = require('./common-login').replyUser;
 
 const ad = rootRequire('./ad');
 const errorCodes = rootRequire('./components/error-codes');
@@ -22,18 +20,14 @@ function dumpLogin (response) {
 }
 
 // sets a cookie - via express-session
-function login (req) {
-  const username = req.body.username;
-  const password = req.body.password;
+function login (qs) {
+  const username = qs.login_login;
+
   const jar = rp.jar();
 
   return rp({
     url: ad.register,
-    qs: {
-      action: 'login',
-      'login_login': username,
-      'login_password': password
-    },
+    qs,
     followRedirect: false,
     jar
   })
@@ -41,7 +35,7 @@ function login (req) {
     const uid = parse.detectLogin(response.headers['set-cookie']);
     if (uid) return completeLogin(response.headers.location, uid);
     // try to understand which error happened
-    return detectError(response);
+    return Promise.reject(cheerio.load(response.body));
   });
 
 
@@ -50,32 +44,9 @@ function login (req) {
     return rp({ url, jar })
     .then(response => cheerio.load(response.body))
     .then($ => parse.userData($, uid))
-    .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login))
-    .then(login => replyUser(req, login));
+    .then(login => storage.setCookies(username, jar.getCookies(ad.base)).return(login));
   }
 
-  // promise-chain terminator in case of alldebrid requests for user intervention to unlock
-  function unlockRequest (loginObject) {
-    const response = loginObject.unlockData;
-    return [
-      { method: 'status', args: [202] },
-      { method: 'send', args: [response] }
-    ];
-  }
-
-  function detectError (response) {
-    const login = parse.loginError(cheerio.load(response.body));
-    if (login.unlockToken) return unlockRequest(login);
-    if (login.recaptcha) throw err.recaptchaAppeared().hr('recaptcha appeared').hc(403);
-    if (login.error) throw err.parseError.hr(login.error).hc(412);
-    throw err.invalidCredentials().hc(401).debug(login);
-  }
 }
-login['@validation'] = {
-  body: {
-    username: Joi.string().required(),
-    password: Joi.string().required()
-  }
-};
 
 module.exports = login;

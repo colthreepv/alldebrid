@@ -27,6 +27,9 @@ app.post('/api/torrents', promesso(api.addTorrents));
 app.post('/api/torrents/remove', promesso(api.removeTorrents));
 app.post('/api/unrestrict', promesso(api.unrestrict));
 
+app.get('/ad/', promesso(pages.adLogin));
+app.post('/ad/', promesso(pages.adIntercept));
+
 app.get('/login', promesso(pages.login));
 app.get('*', promesso(pages.main));
 
