@@ -5,7 +5,9 @@ const ad = rootRequire('./ad');
 const rp = rootRequire('./components/request');
 
 const loginApi = rootRequire('./api/login');
+const unlockApi = rootRequire('./api/unlock');
 
+// first page load goes to login()
 function login () {
   return rp({
     url: ad.register
@@ -15,8 +17,26 @@ function login () {
   .then(editForm);
 }
 
+function unlock (req) {
+  const body = req.body;
+  const unlockP = unlockApi(body);
+
+  const successChain = (login) => {
+    return Promise.resolve(replyUser(req, login))
+    .then(() => '<h1>SO GOOD!</h1>');
+  };
+
+  // failure just edits the form again
+  const failChain = ($) => editForm($);
+
+  // then have success or failure
+  return unlockP.then(successChain, failChain);
+}
+
+// login() POSTs to intercept()
 function intercept (req) {
   const body = req.body;
+  // parses payload
   const loginP = loginApi(body);
   console.log(body);
 
@@ -25,21 +45,31 @@ function intercept (req) {
     .then(() => '<h1>SO GOOD!</h1>');
   };
 
+  // failure just edits the form again
   const failChain = ($) => editForm($);
 
+  // then have success or failure
   return loginP.then(successChain, failChain);
 }
 
 exports.login = login;
+exports.unlock = unlock;
 exports.intercept = intercept;
 
 function editForm ($) {
   const loginForm = $('.login > form');
-  // FIXME: error here
-  // if (!loginForm.length)
+  const unlockField = $('input[name="unlock_token"]');
 
-  loginForm.attr('method', 'POST');
-  loginForm.attr('action', '/ad/');
+  if (unlockField.length) {
+    loginForm.attr('method', 'POST');
+    loginForm.attr('action', '/ad/unlock');
+    return $.html();
+  }
+
+  if (loginForm.length) {
+    loginForm.attr('method', 'POST');
+    loginForm.attr('action', '/ad/');
+  }
 
   return $.html();
 }

@@ -22,7 +22,6 @@ function dumpLogin (response) {
 // sets a cookie - via express-session
 function login (qs) {
   const username = qs.login_login;
-
   const jar = rp.jar();
 
   return rp({

@@ -26,6 +26,7 @@ redirectToHome['@raw'] = true;
 const ad = require('./ad-login');
 const pages = {
   adLogin: ad.login,
+  adUnlock: ad.unlock,
   adIntercept: ad.intercept,
 
   login: require('./login'),
@@ -34,6 +35,7 @@ const pages = {
 
 module.exports = {
   adLogin: [pages.adLogin],
+  adUnlock: [urlencodedParser, pages.adUnlock],
   adIntercept: [urlencodedParser, pages.adIntercept],
 
   login: [html5fallback, redirectToHome, pages.login],

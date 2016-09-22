@@ -1,24 +1,13 @@
 'use strict';
 const Joi = require('joi');
 const cheerio = require('cheerio');
-const replyUser = require('./common-login').replyUser;
 
 const ad = rootRequire('./ad');
-const errorCodes = rootRequire('./components/error-codes');
 const parse = rootRequire('./util/parse-login');
 const rp = rootRequire('./components/request');
 const storage = rootRequire('./components/storage');
 
-const err = {
-  respUnexpected: errorCodes.add(1100, 'unlock is not valid'),
-  parseError: errorCodes.add(1101, 'presumably a parse error happened')
-};
-
-function unlock (req) {
-  const unlock_token = req.body.unlock_token;
-  const pepper = req.body.pepper;
-  const geo_unlock = req.body.geo_unlock;
-  const salt = req.body.salt;
+function unlock (form) {
   const jar = rp.jar();
 
   return rp({
@@ -27,7 +16,7 @@ function unlock (req) {
     qs: {
       action: 'unlock'
     },
-    form: { unlock_token, pepper, geo_unlock, salt },
+    form,
     jar,
     headers: { Host: 'alldebrid.com' }
   })
@@ -36,7 +25,8 @@ function unlock (req) {
     const uid = parse.detectLogin(response.headers['set-cookie']);
     if (uid) return completeLogin(response, uid);
     // request might be non-jsonifiable
-    throw err.respUnexpected().hr('unexpected error').hc(500).debug(response);
+    return Promise.reject(cheerio.load(response.body));
+    // throw err.respUnexpected().hr('unexpected error').hc(500).debug(response);
   });
 
   function completeLogin (response, uid) {
@@ -46,11 +36,7 @@ function unlock (req) {
     })
     .then(response => [cheerio.load(response.body), uid])
     .spread(parse.userData)
-    .then(login => storage.setCookies(login.username, jar.getCookies(ad.base)).return(login))
-    .catch(err => {
-      throw err.parseError().hr('unexpected error').hc(500).debug(err);
-    })
-    .then(login => replyUser(req, login));
+    .then(login => storage.setCookies(login.username, jar.getCookies(ad.base)).return(login));
   }
 
 }
