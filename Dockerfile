@@ -14,7 +14,7 @@ RUN npm run install:backend
 # Code-specific
 COPY . /code
 RUN npm run install:fonts
-RUN npm run production
+RUN npm run build
 
 EXPOSE 8100
 CMD [ "npm", "run", "backend" ]
