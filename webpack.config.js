@@ -35,6 +35,14 @@ function webpackHashInfo () {
 const extractSASS = new ExtractTextPlugin({ filename: isProd ? 'style-[hash].css' : 'style.css', allChunks: true });
 
 const plugins = [
+  new webpack.LoaderOptionsPlugin({
+    options: {
+      sassLoader: {
+        includePaths: [path.join(__dirname, 'node_modules')]
+      },
+      context: '/'
+    }
+  }),
   /**
    * extracts all the css code and puts it in the respective file
    * this produces:
@@ -82,9 +90,9 @@ module.exports = {
   module: {
     loaders: [
       // es6 code
-      { test: /.js$/, loader: ['babel?cacheDirectory'], exclude: /node_modules/, cacheable: true },
+      { test: /.js$/, loader: ['babel?cacheDirectory'], exclude: /node_modules/ },
       // html included from angular
-      { test: /.html$/, loader: 'html', cacheable: true },
+      { test: /.html$/, loader: 'html' },
       // scss - and only scss
       { test: /\.scss$/, loader: extractSASS.extract(['css?sourceMap', 'sass?sourceMap']) },
       // static assets
@@ -92,10 +100,6 @@ module.exports = {
     ]
   },
   plugins,
-  sassLoader: {
-    includePaths: [path.join(__dirname, 'node_modules')]
-  },
-
   /**
    * Dev server configuration
    * Reference: http://webpack.github.io/docs/configuration.html#devserver
