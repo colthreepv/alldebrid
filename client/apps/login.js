@@ -37,31 +37,3 @@ function config ($stateProvider, $locationProvider, $urlMatcherFactoryProvider) 
   $urlMatcherFactoryProvider.strictMode(false);
   $stateProvider.state(home);
 }
-
-// function formlyConfig (formlyConfigProvider) {
-//   function showErrors ($viewValue, $modelValue, scope) {
-//     return (scope.fc.$invalid && scope.form.$submitted);
-//   }
-//   formlyConfigProvider.extras.errorExistsAndShouldBeVisibleExpression = showErrors;
-
-//   formlyConfigProvider.setWrapper({
-//     name: 'errors',
-//     template: `
-//       <div>
-//         <formly-transclude></formly-transclude>
-//         <div ng-if="showError" ng-messages="options.formControl.$error">
-//           <div class="control-label" ng-message="{{::name}}" ng-repeat="(name, message) in ::options.validation.messages">
-//             {{ message(options.formControl.$viewValue, options.formControl.$modelValue, this) }}
-//           </div>
-//         </div>
-//       </div>
-//     `
-//   });
-// }
-
-// function formlyRun (formlyValidationMessages) {
-//   const addTemplate = formlyValidationMessages.addTemplateOptionValueMessage;
-//   const addString = formlyValidationMessages.addStringMessage;
-//   addTemplate('minlength', 'minlength', 'The minimum length for this field is ', '', 'Too short');
-//   addString('required', 'This field is required');
-// }

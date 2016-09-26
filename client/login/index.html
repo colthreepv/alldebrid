@@ -6,7 +6,7 @@
       </div>
       <div class="panel-body">
 
-        <form role="form" name="$ctrl.lgnForm" ng-submit="$ctrl.tryLogin($ctrl.lgnForm)" novalidate
+        <form role="form" name="$ctrl.lgnForm" ng-submit="$ctrl.connect()" novalidate
           form-api="$ctrl.lgnMore.promise">
           <fieldset>
             <div class="row">
@@ -15,52 +15,11 @@
               </div>
             </div>
 
-            <div class="row">
-              <div class="col-sm-12 col-md-10  col-md-offset-1">
-
-                <div class="form-input input-group">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-user"></span>
-                  </span>
-                  <input type="text" name="username" class="form-control" placeholder="username"
-                    ng-model="$ctrl.lgn.username" required autofocus>
-                </div>
-
-                <br>
-                <div class="form-input input-group">
-                  <span class="input-group-addon">
-                    <span class="glyphicon glyphicon-lock"></span>
-                  </span>
-                  <input type="password" name="password" class="form-control" placeholder="password"
-                    ng-model="$ctrl.lgn.password" required>
-                </div>
-
-                <div ng-if="$ctrl.lgnMore.unlock">
-                  <br>
-                  <div class="form-input input-group">
-                    <span class="input-group-addon">
-                      <span class="glyphicon glyphicon-lock"></span>
-                    </span>
-                    <input type="text" name="unlockCode" class="form-control" placeholder="unlock code"
-                      ng-model="$ctrl.lgnMore.unlockCode" required>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            <br>
-              <div class="form-errors" ng-messages="$ctrl.lgnForm.$submitted && $ctrl.lgnForm.$api.$error">
-                  <small class="error" ng-message="invalidPassword">user/pass combination doesn't match</small>
-                  <small class="error" ng-message="unexpectedError">Unexpected API Error ☹</small>
-              </div>
-
             <br>
             <div class="row">
               <div class="text-center">
-                <button type="submit" class="btn btn-lg btn-primary" ng-disabled="$ctrl.lgnMore.loading">Log In</button>
-                <button class="btn btn-lg btn-primary" ng-show="$ctrl.lgnMore.loading">
-                  <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+                <button type="submit" class="btn btn-lg btn-primary"
+                  ng-disabled="$ctrl.lgnMore.connecting">Connect</button>
                 </button>
               </div>
             </div>

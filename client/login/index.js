@@ -1,6 +1,6 @@
 import angular from 'angular';
 /* @ngInject */
-function Controller ($window, api) {
+function Controller ($window, $interval, api) {
   this.loginFailed = false;
   this.loginRecaptcha = false;
 
@@ -9,7 +9,7 @@ function Controller ($window, api) {
     password: null
   };
   this.lgnMore = {
-    loading: false,
+    connecting: false,
     promise: null, // login Promise to handle errors
 
     unlock: false, // boolean to activate unlock input
@@ -17,49 +17,24 @@ function Controller ($window, api) {
     unlockBaseInfo: null
   };
 
-  this.tryLogin = (form) => {
-    if (!form.$valid) return;
+  this.connect = () => {
     toggleLoading();
+    const connectWnd = $window.open('/ad/', 'connectWnd', 'resizable,status,width=980,height=800');
 
-    // FIXME: do this better
-    if (this.lgnMore.unlock) return tryUnlock(form);
 
-    const login = this.lgnMore.promise = api.login(this.lgn.username, this.lgn.password);
-    // in case login has been invoked with a return url, it gets triggered now!
-    // FIXME parameters
-    // if ($stateParams.goTo) $state.go($stateParams.goTo, $stateParams.params);
+    const checkPopup = $interval(() => {
+      try {
+        if (connectWnd && connectWnd.closed) popupClosed();
+      } catch (e) {}
+    }, 100);
 
-    return login.then(response => {
-      if (response.status === 202) return unlockToken(response.data);
-      return redirect(response.data.redirect);
-    })
-    .catch(err => { err.status === 403 && recaptchaAppeared(); })
-    .finally(toggleLoading);
-  };
-
-  const tryUnlock = (form) => {
-    if (!form.$valid) return;
-    toggleLoading();
-
-    const payload = angular.extend(this.lgnMore.unlockBaseInfo, { unlock_token: this.lgnMore.unlockCode });
-    const unlock = this.lgnMore.promise = api.unlock(payload);
-    return unlock.then(response => redirect(response.data.redirect))
-    .finally(toggleLoading);
-  };
-
-  const redirect = (url) => $window.location.assign(url);
-  const recaptchaAppeared = () => { this.loginRecaptcha = true; };
-  const unlockToken = (data) => {
-    this.lgnMore.unlock = true;
-    this.lgnMore.unlockBaseInfo = {
-      username: this.lgn.username,
-      pepper: data.pepper,
-      geo_unlock: data.geo_unlock,
-      salt: data.salt
+    const popupClosed = () => {
+      $interval.cancel(checkPopup); // stop looping, please!
+      toggleLoading();
     };
   };
 
-  const toggleLoading = () => this.lgnMore.loading = !this.lgnMore.loading;
+  const toggleLoading = () => this.lgnMore.connecting = !this.lgnMore.connecting;
 }
 
 export default {

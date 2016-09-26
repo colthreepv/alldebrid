@@ -6,6 +6,7 @@ const rp = rootRequire('./components/request');
 
 const loginApi = rootRequire('./api/login');
 const unlockApi = rootRequire('./api/unlock');
+const loginSuccess = rootRequire('./pages/login-success');
 
 // first page load goes to login()
 function login () {
@@ -23,7 +24,7 @@ function unlock (req) {
 
   const successChain = (login) => {
     return Promise.resolve(replyUser(req, login))
-    .then(() => '<h1>SO GOOD!</h1>');
+    .then(() => loginSuccess);
   };
 
   // failure just edits the form again
@@ -42,7 +43,7 @@ function intercept (req) {
 
   const successChain = (login) => {
     return Promise.resolve(replyUser(req, login))
-    .then(() => '<h1>SO GOOD!</h1>');
+    .then(() => loginSuccess);
   };
 
   // failure just edits the form again
