@@ -37,9 +37,10 @@ function performance ($compileProvider) {
   $compileProvider.debugInfoEnabled(false);
 }
 
-function config ($stateProvider, $locationProvider, $urlMatcherFactoryProvider, $compileProvider) {
+function config ($stateProvider, $locationProvider, $urlMatcherFactoryProvider, $compileProvider, $urlRouterProvider) {
   $locationProvider.html5Mode(true);
   $urlMatcherFactoryProvider.strictMode(false);
   states.forEach(state => $stateProvider.state(state));
+  $urlRouterProvider.otherwise('/');
   $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|tel|file|blob):/);
 }
