@@ -4,6 +4,7 @@ require('./globals');
 const express = require('express');
 const jsonParser = require('body-parser').json();
 const promesso = require('promesso');
+const morgan = require('morgan');
 
 const session = rootRequire('./components/session');
 const serve = rootRequire('./components/serve');
@@ -15,6 +16,7 @@ const app = express();
 
 if (process.env.NODE_ENV === 'production') app.set('trust proxy', true);
 app.use(jsonParser);
+app.use(morgan('combined'));
 
 app.use(session);
 app.get(/(\/build\/|\/public\/).*/, serve);
