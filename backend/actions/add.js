@@ -10,7 +10,7 @@ function redirectToHome (req, res, next) {
 redirectToHome['@raw'] = true;
 
 function fastAdd (req) {
-  const magnet = req.url.substr(5);
+  const magnet = decodeURIComponent(req.url.substr(5));
 
   if (magnet.match(MAGNET_REGEX)) return addTorrents(req, [magnet]);
   return Promise.resolve();
