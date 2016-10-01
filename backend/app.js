@@ -9,6 +9,7 @@ const session = rootRequire('./components/session');
 const serve = rootRequire('./components/serve');
 const pages = rootRequire('./pages');
 const api = rootRequire('./api');
+const actions = rootRequire('./actions');
 
 const app = express();
 
@@ -30,6 +31,8 @@ app.post('/api/unrestrict', promesso(api.unrestrict));
 app.get('/ad/', promesso(pages.adLogin));
 app.post('/ad/unlock', promesso(pages.adUnlock));
 app.post('/ad/', promesso(pages.adIntercept));
+
+app.get('/add/*', promesso(actions.add));
 
 app.get('/login', promesso(pages.login));
 app.get('*', promesso(pages.main));
