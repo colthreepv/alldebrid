@@ -1,6 +1,5 @@
 'use strict';
 const Joi = require('joi');
-const Promise = require('bluebird');
 
 const ad = rootRequire('./ad');
 const auth = rootRequire('./util/auth');

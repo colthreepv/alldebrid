@@ -1,5 +1,4 @@
 'use strict';
-const Promise = require('bluebird');
 const levelup = require('levelup');
 const ttl = require('level-ttl');
 

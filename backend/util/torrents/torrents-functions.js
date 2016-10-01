@@ -15,7 +15,7 @@ function getTorrents (username) {
 
 // always fetches torrents
 function fetchTorrents (username) {
-  console.log('requesting torrents list');
+  console.log(`[${username}]${(new Date()).toISOString()} requesting torrents list`);
   return getJar(username)
   .then(jar => {
     return rp({
