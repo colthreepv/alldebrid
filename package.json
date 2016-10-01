@@ -1,6 +1,6 @@
 {
   "name": "alldebrid",
-  "version": "2.0.0-beta3",
+  "version": "2.0.0-beta4",
   "description": "alternative interface for AllDebrid",
   "dependencies": {
     "angular": "^1.5.7",
