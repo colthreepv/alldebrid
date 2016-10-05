@@ -16,3 +16,6 @@ session.db
 # private data
 test-account.json
 config.json
+
+# log files
+*.html
