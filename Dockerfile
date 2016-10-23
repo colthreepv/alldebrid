@@ -1,4 +1,4 @@
-FROM node:argon
+FROM node:boron
 ENV PORT=8100
 
 RUN npm install -g npm@next
