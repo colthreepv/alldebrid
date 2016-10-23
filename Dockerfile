@@ -1,8 +1,6 @@
 FROM node:boron
 ENV PORT=8100
 
-RUN npm install -g npm@next
-
 RUN mkdir -p /code
 WORKDIR /code
 # Install app dependencies - with cache
