@@ -36,7 +36,7 @@ function webpackHashInfo () {
   });
 }
 
-const extractSASS = new ExtractTextPlugin({ filename: isProd ? '[name]-[chunkhash].css' : 'style-[name].css' });
+const extractSASS = new ExtractTextPlugin({ filename: isProd ? '[name]-[chunkhash].css' : '[name].css' });
 
 const plugins = [
   new webpack.LoaderOptionsPlugin({

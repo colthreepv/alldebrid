@@ -29,17 +29,27 @@ const config = {
 if (process.env.NODE_ENV === 'production') {
   const assets = require(path.join(config.buildDir, config.bundleFile));
   config.bundles = {
-    vendor: `${BASE_DIR}/${assets.vendor}`,
-    style: `${BASE_DIR}/${assets.style}`,
-    main: `${BASE_DIR}/${assets.main}`,
-    login: `${BASE_DIR}/${assets.login}`
+    js: {
+      main: `${BASE_DIR}/${assets.js.main}`,
+      login: `${BASE_DIR}/${assets.js.login}`,
+      common: `${BASE_DIR}/${assets.js.common}`,
+    },
+    css: {
+      main: `${BASE_DIR}/${assets.css.main}`,
+      common: `${BASE_DIR}/${assets.css.common}`,
+    }
   };
 } else {
   config.bundles = {
-    vendor: `${BASE_DIR}/vendor.js`,
-    style: `${BASE_DIR}/style.css`,
-    main: `${BASE_DIR}/main.js`,
-    login: `${BASE_DIR}/login.js`
+    js: {
+      main: `${BASE_DIR}/main.js`,
+      login: `${BASE_DIR}/login.js`,
+      common: `${BASE_DIR}/common.js`,
+    },
+    css: {
+      main: `${BASE_DIR}/main.css`,
+      common: `${BASE_DIR}/common.css`,
+    }
   };
 }
 
