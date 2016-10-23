@@ -31,7 +31,8 @@
         </ul>
       </div>
       <div ng-show="$ctrl.textMode()">
-        <textarea class="form-control long-text" placeholder="unrestricted links" rows="{{ $ctrl.unrestricted.length + 2 }}" autofocus ng-model="$ctrl.unrestrictedText"></textarea>
+        <textarea class="form-control long-text download-area" placeholder="unrestricted links" autofocus
+          ng-attr-rows="{{ $ctrl.unrestricted.length + 2 }}" ng-model="$ctrl.unrestrictedText"></textarea>
       </div>
       <button class="btn btn-lg btn-danger" ng-click="$ctrl.done()" ng-disabled="$ctrl.working">
         Done <span class="glyphicon glyphicon-ok"></span>

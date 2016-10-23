@@ -1,4 +1,3 @@
-import angular from 'angular';
 /* @ngInject */
 function Controller ($window, $interval, api) {
   this.loginFailed = false;

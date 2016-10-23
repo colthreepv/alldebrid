@@ -19,7 +19,11 @@ function webpackHashInfo () {
 
     const assets = stats.assets.map(asset => asset.name)
       .filter(entry => /(\.js|\.css)$/.test(entry))
-      .reduce((prev, current) => { prev[current.split('-')[0]] = current; return prev; }, {});
+      .reduce((hash, current) => {
+        if (current.endsWith('.css')) hash.css[current.split('-')[0]] = current;
+        if (current.endsWith('.js')) hash.js[current.split('-')[0]] = current;
+        return hash;
+      }, { js: {}, css: {} });
     /**
      * produces:
      * {
@@ -32,7 +36,7 @@ function webpackHashInfo () {
   });
 }
 
-const extractSASS = new ExtractTextPlugin({ filename: isProd ? 'style-[hash].css' : 'style.css', allChunks: true });
+const extractSASS = new ExtractTextPlugin({ filename: isProd ? '[name]-[chunkhash].css' : 'style-[name].css' });
 
 const plugins = [
   new webpack.LoaderOptionsPlugin({
@@ -43,6 +47,12 @@ const plugins = [
       context: '/'
     }
   }),
+  // outputs a chunk for all the javascript libraries: angular & co
+  new webpack.optimize.CommonsChunkPlugin({
+    name: 'common',
+    chunks: ['main', 'login'],
+    filename: isProd ? '[name]-[chunkhash].js' : '[name].js'
+  }),
   /**
    * extracts all the css code and puts it in the respective file
    * this produces:
@@ -51,13 +61,6 @@ const plugins = [
    * - main.css:  specific CSS used in main
    */
   extractSASS,
-  // outputs a chunk for all the javascript libraries: angular & co
-  new webpack.optimize.CommonsChunkPlugin({
-    name: 'vendor',
-    chunks: ['vendor', 'login', 'main'],
-    minChunks: Infinity,
-    filename: isProd ? '[name]-[chunkhash].js' : '[name].js'
-  }),
   // handy to enable/disable development features in the client-side code
   new webpack.DefinePlugin({
     'process.env.NODE_ENV': `"${env}"`,
@@ -80,7 +83,7 @@ module.exports = {
   entry: {
     main: path.join(__dirname, 'client/apps/', 'main.js'),
     login: path.join(__dirname, 'client/apps/', 'login.js'),
-    vendor: browserLibs
+    // vendor: browserLibs
   },
   output: {
     path: path.join(__dirname, 'build'),
@@ -94,7 +97,7 @@ module.exports = {
       // html included from angular
       { test: /.html$/, loader: 'html' },
       // scss - and only scss
-      { test: /\.scss$/, loader: extractSASS.extract(['css?sourceMap', 'sass?sourceMap']) },
+      { test: /\.scss$/, loader: extractSASS.extract({ fallbackLoader: 'style', loader: ['css?sourceMap', 'sass?sourceMap'] }) },
       // static assets
       { test: /\.(eot|woff|woff2|ttf|svg|png|jpg)$/, loader: 'url?limit=30000&name=[name]-[hash].[ext]' }
     ]

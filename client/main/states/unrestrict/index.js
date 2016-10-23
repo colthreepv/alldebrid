@@ -1,3 +1,4 @@
+import './unrestrict.scss';
 /* @ngInject */
 function Controller ($stateParams, $q, $window, api, storage) {
   this.working = false;
@@ -18,7 +19,10 @@ function Controller ($stateParams, $q, $window, api, storage) {
     this.working = true;
     api.unrestrict(links)
     .then(response => {
-      response.data.forEach(file => this.unrestrictedText += file.link + '\n');
+      response.data.forEach(file => {
+        this.unrestricted.push(file);
+        if (file.link) this.unrestrictedText += `${file.link}\n`;
+      });
     })
     .finally(() => this.working = false);
   };
