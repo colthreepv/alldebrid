@@ -16,14 +16,14 @@ function template (req) {
     <meta name="description" content="">
     <link rel="shortcut icon" type="image/x-icon" href="//cdn.alldebrid.com/lib/images/default/favicon.png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="${bundles.style}">
+    <link rel="stylesheet" href="${bundles.css.common}">
     <base href="/">
   </head>
   <body>
     <div id="container" ui-view></div>
     <script>window.STATE_FROM_SERVER = ${JSON.stringify(initialState)}</script>
-    <script src="${bundles.vendor}"></script>
-    <script src="${bundles[APP_NAME]}"></script>
+    <script src="${bundles.js.common}"></script>
+    <script src="${bundles.js[APP_NAME]}"></script>
   </body>
   </html>`;
 

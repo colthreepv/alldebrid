@@ -1,5 +1,4 @@
 import '../../css/index.scss';
-import './login.scss';
 
 import uiRouter from 'angular-ui-router';
 import angular from 'angular';
