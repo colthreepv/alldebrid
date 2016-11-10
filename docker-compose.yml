@@ -7,6 +7,6 @@ services:
     volumes:
       - alldebrid:/code/session.db
       - alldebrid:/code/level.db
-    restart: always
+    restart: on-failure:10
 volumes:
   alldebrid: {}
