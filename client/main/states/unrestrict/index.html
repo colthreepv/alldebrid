@@ -14,12 +14,15 @@
 
 
     <div class="text-center">
-      <div class="checkbox">
-        <label>
-          <input type="checkbox" ng-model="$ctrl.textMode" ng-model-options="{ getterSetter: true }"> Text mode
+      <div>
+        <label class="display-mode" ng-repeat="type in $ctrl.displayModes">
+          <input type="radio" name="linkStyle"
+            ng-model="$ctrl.displayMode" ng-value="type" ng-change="$ctrl.changeDisplay()" />
+          {{ type }} mode
         </label>
       </div>
-      <div ng-show="!$ctrl.textMode()">
+
+      <div ng-show="$ctrl.displayMode === 'href'">
         <ul class="list-group">
           <li class="list-group-item" ng-class="{ 'list-group-item-danger': file.error }" ng-repeat="file in $ctrl.unrestricted">
             <span class="badge" title="{{ file.error }}" ng-if="file.error">{{ file.error }}</span>
@@ -30,13 +33,34 @@
           </li>
         </ul>
       </div>
-      <div ng-show="$ctrl.textMode()">
+
+      <div ng-show="$ctrl.displayMode === 'text'">
         <textarea class="form-control long-text download-area" placeholder="unrestricted links" autofocus
           ng-attr-rows="{{ $ctrl.unrestricted.length + 2 }}" ng-model="$ctrl.unrestrictedText"></textarea>
       </div>
-      <button class="btn btn-lg btn-danger" ng-click="$ctrl.done()" ng-disabled="$ctrl.working">
-        Done <span class="glyphicon glyphicon-ok"></span>
-      </button>
+
+      <div ng-show="$ctrl.displayMode === 'aria2'">
+        <textarea class="form-control long-text download-area" placeholder="unrestricted links" autofocus
+          ng-attr-rows="{{ $ctrl.unrestricted.length + 2 }}" ng-model="$ctrl.unrestrictedText"></textarea>
+      </div>
+
+      <div>
+        <button class="btn btn-lg btn-info"
+          ng-click="$ctrl.done()" ng-disabled="true" ng-show="$ctrl.working">
+          <span class="glyphicon glyphicon-refresh glyphicon-spin"></span>
+          Loading
+        </button>
+
+        <a class="btn btn-lg btn-success" target="_blank" download="unrestricted.txt"
+          ng-href="{{ $ctrl.listUrl }}" ng-show="!$ctrl.working && $ctrl.displayMode === 'text'">
+          Download as text <span class="glyphicon glyphicon-floppy-save"></span>
+        </a>
+
+        <button class="btn btn-lg btn-danger" ng-click="$ctrl.done()" ng-show="!$ctrl.working">
+          Done <span class="glyphicon glyphicon-ok"></span>
+        </button>
+      </div>
+
     </div>
   </div>
 </div>

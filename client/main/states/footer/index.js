@@ -17,7 +17,7 @@ function Controller ($window, storage, magnet) {
   this.blobSupport = false;
   let regBlob, regURL;
   try {
-    regBlob = new Blob(regContent, { type : 'text/plain' });
+    regBlob = new Blob([regContent], { type : 'text/plain' });
     regURL = $window.URL.createObjectURL(regBlob);
     this.blobSupport = true;
   } catch (e) {}
