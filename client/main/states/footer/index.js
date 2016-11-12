@@ -29,6 +29,8 @@ function Controller ($window, storage, magnet) {
     this.win10Hide = true;
     magnet.register();
   }
+
+  this.registerMagnet = magnet.register;
 }
 export default {
   template: require('./index.html'),
